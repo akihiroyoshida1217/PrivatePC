@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  vscode-extension:
+#    build: ./vscode-extension
+    image: "vscode-extension-image"
+    container_name: vscode-extension1
+    volumes:
+      - ${HOME}/.vscode/extensions/:/home/${UID}/.vscode/extensions
+    user: ${UID}
+    environment:
+      - CODE_EXTENSION
+    cap_drop:
+      - ALL
+

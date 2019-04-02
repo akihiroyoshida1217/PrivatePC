@@ -1,0 +1,14 @@
+[Unit]
+Description=VSCode Extension Update with Docker
+After=docker.service
+
+[Service]
+ExecStart=/usr/bin/python3 /opt/docker-image/vscode-extension-package/vscode-extension-update.py
+#Restart=always
+#Restart=no
+Type=simple
+#Type=notify
+#WatchdogSec=1
+
+[Install]
+WantedBy=multi-user.target

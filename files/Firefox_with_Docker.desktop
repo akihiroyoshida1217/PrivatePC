@@ -1,0 +1,8 @@
+[Desktop Entry]
+Comment=
+Terminal=false
+Name=Firefox_with_Docker
+GenericName=Firefox_with_Docker
+Exec=/opt/docker-image/firefox-package/Firefox_with_Docker-pkexec
+Type=Application
+Icon=firefox-esr

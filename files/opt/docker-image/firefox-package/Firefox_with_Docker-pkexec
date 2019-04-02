@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+if [ ! -d "$HOME/profile" ];then
+  pkexec env HOME=$HOME cp -r /opt/docker-image/firefox-package/firefox/profile $HOME/profile
+  pkexec env USERNAME=$USERNAME chown -R $USERNAME:$USERNAME $HOME/profile
+fi
+pkexec env DISPLAY=$DISPLAY UID=$UID HOME=$HOME PWD=$PWD /usr/local/bin/docker-compose -f `dirname $0`/docker-compose.yml run --rm firefox

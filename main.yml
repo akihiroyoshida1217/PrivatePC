@@ -1,0 +1,1073 @@
+- hosts: all
+  tasks:
+    - name: Add an Apt signing key https://download.docker.com/linux/debian/gpg
+      apt_key:
+        url: https://download.docker.com/linux/debian/gpg
+        state: present
+    - name: Add an apt key adapta-gtk-theme by id from a keyserver
+      apt_key:
+        keyserver: keyserver.ubuntu.com
+        id: EAC0D406E5D79A82ADEEDFDFB76E53652D87398A
+    - name: Add an apt key paper-icon-theme by id from a keyserver
+      apt_key:
+        keyserver: keyserver.ubuntu.com
+        id: D320D0C30B02E64C5B2BB2743766223989993A70
+    - name: add apt repository debian stretch
+      apt_repository:
+        repo: deb http://ftp.jp.debian.org/debian/ stretch main contrib non-free
+        state: present
+    - name: add apt repository debian source stretch
+      apt_repository:
+        repo: deb-src http://ftp.jp.debian.org/debian/ stretch main contrib non-free
+        state: present
+    - name: add apt repository debian stretch security
+      apt_repository:
+        repo: deb http://security.debian.org/debian-security stretch/updates main contrib non-free
+        state: present
+    - name: add apt repository debian source stretch security
+      apt_repository:
+        repo: deb-src http://security.debian.org/debian-security stretch/updates main contrib non-free
+        state: present
+    - name: add apt repository debian stretch updates
+      apt_repository:
+        repo: deb http://ftp.jp.debian.org/debian/ stretch-updates main contrib non-free
+        state: present
+    - name: add apt repository debian source stretch updates
+      apt_repository:
+        repo: deb-src http://ftp.jp.debian.org/debian/ stretch-updates main contrib non-free
+        state: present
+    - name: add apt repository debian stretch backports
+      apt_repository:
+        repo: deb http://ftp.jp.debian.org/debian/ stretch-backports main contrib non-free
+        state: present
+    - name: add apt repository debian source stretch backports
+      apt_repository:
+        repo: deb-src http://ftp.jp.debian.org/debian/ stretch-backports main contrib non-free
+        state: present
+    - name: add apt repository debian stretch backports
+      apt_repository:
+        repo: deb http://ftp.jp.debian.org/debian/ testing main contrib non-free
+        state: present
+    - name: add apt repository debian source stretch backports
+      apt_repository:
+        repo: deb-src http://ftp.jp.debian.org/debian/ testing main contrib non-free
+        state: present
+    - name: add apt repository docker
+      apt_repository:
+        repo: deb [arch=amd64] https://download.docker.com/linux/debian stretch stable
+        state: present
+        filename: docker
+    - name: add apt repository docker source
+      apt_repository:
+        repo: deb-src [arch=amd64] https://download.docker.com/linux/debian stretch stable
+        state: present
+        filename: docker
+    - name: add apt repository ppa:snwh/ppa
+      apt_repository:
+        repo: 'ppa:snwh/ppa'
+        codename: bionic
+        state: present
+        filename: ppa
+    - name: add apt repository ppa:tista/adapta
+      apt_repository:
+        repo: 'ppa:tista/adapta'
+        codename: bionic
+        state: present
+        filename: ppa
+    - name: remove packages
+      apt: 
+        name: "{{ item }}"
+        state: absent
+      with_items:
+        - docker
+        - docker-engine
+    - name: install packages
+      apt: name={{ item }} update_cache=yes cache_valid_time=3600
+      with_items:
+        - ntp
+        - mailutils
+        - unattended-upgrades
+        - aptitude
+        - iptables
+        - iptables-persistent
+        - apt-transport-https
+        - ca-certificates
+        - curl
+        - gnupg2
+        - install docker-ce
+        - software-properties-common
+        - ibus-mozc
+        - autoremove
+        - clamav-daemon
+        - firefox-gnome-shell
+        - gnome-tweak-tool
+        - libgtk-3-common/testing
+        - adapta-gtk-theme
+        - paper-icon-theme
+        - alacarte
+        - policykit-1
+        - notify-send
+        - libnotify-bin
+        - build-essential
+        - libsystemd-journal-dev
+        - libsystemd-daemon-dev
+        - libsystemd-dev
+        - libgconf-2-4
+        - gconf2-common
+        - python3-pip
+      ignore_errors: "{{ ansible_check_mode }}"
+    - name: iptables flush
+      iptables:
+        flush: true
+    - name: ip6tables flush
+      iptables:
+        flush: true
+        ip_version: ipv6
+    - name: -A INPUT -i lo -j ACCEPT
+      iptables:
+        comment: -A INPUT -i lo -j ACCEPT
+        chain: INPUT
+        in_interface: lo
+        jump: ACCEPT
+    - name: -A INPUT ! -i lo -d 127.0.0.0/8 -j REJECT
+      iptables:
+        comment: -A INPUT ! -i lo -d 127.0.0.0/8 -j REJECT
+        chain: INPUT
+        in_interface: ! lo
+        destination: 127.0.0.0/8
+        jump: REJECT
+    - name: -A OUTPUT -o lo -j ACCEPT
+      iptables:
+        comment: -A OUTPUT -o lo -j ACCEPT
+        chain: OUTPUT
+        in_interface: lo
+        jump: ACCEPT
+    - name: -A OUTPUT ! -o lo -d 127.0.0.0/8 -j REJECT
+      iptables:
+        comment: -A OUTPUT ! -o lo -d 127.0.0.0/8 -j REJECT
+        chain: OUTPUT
+        in_interface: ! lo
+        destination: 127.0.0.0/8
+        jump: REJECT
+    - iptables:
+        chain: INPUT
+        ctstate: ESTABLISHED,RELATED
+        jump: ACCEPT
+      become: yes
+    - name: -A OUTPUT -p udp --dport 53 -j ACCEPT
+      iptables:
+        comment: -A OUTPUT -p udp --dport 53 -j ACCEPT
+        chain: OUTPUT
+        protocol: udp
+        destination_port: 53
+        jump: ACCEPT
+    - name: -A OUTPUT -o wlp2s0 -d 133.243.238.163 -p udp --dport 123 -j ACCEPT
+      iptables:
+        comment: -A OUTPUT -o wlp2s0 -d 133.243.238.163 -p udp --dport 123 -j ACCEPT
+        chain: OUTPUT
+        out_interface: wlp2s0
+        destination: 133.243.238.163
+        protocol: udp
+        destination_port: 123
+        jump: ACCEPT
+    - name: -A OUTPUT -o wlp2s0 -d 133.243.238.164 -p udp --dport 123 -j ACCEPT
+      iptables:
+        comment: -A OUTPUT -o wlp2s0 -d 133.243.238.164 -p udp --dport 123 -j ACCEPT
+        chain: OUTPUT
+        out_interface: wlp2s0
+        destination: 133.243.238.164
+        protocol: udp
+        destination_port: 123
+        jump: ACCEPT
+    - name: -A OUTPUT -o wlp2s0 -d 133.243.238.243 -p udp --dport 123 -j ACCEPT
+      iptables:
+        comment: -A OUTPUT -o wlp2s0 -d 133.243.238.243 -p udp --dport 123 -j ACCEPT
+        chain: OUTPUT
+        out_interface: wlp2s0
+        destination: 133.243.238.243
+        protocol: udp
+        destination_port: 123
+        jump: ACCEPT
+    - name: -A OUTPUT -o wlp2s0 -d 133.243.238.244 -p udp --dport 123 -j ACCEPT
+      iptables:
+        comment: -A OUTPUT -o wlp2s0 -d 133.243.238.244 -p udp --dport 123 -j ACCEPT
+        chain: OUTPUT
+        out_interface: wlp2s0
+        destination: 133.243.238.244
+        protocol: udp
+        destination_port: 123
+        jump: ACCEPT
+    - name: ftp1.debian.or.jp
+      iptables:
+        comment: -A OUTPUT -o wlp2s0 -d 202.221.179.45 -p tcp --dport 80 -j ACCEPT
+        chain: OUTPUT
+        out_interface: wlp2s0
+        destination: 202.221.179.45
+        protocol: tcp
+        destination_port: 80
+        jump: ACCEPT
+    - name: ftp.nara.wide.ad.jp
+      iptables:
+        comment: -A OUTPUT -o wlp2s0 -d 203.178.137.175 -p tcp --dport 80 -j ACCEPT
+        chain: OUTPUT
+        out_interface: wlp2s0
+        destination: 203.178.137.175
+        protocol: tcp
+        destination_port: 80
+        jump: ACCEPT
+    - name: ftp.tsukuba.wide.ad.jp
+      iptables:
+        comment: -A OUTPUT -o wlp2s0 -d 203.178.132.80 -p tcp --dport 80 -j ACCEPT
+        chain: OUTPUT
+        out_interface: wlp2s0
+        destination: 203.178.132.80
+        protocol: tcp
+        destination_port: 80
+        jump: ACCEPT
+    - name: dennou-h.gfd-dennou.org
+      iptables:
+        comment: -A OUTPUT -o wlp2s0 -d 133.87.45.30 -p tcp --dport 80 -j ACCEPT
+        chain: OUTPUT
+        out_interface: wlp2s0
+        destination: 133.87.45.30
+        protocol: tcp
+        destination_port: 80
+        jump: ACCEPT
+    - name: dennou-k.gfd-dennou.org
+      iptables:
+        comment: -A OUTPUT -o wlp2s0 -d 130.54.59.159 -p tcp --dport 80 -j ACCEPT
+        chain: OUTPUT
+        out_interface: wlp2s0
+        destination: 130.54.59.159
+        protocol: tcp
+        destination_port: 80
+        jump: ACCEPT
+    - name: dennou-q.gfd-dennou.org
+      iptables:
+        comment: -A OUTPUT -o wlp2s0 -d 133.5.166.3 -p tcp --dport 80 -j ACCEPT
+        chain: OUTPUT
+        out_interface: wlp2s0
+        destination: 133.5.166.3
+        protocol: tcp
+        destination_port: 80
+        jump: ACCEPT
+    - name: debian-mirror.sakura.ne.jp
+      iptables:
+        comment: -A OUTPUT -o wlp2s0 -d 153.127.75.11 -p tcp --dport 80 -j ACCEPT
+        chain: OUTPUT
+        out_interface: wlp2s0
+        destination: 153.127.75.11
+        protocol: tcp
+        destination_port: 80
+        jump: ACCEPT
+    - name: riksun.riken.go.jp
+      iptables:
+        comment: -A OUTPUT -o wlp2s0 -d 134.160.38.1 -p tcp --dport 80 -j ACCEPT
+        chain: OUTPUT
+        out_interface: wlp2s0
+        destination: 134.160.38.1
+        protocol: tcp
+        destination_port: 80
+        jump: ACCEPT
+    - name: infoserv.ics.es.osaka-u.ac.jp
+      iptables:
+        comment: -A OUTPUT -o wlp2s0 -d 133.1.240.15 -p tcp --dport 80 -j ACCEPT
+        chain: OUTPUT
+        out_interface: wlp2s0
+        destination: 133.1.240.15
+        protocol: tcp
+        destination_port: 80
+        jump: ACCEPT
+    - name: ftp.kddilabs.jp
+      iptables:
+        comment: -A OUTPUT -o wlp2s0 -d 192.26.91.193 -p tcp --dport 80 -j ACCEPT
+        chain: OUTPUT
+        out_interface: wlp2s0
+        destination: 192.26.91.193
+        protocol: tcp
+        destination_port: 80
+        jump: ACCEPT
+    - name: ring.shibaura-it.ac.jp
+      iptables:
+        comment: -A OUTPUT -o wlp2s0 -d 202.18.64.24 -p tcp --dport 80 -j ACCEPT
+        chain: OUTPUT
+        out_interface: wlp2s0
+        destination: 202.18.64.24
+        protocol: tcp
+        destination_port: 80
+        jump: ACCEPT
+    - name: ring.u-toyama.ac.jp
+      iptables:
+        comment: -A OUTPUT -o wlp2s0 -d 160.26.2.184 -p tcp --dport 80 -j ACCEPT
+        chain: OUTPUT
+        out_interface: wlp2s0
+        destination: 160.26.2.184
+        protocol: tcp
+        destination_port: 80
+        jump: ACCEPT
+    - name: ring.airnet.ne.jp
+      iptables:
+        comment: -A OUTPUT -o wlp2s0 -d 210.159.71.23 -p tcp --dport 80 -j ACCEPT
+        chain: OUTPUT
+        out_interface: wlp2s0
+        destination: 210.159.71.23
+        protocol: tcp
+        destination_port: 80
+        jump: ACCEPT
+    - name: ring.ix.oita-u.ac.jp
+      iptables:
+        comment: -A OUTPUT -o wlp2s0 -d 133.37.44.6 -p tcp --dport 80 -j ACCEPT
+        chain: OUTPUT
+        out_interface: wlp2s0
+        destination: 133.37.44.6
+        protocol: tcp
+        destination_port: 80
+        jump: ACCEPT
+    - name: security.debin.org
+      iptables:
+        comment: -A OUTPUT -o wlp2s0 -d 133.242.99.74 -p tcp --dport 80 -j ACCEPT
+        chain: OUTPUT
+        out_interface: wlp2s0
+        destination: 133.242.99.74
+        protocol: tcp
+        destination_port: 80
+        jump: ACCEPT
+    - name: ftp.jp.debian.org
+      iptables:
+        comment: -A OUTPUT -o wlp2s0 -d 150.65.7.130 -p tcp --dport 80 -j ACCEPT
+        chain: OUTPUT
+        out_interface: wlp2s0
+        destination: 150.65.7.130
+        protocol: tcp
+        destination_port: 80
+        jump: ACCEPT
+    - name: -A OUTPUT -o wlp2s0 -d 13.32.52.90 -p tcp --dport 443 -j ACCEPT
+      iptables:
+        comment: -A OUTPUT -o wlp2s0 -d 13.32.52.90 -p tcp --dport 443 -j ACCEPT
+        chain: OUTPUT
+        out_interface: wlp2s0
+        destination: 13.32.52.90
+        protocol: tcp
+        destination_port: 443
+        jump: ACCEPT
+    - name: -A OUTPUT -o wlp2s0 -d 13.32.52.25 -p tcp --dport 443 -j ACCEPT
+      iptables:
+        comment: -A OUTPUT -o wlp2s0 -d 13.32.52.25 -p tcp --dport 443 -j ACCEPT
+        chain: OUTPUT
+        out_interface: wlp2s0
+        destination: 13.32.52.25
+        protocol: tcp
+        destination_port: 443
+        jump: ACCEPT
+    - name: -A OUTPUT -o wlp2s0 -d 13.32.52.64 -p tcp --dport 443 -j ACCEPT
+      iptables:
+        comment: -A OUTPUT -o wlp2s0 -d 13.32.52.64 -p tcp --dport 443 -j ACCEPT
+        chain: OUTPUT
+        out_interface: wlp2s0
+        destination: 13.32.52.64
+        protocol: tcp
+        destination_port: 443
+        jump: ACCEPT
+    - name: -A OUTPUT -o wlp2s0 -d 13.32.52.78 -p tcp --dport 443 -j ACCEPT
+      iptables:
+        comment: -A OUTPUT -o wlp2s0 -d 13.32.52.78 -p tcp --dport 443 -j ACCEPT
+        chain: OUTPUT
+        out_interface: wlp2s0
+        destination: 13.32.52.78
+        protocol: tcp
+        destination_port: 443
+        jump: ACCEPT
+    - name: -A OUTPUT -o wlp2s0 -d 13.35.67.89 -p tcp --dport 443 -j ACCEPT
+      iptables:
+        comment: -A OUTPUT -o wlp2s0 -d 13.35.67.89 -p tcp --dport 443 -j ACCEPT
+        chain: OUTPUT
+        out_interface: wlp2s0
+        destination: 13.35.67.89
+        protocol: tcp
+        destination_port: 443
+        jump: ACCEPT
+    - name: -A OUTPUT -o wlp2s0 -d 13.35.67.104 -p tcp --dport 443 -j ACCEPT
+      iptables:
+        comment: -A OUTPUT -o wlp2s0 -d 13.35.67.104 -p tcp --dport 443 -j ACCEPT
+        chain: OUTPUT
+        out_interface: wlp2s0
+        destination: 13.35.67.104
+        protocol: tcp
+        destination_port: 443
+        jump: ACCEPT
+    - name: -A OUTPUT -o wlp2s0 -d 13.35.67.79 -p tcp --dport 443 -j ACCEPT
+      iptables:
+        comment: -A OUTPUT -o wlp2s0 -d 13.35.67.79 -p tcp --dport 443 -j ACCEPT
+        chain: OUTPUT
+        out_interface: wlp2s0
+        destination: 13.35.67.79
+        protocol: tcp
+        destination_port: 443
+        jump: ACCEPT
+    - name: -A OUTPUT -o wlp2s0 -d 13.35.67.42 -p tcp --dport 443 -j ACCEPT
+      iptables:
+        comment: -A OUTPUT -o wlp2s0 -d 13.35.67.42 -p tcp --dport 443 -j ACCEPT
+        chain: OUTPUT
+        out_interface: wlp2s0
+        destination: 13.35.67.42
+        protocol: tcp
+        destination_port: 443
+        jump: ACCEPT
+    - name: -A OUTPUT -o wlp2s0 -d 143.204.83.95 -p tcp --dport 443 -j ACCEPT
+      iptables:
+        comment: -A OUTPUT -o wlp2s0 -d 143.204.83.95 -p tcp --dport 443 -j ACCEPT
+        chain: OUTPUT
+        out_interface: wlp2s0
+        destination: 143.204.83.95
+        protocol: tcp
+        destination_port: 443
+        jump: ACCEPT
+    - name: -A OUTPUT -o wlp2s0 -d 143.204.83.49 -p tcp --dport 443 -j ACCEPT
+      iptables:
+        comment: -A OUTPUT -o wlp2s0 -d 143.204.83.49 -p tcp --dport 443 -j ACCEPT
+        chain: OUTPUT
+        out_interface: wlp2s0
+        destination: 143.204.83.49
+        protocol: tcp
+        destination_port: 443
+        jump: ACCEPT
+    - name: -A OUTPUT -o wlp2s0 -d 143.204.83.32 -p tcp --dport 443 -j ACCEPT
+      iptables:
+        comment: -A OUTPUT -o wlp2s0 -d 143.204.83.32 -p tcp --dport 443 -j ACCEPT
+        chain: OUTPUT
+        out_interface: wlp2s0
+        destination: 143.204.83.32
+        protocol: tcp
+        destination_port: 443
+        jump: ACCEPT
+    - name: -A OUTPUT -o wlp2s0 -d 143.204.83.37 -p tcp --dport 443 -j ACCEPT
+      iptables:
+        comment: -A OUTPUT -o wlp2s0 -d 143.204.83.37 -p tcp --dport 443 -j ACCEPT
+        chain: OUTPUT
+        out_interface: wlp2s0
+        destination: 143.204.83.37
+        protocol: tcp
+        destination_port: 443
+        jump: ACCEPT
+    - name: -A OUTPUT -o wlp2s0 -d 52.85.12.83 -p tcp --dport 443 -j ACCEPT
+      iptables:
+        comment: -A OUTPUT -o wlp2s0 -d 52.85.12.83 -p tcp --dport 443 -j ACCEPT
+        chain: OUTPUT
+        out_interface: wlp2s0
+        destination: 52.85.12.83
+        protocol: tcp
+        destination_port: 443
+        jump: ACCEPT
+    - name: -A OUTPUT -o wlp2s0 -d 52.85.12.107 -p tcp --dport 443 -j ACCEPT
+      iptables:
+        comment: -A OUTPUT -o wlp2s0 -d 52.85.12.107 -p tcp --dport 443 -j ACCEPT
+        chain: OUTPUT
+        out_interface: wlp2s0
+        destination: 52.85.12.107
+        protocol: tcp
+        destination_port: 443
+        jump: ACCEPT
+    - name: -A OUTPUT -o wlp2s0 -d 52.85.12.177 -p tcp --dport 443 -j ACCEPT
+      iptables:
+        comment: -A OUTPUT -o wlp2s0 -d 52.85.12.177 -p tcp --dport 443 -j ACCEPT
+        chain: OUTPUT
+        out_interface: wlp2s0
+        destination: 52.85.12.177
+        protocol: tcp
+        destination_port: 443
+        jump: ACCEPT
+    - name: -A OUTPUT -o wlp2s0 -d 52.85.12.245 -p tcp --dport 443 -j ACCEPT
+      iptables:
+        comment: -A OUTPUT -o wlp2s0 -d 52.85.12.245 -p tcp --dport 443 -j ACCEPT
+        chain: OUTPUT
+        out_interface: wlp2s0
+        destination: 52.85.12.245
+        protocol: tcp
+        destination_port: 443
+        jump: ACCEPT
+    - name: -A OUTPUT -o wlp2s0 -d 99.84.59.78 -p tcp --dport 443 -j ACCEPT
+      iptables:
+        comment: -A OUTPUT -o wlp2s0 -d 99.84.59.78 -p tcp --dport 443 -j ACCEPT
+        chain: OUTPUT
+        out_interface: wlp2s0
+        destination: 99.84.59.78
+        protocol: tcp
+        destination_port: 443
+        jump: ACCEPT
+    - name: -A OUTPUT -o wlp2s0 -d 99.84.59.129 -p tcp --dport 443 -j ACCEPT
+      iptables:
+        comment: -A OUTPUT -o wlp2s0 -d 99.84.59.129 -p tcp --dport 443 -j ACCEPT
+        chain: OUTPUT
+        out_interface: wlp2s0
+        destination: 99.84.59.129
+        protocol: tcp
+        destination_port: 443
+        jump: ACCEPT
+    - name: -A OUTPUT -o wlp2s0 -d 99.84.59.89 -p tcp --dport 443 -j ACCEPT
+      iptables:
+        comment: -A OUTPUT -o wlp2s0 -d 99.84.59.89 -p tcp --dport 443 -j ACCEPT
+        chain: OUTPUT
+        out_interface: wlp2s0
+        destination: 99.84.59.89
+        protocol: tcp
+        destination_port: 443
+        jump: ACCEPT
+    - name: -A OUTPUT -o wlp2s0 -d 99.84.59.29 -p tcp --dport 443 -j ACCEPT
+      iptables:
+        comment: -A OUTPUT -o wlp2s0 -d 99.84.59.29 -p tcp --dport 443 -j ACCEPT
+        chain: OUTPUT
+        out_interface: wlp2s0
+        destination: 99.84.59.29
+        protocol: tcp
+        destination_port: 443
+        jump: ACCEPT
+    - name: -A OUTPUT -o wlp2s0 -d 13.33.213.65 -p tcp --dport 443 -j ACCEPT
+      iptables:
+        comment: -A OUTPUT -o wlp2s0 -d 13.33.213.65 -p tcp --dport 443 -j ACCEPT
+        chain: OUTPUT
+        out_interface: wlp2s0
+        destination: 13.33.213.65
+        protocol: tcp
+        destination_port: 443
+        jump: ACCEPT
+    - name: -A OUTPUT -o wlp2s0 -d 13.33.213.48 -p tcp --dport 443 -j ACCEPT
+      iptables:
+        comment: -A OUTPUT -o wlp2s0 -d 13.33.213.48 -p tcp --dport 443 -j ACCEPT
+        chain: OUTPUT
+        out_interface: wlp2s0
+        destination: 13.33.213.48
+        protocol: tcp
+        destination_port: 443
+        jump: ACCEPT
+    - name: -A OUTPUT -o wlp2s0 -d 13.33.213.226 -p tcp --dport 443 -j ACCEPT
+      iptables:
+        comment: -A OUTPUT -o wlp2s0 -d 13.33.213.226 -p tcp --dport 443 -j ACCEPT
+        chain: OUTPUT
+        out_interface: wlp2s0
+        destination: 13.33.213.226
+        protocol: tcp
+        destination_port: 443
+        jump: ACCEPT
+    - name: -A OUTPUT -o wlp2s0 -d 13.33.213.17 -p tcp --dport 443 -j ACCEPT
+      iptables:
+        comment: -A OUTPUT -o wlp2s0 -d 13.33.213.17 -p tcp --dport 443 -j ACCEPT
+        chain: OUTPUT
+        out_interface: wlp2s0
+        destination: 13.33.213.17
+        protocol: tcp
+        destination_port: 443
+        jump: ACCEPT
+    - name: -A OUTPUT -o wlp2s0 -d 34.200.28.105 -p tcp --dport 443 -j ACCEPT
+      iptables:
+        comment: -A OUTPUT -o wlp2s0 -d 34.200.28.105 -p tcp --dport 443 -j ACCEPT
+        chain: OUTPUT
+        out_interface: wlp2s0
+        destination: 34.200.28.105
+        protocol: tcp
+        destination_port: 443
+        jump: ACCEPT
+    - name: -A OUTPUT -o wlp2s0 -d 54.165.149.19 -p tcp --dport 443 -j ACCEPT
+      iptables:
+        comment: -A OUTPUT -o wlp2s0 -d 54.165.149.19 -p tcp --dport 443 -j ACCEPT
+        chain: OUTPUT
+        out_interface: wlp2s0
+        destination: 54.165.149.19
+        protocol: tcp
+        destination_port: 443
+        jump: ACCEPT
+    - name: -A OUTPUT -o wlp2s0 -d 34.205.207.96 -p tcp --dport 443 -j ACCEPT
+      iptables:
+        comment: -A OUTPUT -o wlp2s0 -d 34.205.207.96 -p tcp --dport 443 -j ACCEPT
+        chain: OUTPUT
+        out_interface: wlp2s0
+        destination: 34.205.207.96
+        protocol: tcp
+        destination_port: 443
+        jump: ACCEPT
+    - name: -A OUTPUT -o wlp2s0 -d 54.175.43.85 -p tcp --dport 443 -j ACCEPT
+      iptables:
+        comment: -A OUTPUT -o wlp2s0 -d 54.175.43.85 -p tcp --dport 443 -j ACCEPT
+        chain: OUTPUT
+        out_interface: wlp2s0
+        destination: 54.175.43.85
+        protocol: tcp
+        destination_port: 443
+        jump: ACCEPT
+    - name: -A OUTPUT -o wlp2s0 -d 34.206.236.31 -p tcp --dport 443 -j ACCEPT
+      iptables:
+        comment: -A OUTPUT -o wlp2s0 -d 34.206.236.31 -p tcp --dport 443 -j ACCEPT
+        chain: OUTPUT
+        out_interface: wlp2s0
+        destination: 34.206.236.31
+        protocol: tcp
+        destination_port: 443
+        jump: ACCEPT
+    - name: -A OUTPUT -o wlp2s0 -d 34.201.236.93 -p tcp --dport 443 -j ACCEPT
+      iptables:
+        comment: -A OUTPUT -o wlp2s0 -d 34.201.236.93 -p tcp --dport 443 -j ACCEPT
+        chain: OUTPUT
+        out_interface: wlp2s0
+        destination: 34.201.236.93
+        protocol: tcp
+        destination_port: 443
+        jump: ACCEPT
+    - name: -A OUTPUT -o wlp2s0 -d 34.233.151.211 -p tcp --dport 443 -j ACCEPT
+      iptables:
+        comment: -A OUTPUT -o wlp2s0 -d 34.233.151.211 -p tcp --dport 443 -j ACCEPT
+        chain: OUTPUT
+        out_interface: wlp2s0
+        destination: 34.233.151.211
+        protocol: tcp
+        destination_port: 443
+        jump: ACCEPT
+    - name: -A OUTPUT -o wlp2s0 -d 52.70.175.131 -p tcp --dport 443 -j ACCEPT
+      iptables:
+        comment: -A OUTPUT -o wlp2s0 -d 52.70.175.131 -p tcp --dport 443 -j ACCEPT
+        chain: OUTPUT
+        out_interface: wlp2s0
+        destination: 52.70.175.131
+        protocol: tcp
+        destination_port: 443
+        jump: ACCEPT
+    - name: -A OUTPUT -o wlp2s0 -d 104.18.121.25 -p tcp --dport 443 -j ACCEPT
+      iptables:
+        comment: -A OUTPUT -o wlp2s0 -d 104.18.121.25 -p tcp --dport 443 -j ACCEPT
+        chain: OUTPUT
+        out_interface: wlp2s0
+        destination: 104.18.121.25
+        protocol: tcp
+        destination_port: 443
+        jump: ACCEPT
+    - name: -A OUTPUT -o wlp2s0 -d 104.18.122.25 -p tcp --dport 443 -j ACCEPT
+      iptables:
+        comment: -A OUTPUT -o wlp2s0 -d 104.18.122.25 -p tcp --dport 443 -j ACCEPT
+        chain: OUTPUT
+        out_interface: wlp2s0
+        destination: 104.18.122.25
+        protocol: tcp
+        destination_port: 443
+        jump: ACCEPT
+    - name: -A OUTPUT -o wlp2s0 -d 104.18.123.25 -p tcp --dport 443 -j ACCEPT
+      iptables:
+        comment: -A OUTPUT -o wlp2s0 -d 104.18.123.25 -p tcp --dport 443 -j ACCEPT
+        chain: OUTPUT
+        out_interface: wlp2s0
+        destination: 104.18.123.25
+        protocol: tcp
+        destination_port: 443
+        jump: ACCEPT
+    - name: -A OUTPUT -o wlp2s0 -d 104.18.124.25 -p tcp --dport 443 -j ACCEPT
+      iptables:
+        comment: -A OUTPUT -o wlp2s0 -d 104.18.124.25 -p tcp --dport 443 -j ACCEPT
+        chain: OUTPUT
+        out_interface: wlp2s0
+        destination: 104.18.124.25
+        protocol: tcp
+        destination_port: 443
+        jump: ACCEPT
+    - name: -A OUTPUT -o wlp2s0 -d 104.18.125.25 -p tcp --dport 443 -j ACCEPT
+      iptables:
+        comment: -A OUTPUT -o wlp2s0 -d 104.18.125.25 -p tcp --dport 443 -j ACCEPT
+        chain: OUTPUT
+        out_interface: wlp2s0
+        destination: 104.18.125.25
+        protocol: tcp
+        destination_port: 443
+        jump: ACCEPT
+    - name: -A OUTPUT -o wlp2s0 -d 192.30.255.113 -p tcp --dport 443 -j ACCEPT
+      iptables:
+        comment: -A OUTPUT -o wlp2s0 -d 192.30.255.113 -p tcp --dport 443 -j ACCEPT
+        chain: OUTPUT
+        out_interface: wlp2s0
+        destination: 192.30.255.113
+        protocol: tcp
+        destination_port: 443
+        jump: ACCEPT
+    - name: -A OUTPUT -o wlp2s0 -d 192.30.255.112 -p tcp --dport 443 -j ACCEPT
+      iptables:
+        comment: -A OUTPUT -o wlp2s0 -d 192.30.255.112 -p tcp --dport 443 -j ACCEPT
+        chain: OUTPUT
+        out_interface: wlp2s0
+        destination: 192.30.255.112
+        protocol: tcp
+        destination_port: 443
+        jump: ACCEPT
+    - name: -A OUTPUT -o wlp2s0 -d 192.30.255.121 -p tcp --dport 443 -j ACCEPT
+      iptables:
+        comment: -A OUTPUT -o wlp2s0 -d 192.30.255.121 -p tcp --dport 443 -j ACCEPT
+        chain: OUTPUT
+        out_interface: wlp2s0
+        destination: 192.30.255.121
+        protocol: tcp
+        destination_port: 443
+        jump: ACCEPT
+    - name: -A OUTPUT -o wlp2s0 -d 192.30.255.120 -p tcp --dport 443 -j ACCEPT
+      iptables:
+        comment: -A OUTPUT -o wlp2s0 -d 192.30.255.120 -p tcp --dport 443 -j ACCEPT
+        chain: OUTPUT
+        out_interface: wlp2s0
+        destination: 192.30.255.120
+        protocol: tcp
+        destination_port: 443
+        jump: ACCEPT
+    - name: -A OUTPUT -o wlp2s0 -d 151.101.196.204 -p tcp --dport 443 -j ACCEPT
+      iptables:
+        comment: -A OUTPUT -o wlp2s0 -d 151.101.196.204 -p tcp --dport 443 -j ACCEPT
+        chain: OUTPUT
+        out_interface: wlp2s0
+        destination: 151.101.196.204
+        protocol: tcp
+        destination_port: 80
+        jump: ACCEPT
+    - name: -A OUTPUT -o wlp2s0 -d 151.101.72.204 -p tcp --dport 443 -j ACCEPT
+      iptables:
+        comment: -A OUTPUT -o wlp2s0 -d 151.101.72.204 -p tcp --dport 443 -j ACCEPT
+        chain: OUTPUT
+        out_interface: wlp2s0
+        destination: 151.101.72.204
+        protocol: tcp
+        destination_port: 80
+        jump: ACCEPT
+    - name: -A OUTPUT -o wlp2s0 -d 151.101.228.204 -p tcp --dport 443 -j ACCEPT
+      iptables:
+        comment: -A OUTPUT -o wlp2s0 -d 151.101.228.204 -p tcp --dport 443 -j ACCEPT
+        chain: OUTPUT
+        out_interface: wlp2s0
+        destination: 151.101.228.204
+        protocol: tcp
+        destination_port: 80
+        jump: ACCEPT
+    - name: -A OUTPUT -o wlp2s0 -d 91.189.95.83 -p tcp --dport 443 -j ACCEPT
+      iptables:
+        comment: -A OUTPUT -o wlp2s0 -d 91.189.95.83 -p tcp --dport 443 -j ACCEPT
+        chain: OUTPUT
+        out_interface: wlp2s0
+        destination: 91.189.95.83
+        protocol: tcp
+        destination_port: 80
+        jump: ACCEPT
+    - name: -A OUTPUT -o wlp2s0 -d 91.189.90.55 -p tcp --dport 443 -j ACCEPT
+      iptables:
+        comment: -A OUTPUT -o wlp2s0 -d 91.189.90.55 -p tcp --dport 443 -j ACCEPT
+        chain: OUTPUT
+        out_interface: wlp2s0
+        destination: 91.189.90.55
+        protocol: tcp
+        destination_port: 80
+        jump: ACCEPT
+    - name: -A OUTPUT -o wlp2s0 -d 91.189.89.49 -p tcp --dport 443 -j ACCEPT
+      iptables:
+        comment: -A OUTPUT -o wlp2s0 -d 91.189.89.49 -p tcp --dport 443 -j ACCEPT
+        chain: OUTPUT
+        out_interface: wlp2s0
+        destination: 91.189.89.49
+        protocol: tcp
+        destination_port: 80
+        jump: ACCEPT
+    - name: -A OUTPUT -o wlp2s0 -d 209.132.180.168 -p tcp --dport 443 -j ACCEPT
+      iptables:
+        comment: -A OUTPUT -o wlp2s0 -d 209.132.180.168 -p tcp --dport 443 -j ACCEPT
+        chain: OUTPUT
+        out_interface: wlp2s0
+        destination: 209.132.180.168
+        protocol: tcp
+        destination_port: 443
+        jump: ACCEPT
+    - name: -A OUTPUT -o wlp2s0 -d 209.132.180.180 -p tcp --dport 443 -j ACCEPT
+      iptables:
+        comment: -A OUTPUT -o wlp2s0 -d 209.132.180.180 -p tcp --dport 443 -j ACCEPT
+        chain: OUTPUT
+        out_interface: wlp2s0
+        destination: 209.132.180.180
+        protocol: tcp
+        destination_port: 443
+        jump: ACCEPT
+    - name: -A OUTPUT -o wlp2s0 -d 151.101.192.223 -p tcp --dport 443 -j ACCEPT
+      iptables:
+        comment: -A OUTPUT -o wlp2s0 -d 151.101.192.223 -p tcp --dport 443 -j ACCEPT
+        chain: OUTPUT
+        out_interface: wlp2s0
+        destination: 151.101.192.223
+        protocol: tcp
+        destination_port: 443
+        jump: ACCEPT
+    - name: -A OUTPUT -o wlp2s0 -d 151.101.128.223 -p tcp --dport 443 -j ACCEPT
+      iptables:
+        comment: -A OUTPUT -o wlp2s0 -d 151.101.128.223 -p tcp --dport 443 -j ACCEPT
+        chain: OUTPUT
+        out_interface: wlp2s0
+        destination: 151.101.128.223
+        protocol: tcp
+        destination_port: 443
+        jump: ACCEPT
+    - name: -A OUTPUT -o wlp2s0 -d 151.101.64.223 -p tcp --dport 443 -j ACCEPT
+      iptables:
+        comment: -A OUTPUT -o wlp2s0 -d 151.101.64.223 -p tcp --dport 443 -j ACCEPT
+        chain: OUTPUT
+        out_interface: wlp2s0
+        destination: 151.101.64.223
+        protocol: tcp
+        destination_port: 443
+        jump: ACCEPT
+    - name: -A OUTPUT -o wlp2s0 -d 151.101.0.223 -p tcp --dport 443 -j ACCEPT
+      iptables:
+        comment: -A OUTPUT -o wlp2s0 -d 151.101.0.223 -p tcp --dport 443 -j ACCEPT
+        chain: OUTPUT
+        out_interface: wlp2s0
+        destination: 151.101.0.223
+        protocol: tcp
+        destination_port: 443
+        jump: ACCEPT
+    - name: -A OUTPUT -o wlp2s0 -d 151.101.228.175 -p tcp --dport 443 -j ACCEPT
+      iptables:
+        comment: -A OUTPUT -o wlp2s0 -d 151.101.228.175 -p tcp --dport 443 -j ACCEPT
+        chain: OUTPUT
+        out_interface: wlp2s0
+        destination: 151.101.228.175
+        protocol: tcp
+        destination_port: 443
+        jump: ACCEPT
+    - name: -A OUTPUT -o wlp2s0 -d 151.101.228.223 -p tcp --dport 443 -j ACCEPT
+      iptables:
+        comment: -A OUTPUT -o wlp2s0 -d 151.101.228.223 -p tcp --dport 443 -j ACCEPT
+        chain: OUTPUT
+        out_interface: wlp2s0
+        destination: 151.101.228.223
+        protocol: tcp
+        destination_port: 443
+        jump: ACCEPT
+    - name: -A OUTPUT -o wlp2s0 -d 151.101.229.63 -p tcp --dport 443 -j ACCEPT
+      iptables:
+        comment: -A OUTPUT -o wlp2s0 -d 151.101.229.63 -p tcp --dport 443 -j ACCEPT
+        chain: OUTPUT
+        out_interface: wlp2s0
+        destination: 151.101.229.63
+        protocol: tcp
+        destination_port: 443
+        jump: ACCEPT
+    - name: -A INPUT -m limit --limit 5/min -j LOG --log-prefix "iptables denied " --log-level 7
+      iptables:
+        comment: -A INPUT -m limit --limit 5/min -j LOG --log-prefix "iptables denied " --log-level 7
+        chain: INPUT
+        limit: 5/min
+        jump: LOG
+        log_prefix: "iptables denied: "
+    - name: -A OUTPUT -m limit --limit 5/min -j LOG --log-prefix "iptables denied " --log-level 7
+      iptables:
+        comment: -A OUTPUT -m limit --limit 5/min -j LOG --log-prefix "iptables denied " --log-level 7
+        chain: OUTPUT
+        limit: 5/min
+        jump: LOG
+        log_prefix: "iptables denied: "
+    - name: -A OUTPUT -j REJECT
+      iptables:
+        comment: -A OUTPUT -j REJECT
+        chain: OUTPUT
+        jump: REJECT
+    - name: -A INPUT -j REJECT
+      iptables:
+        comment: -A INPUT -j REJECT
+        chain: INPUT
+        jump: REJECT
+    - name: -A FORWARD -j REJECT
+      iptables:
+        comment: -A FORWARD -j REJECT
+        chain: FORWARD
+        jump: REJECT
+    - name: :OUTPUT DROP [0:0]
+      iptables:
+        comment: :OUTPUT DROP [0:0]
+        chain: OUTPUT
+        policy: DROP
+        ip_version: ipv6
+    - name: :INPUT DROP [0:0]
+      iptables:
+        comment: :INPUT DROP [0:0]
+        chain: INPUT
+        policy: DROP
+        ip_version: ipv6
+    - name: :FORWARD DROP [0:0]
+      iptables:
+        comment: :FORWARD DROP [0:0]
+        chain: FORWARD
+        policy: DROP
+        ip_version: ipv6
+
+    - pip:
+        name: "{{ item }}"
+        executable: pip-3.5
+      with_items:
+          - docker-compose
+          - docker
+          - watchdog
+          - pylint
+          - systemd
+      ignore_errors: "{{ ansible_check_mode }}"
+    - name: copy /opt/clamav/notify_viruscheck_watchdog.py
+      copy: src=./files/opt/clamav/notify_viruscheck_watchdog.py dest=/opt/clamav/notify_viruscheck_watchdog.py owner=root group=root mode=0755
+    - name: copy /opt/docker-image
+      copy: src=./files/opt/docker-image/ dest=/opt/docker-image/ owner=root group=root
+      when: not ansible_check_mode
+    - name: copy /etc/systemd/system/clamav-update-docker.service
+      copy: src=./files/systemd/system/clamav-update-docker.service dest=/etc/systemd/system/clamav-update-docker.service owner=root group=root mode=0644
+    - name: copy /etc/systemd/system/clamav-watchdog.service
+      copy: src=./files/systemd/system/clamav-watchdog.service dest=/etc/systemd/system/clamav-watchdog.service owner=root group=root mode=0644
+    - name: copy /etc/systemd/system/vscode-extension-update-docker.service
+      copy: src=./files/systemd/system/vscode-extension-update-docker.service dest=/etc/systemd/system/vscode-extension-update-docker.service owner=root group=root mode=0644
+    - name: copy /etc/systemd/system/vscode-update-docker.service
+      copy: src=./files/systemd/system/vscode-update-docker.service dest=/etc/systemd/system/vscode-update-docker.service owner=root group=root mode=0644
+    - name: copy /etc/skel/.local/share/applications/Firefox_with_Docker.desktop
+      copy: src=./files/Firefox_with_Docker.desktop dest=/etc/skel/.local/share/applications/Firefox_with_Docker.desktop owner=root group=root mode=0644
+    - name: copy /etc/cron.monthly/docker_image_update.py
+      copy: src=./files/cron.monthly/docker_image_update.py dest=/etc/cron.monthly/docker_image_update.py owner=root group=root mode=0755
+    - name: copy /etc/cron.monthly/notify_viruscheck_cron.py
+      copy: src=./files/cron.monthly/notify_viruscheck_cron.py dest=/etc/cron.monthly/notify_viruscheck_cron.py owner=root group=root mode=0755
+    - name: copy /etc/skel/.config/dconf/user
+      copy: src=./files/dconf/user dest=/etc/skel/.config/dconf/user owner=root group=root mode=0644
+    - name: copy /etc/apt/apt.conf.d/20auto-upgrades
+      copy: src=./files/apt/apt.conf.d/20auto-upgrades dest=/etc/apt/apt.conf.d/20auto-upgrades owner=root group=root mode=0644
+    - name: LocalSocketGroup root
+      lineinfile: 
+        path: /etc/clamav/clamd.conf
+        regexp: '^LocalSocketGroup'
+        line: 'LocalSocketGroup root'
+    - name: User root
+      lineinfile: 
+        path: /etc/clamav/clamd.conf
+        regexp: '^User'
+        line: 'User root'
+    - name: MaxDirectoryRecursion 20
+      lineinfile: 
+        path: /etc/clamav/clamd.conf
+        regexp: '^MaxDirectoryRecursion'
+        line: 'MaxDirectoryRecursion 20'
+    - name: ScanOnAccess true
+      lineinfile: 
+        path: /etc/clamav/clamd.conf
+        regexp: '^ScanOnAccess'
+        line: 'ScanOnAccess true'
+    - name: MaxScanSize 0M
+      lineinfile: 
+        path: /etc/clamav/clamd.conf
+        regexp: '^MaxScanSize'
+        line: 'MaxScanSize 0M'
+    - name: MaxFileSize 0M
+      lineinfile: 
+        path: /etc/clamav/clamd.conf
+        regexp: '^MaxFileSize'
+        line: 'MaxFileSize 0M'
+    - name: MaxFiles 100000
+      lineinfile: 
+        path: /etc/clamav/clamd.conf
+        regexp: '^MaxFiles'
+        line: 'MaxFiles 100000'
+    - name: OnAccessMountPath /
+      lineinfile: 
+        path: /etc/clamav/clamd.conf
+        regexp: '^OnAccessMountPath'
+        line: 'OnAccessMountPath /'
+    - name: Unattended-Upgrade::Remove-Unused-Dependencies "true";
+      lineinfile: 
+        path: /etc/apt/apt.conf.d/50unattended-upgrades
+        regexp: '^(//)?Unattended-Upgrade::Remove-Unused-Dependencies'
+        line: 'Unattended-Upgrade::Remove-Unused-Dependencies "true";'
+    - name: pool 0.debian.pool.ntp.org iburst
+      lineinfile: 
+        path: /etc/ntp.conf
+        regexp: '^pool 0.debian.pool.ntp.org iburst'
+        line: '#pool 0.debian.pool.ntp.org iburst'
+    - name: pool 1.debian.pool.ntp.org iburst
+      lineinfile: 
+        path: /etc/ntp.conf
+        regexp: '^pool 1.debian.pool.ntp.org iburst'
+        line: '#pool 1.debian.pool.ntp.org iburst'
+    - name: pool 2.debian.pool.ntp.org iburst
+      lineinfile: 
+        path: /etc/ntp.conf
+        regexp: '^pool 2.debian.pool.ntp.org iburst'
+        line: '#pool 2.debian.pool.ntp.org iburst'
+    - name: pool 3.debian.pool.ntp.org iburst
+      lineinfile: 
+        path: /etc/ntp.conf
+        regexp: '^pool 3.debian.pool.ntp.org iburst'
+        line: '#pool 3.debian.pool.ntp.org iburst'
+    - name: pool ntp.nict.jp iburst
+      lineinfile: 
+        path: /etc/ntp.conf
+        line: 'pool ntp.nict.jp iburst'
+    - name: build "firefox-image"
+      docker_image:
+        path: /opt/docker-image/firefox-package/firefox/
+        name: firefox-image
+        tag: ansible-build
+      ignore_errors: "{{ ansible_check_mode }}"
+    - name: tag "firefox-image"
+      docker_image:
+        name: firefox-image:ansible-build
+        tag: latest
+      ignore_errors: "{{ ansible_check_mode }}"
+    - name: build "freshclam"
+      docker_image:
+        path: /opt/docker-image/clamav-package/clamav/
+        name: freshclam
+        tag: ansible-build
+      ignore_errors: "{{ ansible_check_mode }}"
+    - name: tag "freshclam"
+      docker_image:
+        name: freshclam:ansible-build
+        tag: latest
+      ignore_errors: "{{ ansible_check_mode }}"
+    - name: build "vscode-image"
+      docker_image:
+        path: /opt/docker-image/vscode-package/vscode/
+        name: vscode-image
+        tag: ansible-build
+      ignore_errors: "{{ ansible_check_mode }}"
+    - name: tag "vscode-image"
+      docker_image:
+        name: vscode-image:ansible-build
+        tag: latest
+      ignore_errors: "{{ ansible_check_mode }}"
+    - name: build "vscode-extension-image"
+      docker_image:
+        path: /opt/docker-image/vscode-extension-package/vscode-extension/
+        name: vscode-extension-image
+        tag: ansible-build
+      ignore_errors: "{{ ansible_check_mode }}"
+    - name: tag "vscode-extension-image"
+      docker_image:
+        name: vscode-extension-image:ansible-build
+        tag: latest
+      ignore_errors: "{{ ansible_check_mode }}"
+    - name: Unarchive dash-to-dock
+      unarchive:
+        src: https://extensions.gnome.org/extension-data/dash-to-dockmicxgx.gmail.com.v65.shell-extension.zip
+        dest: "{{ansible_env.HOME}}/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com"
+        remote_src: yes
+      ignore_errors: "{{ ansible_check_mode }}"
+    - name: Unarchive activities-configurator
+      unarchive:
+        src: https://extensions.gnome.org/extension-data/activities-config%40nls1729.v58.shell-extension.zip
+        dest: "{{ansible_env.HOME}}/.local/share/gnome-shell/extensions/activities-config@nls1729/"
+        remote_src: yes
+      ignore_errors: "{{ ansible_check_mode }}"
+    - name: Unarchive Frippery-Move-Clock
+      unarchive:
+        src: https://extensions.gnome.org/extension-data/Move_Clock%40rmy.pobox.com.v12.shell-extension.zip
+        dest: "{{ansible_env.HOME}}/.local/share/gnome-shell/extensions/Move_Clock@rmy.pobox.com/"
+        remote_src: yes
+      ignore_errors: "{{ ansible_check_mode }}"
+    - name: Unarchive panel-date-format
+      unarchive:
+        src: https://extensions.gnome.org/extension-data/panel-date-format%40keiii.github.com.v1.shell-extension.zip
+        dest: "{{ansible_env.HOME}}/.local/share/gnome-shell/extensions/panel-date-format@keiii.github.com/"
+        remote_src: yes
+      ignore_errors: "{{ ansible_check_mode }}"
+    - name: gnome-shell-extension-tool -e dash-to-dock@micxgx.gmail.com
+      shell: gnome-shell-extension-tool -e dash-to-dock@micxgx.gmail.com
+    - name: gnome-shell-extension-tool -e activities-config@nls1729
+      shell: gnome-shell-extension-tool -e activities-config@nls1729
+    - name: gnome-shell-extension-tool -e Move_Clock@rmy.pobox.com
+      shell: gnome-shell-extension-tool -e Move_Clock@rmy.pobox.com
+    - name: gnome-shell-extension-tool -e panel-date-format@keiii.github.com
+      shell: gnome-shell-extension-tool -e panel-date-format@keiii.github.com

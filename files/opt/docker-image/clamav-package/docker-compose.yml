@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  freshclam:
+#    build: ./clamav
+    image: "freshclam"
+    container_name: freshclam1
+    volumes:
+      - /opt/docker-image/clamav-package/clamav/patternfile/:/var/lib/clamav
+    cap_drop:
+      - ALL

@@ -1,0 +1,15 @@
+[Unit]
+Description=VSCode Update with Docker
+After=docker.service
+
+[Service]
+ExecStartPre=/usr/local/bin/docker-compose -f /opt/docker-image/vscode-package/docker-compose.yml run --rm vscode
+ExecStart=/usr/bin/apt-get install -y /opt/docker-image/vscode-package/vscode/package/code*
+#Restart=always
+#Restart=no
+Type=simple
+#Type=notify
+#WatchdogSec=1
+
+[Install]
+WantedBy=multi-user.target
