@@ -116,6 +116,186 @@
         - gconf2-common
         - python3-pip
       ignore_errors: "{{ ansible_check_mode }}"
+
+    - pip:
+        name: "{{ item }}"
+        executable: pip-3.5
+      with_items:
+          - docker-compose
+          - docker
+          - watchdog
+          - pylint
+          - systemd
+      ignore_errors: "{{ ansible_check_mode }}"
+    - name: copy /opt/clamav/notify_viruscheck_watchdog.py
+      copy: src=./files/opt/clamav/notify_viruscheck_watchdog.py dest=/opt/clamav/notify_viruscheck_watchdog.py owner=root group=root mode=0755
+    - name: copy /opt/docker-image
+      copy: src=./files/opt/docker-image/ dest=/opt/docker-image/ owner=root group=root
+      when: not ansible_check_mode
+    - name: copy /etc/systemd/system/clamav-update-docker.service
+      copy: src=./files/systemd/system/clamav-update-docker.service dest=/etc/systemd/system/clamav-update-docker.service owner=root group=root mode=0644
+    - name: copy /etc/systemd/system/clamav-watchdog.service
+      copy: src=./files/systemd/system/clamav-watchdog.service dest=/etc/systemd/system/clamav-watchdog.service owner=root group=root mode=0644
+    - name: copy /etc/systemd/system/vscode-extension-update-docker.service
+      copy: src=./files/systemd/system/vscode-extension-update-docker.service dest=/etc/systemd/system/vscode-extension-update-docker.service owner=root group=root mode=0644
+    - name: copy /etc/systemd/system/vscode-update-docker.service
+      copy: src=./files/systemd/system/vscode-update-docker.service dest=/etc/systemd/system/vscode-update-docker.service owner=root group=root mode=0644
+    - name: copy /etc/skel/.local/share/applications/Firefox_with_Docker.desktop
+      copy: src=./files/Firefox_with_Docker.desktop dest=/etc/skel/.local/share/applications/Firefox_with_Docker.desktop owner=root group=root mode=0644
+    - name: copy /etc/cron.monthly/docker_image_update.py
+      copy: src=./files/cron.monthly/docker_image_update.py dest=/etc/cron.monthly/docker_image_update.py owner=root group=root mode=0755
+    - name: copy /etc/cron.monthly/notify_viruscheck_cron.py
+      copy: src=./files/cron.monthly/notify_viruscheck_cron.py dest=/etc/cron.monthly/notify_viruscheck_cron.py owner=root group=root mode=0755
+    - name: copy /etc/skel/.config/dconf/user
+      copy: src=./files/dconf/user dest=/etc/skel/.config/dconf/user owner=root group=root mode=0644
+    - name: copy /etc/apt/apt.conf.d/20auto-upgrades
+      copy: src=./files/apt/apt.conf.d/20auto-upgrades dest=/etc/apt/apt.conf.d/20auto-upgrades owner=root group=root mode=0644
+    - name: LocalSocketGroup root
+      lineinfile: 
+        path: /etc/clamav/clamd.conf
+        regexp: '^LocalSocketGroup'
+        line: 'LocalSocketGroup root'
+    - name: User root
+      lineinfile: 
+        path: /etc/clamav/clamd.conf
+        regexp: '^User'
+        line: 'User root'
+    - name: MaxDirectoryRecursion 20
+      lineinfile: 
+        path: /etc/clamav/clamd.conf
+        regexp: '^MaxDirectoryRecursion'
+        line: 'MaxDirectoryRecursion 20'
+    - name: ScanOnAccess true
+      lineinfile: 
+        path: /etc/clamav/clamd.conf
+        regexp: '^ScanOnAccess'
+        line: 'ScanOnAccess true'
+    - name: MaxScanSize 0M
+      lineinfile: 
+        path: /etc/clamav/clamd.conf
+        regexp: '^MaxScanSize'
+        line: 'MaxScanSize 0M'
+    - name: MaxFileSize 0M
+      lineinfile: 
+        path: /etc/clamav/clamd.conf
+        regexp: '^MaxFileSize'
+        line: 'MaxFileSize 0M'
+    - name: MaxFiles 100000
+      lineinfile: 
+        path: /etc/clamav/clamd.conf
+        regexp: '^MaxFiles'
+        line: 'MaxFiles 100000'
+    - name: OnAccessMountPath /
+      lineinfile: 
+        path: /etc/clamav/clamd.conf
+        regexp: '^OnAccessMountPath'
+        line: 'OnAccessMountPath /'
+    - name: Unattended-Upgrade::Remove-Unused-Dependencies "true";
+      lineinfile: 
+        path: /etc/apt/apt.conf.d/50unattended-upgrades
+        regexp: '^(//)?Unattended-Upgrade::Remove-Unused-Dependencies'
+        line: 'Unattended-Upgrade::Remove-Unused-Dependencies "true";'
+    - name: pool 0.debian.pool.ntp.org iburst
+      lineinfile: 
+        path: /etc/ntp.conf
+        regexp: '^pool 0.debian.pool.ntp.org iburst'
+        line: '#pool 0.debian.pool.ntp.org iburst'
+    - name: pool 1.debian.pool.ntp.org iburst
+      lineinfile: 
+        path: /etc/ntp.conf
+        regexp: '^pool 1.debian.pool.ntp.org iburst'
+        line: '#pool 1.debian.pool.ntp.org iburst'
+    - name: pool 2.debian.pool.ntp.org iburst
+      lineinfile: 
+        path: /etc/ntp.conf
+        regexp: '^pool 2.debian.pool.ntp.org iburst'
+        line: '#pool 2.debian.pool.ntp.org iburst'
+    - name: pool 3.debian.pool.ntp.org iburst
+      lineinfile: 
+        path: /etc/ntp.conf
+        regexp: '^pool 3.debian.pool.ntp.org iburst'
+        line: '#pool 3.debian.pool.ntp.org iburst'
+    - name: pool ntp.nict.jp iburst
+      lineinfile: 
+        path: /etc/ntp.conf
+        line: 'pool ntp.nict.jp iburst'
+    - name: build "firefox-image"
+      docker_image:
+        path: /opt/docker-image/firefox-package/firefox/
+        name: firefox-image
+        tag: ansible-build
+      ignore_errors: "{{ ansible_check_mode }}"
+    - name: tag "firefox-image"
+      docker_image:
+        name: firefox-image:ansible-build
+        tag: latest
+      ignore_errors: "{{ ansible_check_mode }}"
+    - name: build "freshclam"
+      docker_image:
+        path: /opt/docker-image/clamav-package/clamav/
+        name: freshclam
+        tag: ansible-build
+      ignore_errors: "{{ ansible_check_mode }}"
+    - name: tag "freshclam"
+      docker_image:
+        name: freshclam:ansible-build
+        tag: latest
+      ignore_errors: "{{ ansible_check_mode }}"
+    - name: build "vscode-image"
+      docker_image:
+        path: /opt/docker-image/vscode-package/vscode/
+        name: vscode-image
+        tag: ansible-build
+      ignore_errors: "{{ ansible_check_mode }}"
+    - name: tag "vscode-image"
+      docker_image:
+        name: vscode-image:ansible-build
+        tag: latest
+      ignore_errors: "{{ ansible_check_mode }}"
+    - name: build "vscode-extension-image"
+      docker_image:
+        path: /opt/docker-image/vscode-extension-package/vscode-extension/
+        name: vscode-extension-image
+        tag: ansible-build
+      ignore_errors: "{{ ansible_check_mode }}"
+    - name: tag "vscode-extension-image"
+      docker_image:
+        name: vscode-extension-image:ansible-build
+        tag: latest
+      ignore_errors: "{{ ansible_check_mode }}"
+    - name: Unarchive dash-to-dock
+      unarchive:
+        src: https://extensions.gnome.org/extension-data/dash-to-dockmicxgx.gmail.com.v65.shell-extension.zip
+        dest: "{{ansible_env.HOME}}/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com"
+        remote_src: yes
+      ignore_errors: "{{ ansible_check_mode }}"
+    - name: Unarchive activities-configurator
+      unarchive:
+        src: https://extensions.gnome.org/extension-data/activities-config%40nls1729.v58.shell-extension.zip
+        dest: "{{ansible_env.HOME}}/.local/share/gnome-shell/extensions/activities-config@nls1729/"
+        remote_src: yes
+      ignore_errors: "{{ ansible_check_mode }}"
+    - name: Unarchive Frippery-Move-Clock
+      unarchive:
+        src: https://extensions.gnome.org/extension-data/Move_Clock%40rmy.pobox.com.v12.shell-extension.zip
+        dest: "{{ansible_env.HOME}}/.local/share/gnome-shell/extensions/Move_Clock@rmy.pobox.com/"
+        remote_src: yes
+      ignore_errors: "{{ ansible_check_mode }}"
+    - name: Unarchive panel-date-format
+      unarchive:
+        src: https://extensions.gnome.org/extension-data/panel-date-format%40keiii.github.com.v1.shell-extension.zip
+        dest: "{{ansible_env.HOME}}/.local/share/gnome-shell/extensions/panel-date-format@keiii.github.com/"
+        remote_src: yes
+      ignore_errors: "{{ ansible_check_mode }}"
+    - name: gnome-shell-extension-tool -e dash-to-dock@micxgx.gmail.com
+      shell: gnome-shell-extension-tool -e dash-to-dock@micxgx.gmail.com
+    - name: gnome-shell-extension-tool -e activities-config@nls1729
+      shell: gnome-shell-extension-tool -e activities-config@nls1729
+    - name: gnome-shell-extension-tool -e Move_Clock@rmy.pobox.com
+      shell: gnome-shell-extension-tool -e Move_Clock@rmy.pobox.com
+    - name: gnome-shell-extension-tool -e panel-date-format@keiii.github.com
+      shell: gnome-shell-extension-tool -e panel-date-format@keiii.github.com
+
     - name: iptables flush
       iptables:
         flush: true
@@ -892,182 +1072,3 @@
         chain: FORWARD
         policy: DROP
         ip_version: ipv6
-
-    - pip:
-        name: "{{ item }}"
-        executable: pip-3.5
-      with_items:
-          - docker-compose
-          - docker
-          - watchdog
-          - pylint
-          - systemd
-      ignore_errors: "{{ ansible_check_mode }}"
-    - name: copy /opt/clamav/notify_viruscheck_watchdog.py
-      copy: src=./files/opt/clamav/notify_viruscheck_watchdog.py dest=/opt/clamav/notify_viruscheck_watchdog.py owner=root group=root mode=0755
-    - name: copy /opt/docker-image
-      copy: src=./files/opt/docker-image/ dest=/opt/docker-image/ owner=root group=root
-      when: not ansible_check_mode
-    - name: copy /etc/systemd/system/clamav-update-docker.service
-      copy: src=./files/systemd/system/clamav-update-docker.service dest=/etc/systemd/system/clamav-update-docker.service owner=root group=root mode=0644
-    - name: copy /etc/systemd/system/clamav-watchdog.service
-      copy: src=./files/systemd/system/clamav-watchdog.service dest=/etc/systemd/system/clamav-watchdog.service owner=root group=root mode=0644
-    - name: copy /etc/systemd/system/vscode-extension-update-docker.service
-      copy: src=./files/systemd/system/vscode-extension-update-docker.service dest=/etc/systemd/system/vscode-extension-update-docker.service owner=root group=root mode=0644
-    - name: copy /etc/systemd/system/vscode-update-docker.service
-      copy: src=./files/systemd/system/vscode-update-docker.service dest=/etc/systemd/system/vscode-update-docker.service owner=root group=root mode=0644
-    - name: copy /etc/skel/.local/share/applications/Firefox_with_Docker.desktop
-      copy: src=./files/Firefox_with_Docker.desktop dest=/etc/skel/.local/share/applications/Firefox_with_Docker.desktop owner=root group=root mode=0644
-    - name: copy /etc/cron.monthly/docker_image_update.py
-      copy: src=./files/cron.monthly/docker_image_update.py dest=/etc/cron.monthly/docker_image_update.py owner=root group=root mode=0755
-    - name: copy /etc/cron.monthly/notify_viruscheck_cron.py
-      copy: src=./files/cron.monthly/notify_viruscheck_cron.py dest=/etc/cron.monthly/notify_viruscheck_cron.py owner=root group=root mode=0755
-    - name: copy /etc/skel/.config/dconf/user
-      copy: src=./files/dconf/user dest=/etc/skel/.config/dconf/user owner=root group=root mode=0644
-    - name: copy /etc/apt/apt.conf.d/20auto-upgrades
-      copy: src=./files/apt/apt.conf.d/20auto-upgrades dest=/etc/apt/apt.conf.d/20auto-upgrades owner=root group=root mode=0644
-    - name: LocalSocketGroup root
-      lineinfile: 
-        path: /etc/clamav/clamd.conf
-        regexp: '^LocalSocketGroup'
-        line: 'LocalSocketGroup root'
-    - name: User root
-      lineinfile: 
-        path: /etc/clamav/clamd.conf
-        regexp: '^User'
-        line: 'User root'
-    - name: MaxDirectoryRecursion 20
-      lineinfile: 
-        path: /etc/clamav/clamd.conf
-        regexp: '^MaxDirectoryRecursion'
-        line: 'MaxDirectoryRecursion 20'
-    - name: ScanOnAccess true
-      lineinfile: 
-        path: /etc/clamav/clamd.conf
-        regexp: '^ScanOnAccess'
-        line: 'ScanOnAccess true'
-    - name: MaxScanSize 0M
-      lineinfile: 
-        path: /etc/clamav/clamd.conf
-        regexp: '^MaxScanSize'
-        line: 'MaxScanSize 0M'
-    - name: MaxFileSize 0M
-      lineinfile: 
-        path: /etc/clamav/clamd.conf
-        regexp: '^MaxFileSize'
-        line: 'MaxFileSize 0M'
-    - name: MaxFiles 100000
-      lineinfile: 
-        path: /etc/clamav/clamd.conf
-        regexp: '^MaxFiles'
-        line: 'MaxFiles 100000'
-    - name: OnAccessMountPath /
-      lineinfile: 
-        path: /etc/clamav/clamd.conf
-        regexp: '^OnAccessMountPath'
-        line: 'OnAccessMountPath /'
-    - name: Unattended-Upgrade::Remove-Unused-Dependencies "true";
-      lineinfile: 
-        path: /etc/apt/apt.conf.d/50unattended-upgrades
-        regexp: '^(//)?Unattended-Upgrade::Remove-Unused-Dependencies'
-        line: 'Unattended-Upgrade::Remove-Unused-Dependencies "true";'
-    - name: pool 0.debian.pool.ntp.org iburst
-      lineinfile: 
-        path: /etc/ntp.conf
-        regexp: '^pool 0.debian.pool.ntp.org iburst'
-        line: '#pool 0.debian.pool.ntp.org iburst'
-    - name: pool 1.debian.pool.ntp.org iburst
-      lineinfile: 
-        path: /etc/ntp.conf
-        regexp: '^pool 1.debian.pool.ntp.org iburst'
-        line: '#pool 1.debian.pool.ntp.org iburst'
-    - name: pool 2.debian.pool.ntp.org iburst
-      lineinfile: 
-        path: /etc/ntp.conf
-        regexp: '^pool 2.debian.pool.ntp.org iburst'
-        line: '#pool 2.debian.pool.ntp.org iburst'
-    - name: pool 3.debian.pool.ntp.org iburst
-      lineinfile: 
-        path: /etc/ntp.conf
-        regexp: '^pool 3.debian.pool.ntp.org iburst'
-        line: '#pool 3.debian.pool.ntp.org iburst'
-    - name: pool ntp.nict.jp iburst
-      lineinfile: 
-        path: /etc/ntp.conf
-        line: 'pool ntp.nict.jp iburst'
-    - name: build "firefox-image"
-      docker_image:
-        path: /opt/docker-image/firefox-package/firefox/
-        name: firefox-image
-        tag: ansible-build
-      ignore_errors: "{{ ansible_check_mode }}"
-    - name: tag "firefox-image"
-      docker_image:
-        name: firefox-image:ansible-build
-        tag: latest
-      ignore_errors: "{{ ansible_check_mode }}"
-    - name: build "freshclam"
-      docker_image:
-        path: /opt/docker-image/clamav-package/clamav/
-        name: freshclam
-        tag: ansible-build
-      ignore_errors: "{{ ansible_check_mode }}"
-    - name: tag "freshclam"
-      docker_image:
-        name: freshclam:ansible-build
-        tag: latest
-      ignore_errors: "{{ ansible_check_mode }}"
-    - name: build "vscode-image"
-      docker_image:
-        path: /opt/docker-image/vscode-package/vscode/
-        name: vscode-image
-        tag: ansible-build
-      ignore_errors: "{{ ansible_check_mode }}"
-    - name: tag "vscode-image"
-      docker_image:
-        name: vscode-image:ansible-build
-        tag: latest
-      ignore_errors: "{{ ansible_check_mode }}"
-    - name: build "vscode-extension-image"
-      docker_image:
-        path: /opt/docker-image/vscode-extension-package/vscode-extension/
-        name: vscode-extension-image
-        tag: ansible-build
-      ignore_errors: "{{ ansible_check_mode }}"
-    - name: tag "vscode-extension-image"
-      docker_image:
-        name: vscode-extension-image:ansible-build
-        tag: latest
-      ignore_errors: "{{ ansible_check_mode }}"
-    - name: Unarchive dash-to-dock
-      unarchive:
-        src: https://extensions.gnome.org/extension-data/dash-to-dockmicxgx.gmail.com.v65.shell-extension.zip
-        dest: "{{ansible_env.HOME}}/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com"
-        remote_src: yes
-      ignore_errors: "{{ ansible_check_mode }}"
-    - name: Unarchive activities-configurator
-      unarchive:
-        src: https://extensions.gnome.org/extension-data/activities-config%40nls1729.v58.shell-extension.zip
-        dest: "{{ansible_env.HOME}}/.local/share/gnome-shell/extensions/activities-config@nls1729/"
-        remote_src: yes
-      ignore_errors: "{{ ansible_check_mode }}"
-    - name: Unarchive Frippery-Move-Clock
-      unarchive:
-        src: https://extensions.gnome.org/extension-data/Move_Clock%40rmy.pobox.com.v12.shell-extension.zip
-        dest: "{{ansible_env.HOME}}/.local/share/gnome-shell/extensions/Move_Clock@rmy.pobox.com/"
-        remote_src: yes
-      ignore_errors: "{{ ansible_check_mode }}"
-    - name: Unarchive panel-date-format
-      unarchive:
-        src: https://extensions.gnome.org/extension-data/panel-date-format%40keiii.github.com.v1.shell-extension.zip
-        dest: "{{ansible_env.HOME}}/.local/share/gnome-shell/extensions/panel-date-format@keiii.github.com/"
-        remote_src: yes
-      ignore_errors: "{{ ansible_check_mode }}"
-    - name: gnome-shell-extension-tool -e dash-to-dock@micxgx.gmail.com
-      shell: gnome-shell-extension-tool -e dash-to-dock@micxgx.gmail.com
-    - name: gnome-shell-extension-tool -e activities-config@nls1729
-      shell: gnome-shell-extension-tool -e activities-config@nls1729
-    - name: gnome-shell-extension-tool -e Move_Clock@rmy.pobox.com
-      shell: gnome-shell-extension-tool -e Move_Clock@rmy.pobox.com
-    - name: gnome-shell-extension-tool -e panel-date-format@keiii.github.com
-      shell: gnome-shell-extension-tool -e panel-date-format@keiii.github.com
