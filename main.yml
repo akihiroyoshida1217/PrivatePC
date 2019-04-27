@@ -1,8 +1,5 @@
 - hosts: all
   tasks:
-    - pip:
-        name: python-apt
-        executable: pip3
     - name: pre-install packages
       apt: name={{ item }} update_cache=yes cache_valid_time=3600
       with_items:
@@ -105,7 +102,6 @@
         - software-properties-common
         - ibus-mozc
         - clamav-daemon
-        - firefox-gnome-shell
         - gnome-tweak-tool
         - libgtk-3-common/testing
         - adapta-gtk-theme
