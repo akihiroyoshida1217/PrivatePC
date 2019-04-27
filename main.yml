@@ -116,6 +116,13 @@
         - gconf2-common
         - python3-pip
       ignore_errors: "{{ ansible_check_mode }}"
+    - name: install packages
+      apt: 
+        name: libgtk-3-common
+        update_cache: yes 
+        cache_valid_time: 3600
+        default_release: testing
+      ignore_errors: "{{ ansible_check_mode }}"
 
     - pip:
         name: "{{ item }}"
