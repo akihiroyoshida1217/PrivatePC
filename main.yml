@@ -2,7 +2,7 @@
   tasks:
     - pip:
         name: python-apt
-        executable: pip-3
+        executable: pip3
     - name: pre-install packages
       apt: name={{ item }} update_cache=yes cache_valid_time=3600
       with_items:
@@ -123,7 +123,7 @@
 
     - pip:
         name: "{{ item }}"
-        executable: pip-3
+        executable: pip3
       with_items:
           - docker-compose
           - docker
