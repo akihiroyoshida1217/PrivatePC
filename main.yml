@@ -1,6 +1,6 @@
 - hosts: all
   tasks:
-    - name: install packages
+    - name: pre-install packages
       apt: name={{ item }} update_cache=yes cache_valid_time=3600
       with_items:
         - apt-transport-https
@@ -53,11 +53,11 @@
       apt_repository:
         repo: deb-src http://ftp.jp.debian.org/debian/ stretch-backports main contrib non-free
         state: present
-    - name: add apt repository debian stretch backports
+    - name: add apt repository debian testing
       apt_repository:
         repo: deb http://ftp.jp.debian.org/debian/ testing main contrib non-free
         state: present
-    - name: add apt repository debian source stretch backports
+    - name: add apt repository debian source testing
       apt_repository:
         repo: deb-src http://ftp.jp.debian.org/debian/ testing main contrib non-free
         state: present
