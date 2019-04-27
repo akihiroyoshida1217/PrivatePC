@@ -1,5 +1,14 @@
 - hosts: all
   tasks:
+    - name: install packages
+      apt: name={{ item }} update_cache=yes cache_valid_time=3600
+      with_items:
+        - apt-transport-https
+        - ca-certificates
+        - curl
+        - gnupg2
+      ignore_errors: "{{ ansible_check_mode }}"
+
     - name: Add an Apt signing key https://download.docker.com/linux/debian/gpg
       apt_key:
         url: https://download.docker.com/linux/debian/gpg
@@ -90,14 +99,8 @@
         - aptitude
         - iptables
         - iptables-persistent
-        - apt-transport-https
-        - ca-certificates
-        - curl
-        - gnupg2
-        - install docker-ce
         - software-properties-common
         - ibus-mozc
-        - autoremove
         - clamav-daemon
         - firefox-gnome-shell
         - gnome-tweak-tool
@@ -109,8 +112,6 @@
         - notify-send
         - libnotify-bin
         - build-essential
-        - libsystemd-journal-dev
-        - libsystemd-daemon-dev
         - libsystemd-dev
         - libgconf-2-4
         - gconf2-common
@@ -119,7 +120,7 @@
 
     - pip:
         name: "{{ item }}"
-        executable: pip-3.5
+        executable: pip-3
       with_items:
           - docker-compose
           - docker
