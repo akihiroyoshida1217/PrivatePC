@@ -66,11 +66,6 @@
         repo: deb [arch=amd64] https://download.docker.com/linux/debian stretch stable
         state: present
         filename: docker
-    - name: add apt repository docker source
-      apt_repository:
-        repo: deb-src [arch=amd64] https://download.docker.com/linux/debian stretch stable
-        state: present
-        filename: docker
     - name: add apt repository ppa:snwh/ppa
       apt_repository:
         repo: 'ppa:snwh/ppa'
