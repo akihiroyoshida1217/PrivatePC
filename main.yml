@@ -98,12 +98,12 @@
         - ibus-mozc
         - clamav-daemon
         - gnome-tweak-tool
-        - libgtk-3-common/testing
+        #- libgtk-3-common/testing
         - adapta-gtk-theme
         - paper-icon-theme
         - alacarte
         - policykit-1
-        - notify-send
+        #- notify-send
         - libnotify-bin
         - build-essential
         - libsystemd-dev
