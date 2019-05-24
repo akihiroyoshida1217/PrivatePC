@@ -21,30 +21,30 @@
       apt_key:
         keyserver: keyserver.ubuntu.com
         id: D320D0C30B02E64C5B2BB2743766223989993A70
-    - name: add apt repository debian stretch
-      apt_repository:
-        repo: deb http://ftp.jp.debian.org/debian/ stretch main contrib non-free
-        state: present
-    - name: add apt repository debian source stretch
-      apt_repository:
-        repo: deb-src http://ftp.jp.debian.org/debian/ stretch main contrib non-free
-        state: present
-    - name: add apt repository debian stretch security
-      apt_repository:
-        repo: deb http://security.debian.org/debian-security stretch/updates main contrib non-free
-        state: present
-    - name: add apt repository debian source stretch security
-      apt_repository:
-        repo: deb-src http://security.debian.org/debian-security stretch/updates main contrib non-free
-        state: present
-    - name: add apt repository debian stretch updates
-      apt_repository:
-        repo: deb http://ftp.jp.debian.org/debian/ stretch-updates main contrib non-free
-        state: present
-    - name: add apt repository debian source stretch updates
-      apt_repository:
-        repo: deb-src http://ftp.jp.debian.org/debian/ stretch-updates main contrib non-free
-        state: present
+    #- name: add apt repository debian stretch
+    #  apt_repository:
+    #    repo: deb http://ftp.jp.debian.org/debian/ stretch main contrib non-free
+    #    state: present
+    #- name: add apt repository debian source stretch
+    #  apt_repository:
+    #    repo: deb-src http://ftp.jp.debian.org/debian/ stretch main contrib non-free
+    #    state: present
+    #- name: add apt repository debian stretch security
+    #  apt_repository:
+    #    repo: deb http://security.debian.org/debian-security stretch/updates main contrib non-free
+    #    state: present
+    #- name: add apt repository debian source stretch security
+    #  apt_repository:
+    #    repo: deb-src http://security.debian.org/debian-security stretch/updates main contrib non-free
+    #    state: present
+    #- name: add apt repository debian stretch updates
+    #  apt_repository:
+    #    repo: deb http://ftp.jp.debian.org/debian/ stretch-updates main contrib non-free
+    #    state: present
+    #- name: add apt repository debian source stretch updates
+    #  apt_repository:
+    #    repo: deb-src http://ftp.jp.debian.org/debian/ stretch-updates main contrib non-free
+    #    state: present
     - name: add apt repository debian stretch backports
       apt_repository:
         repo: deb http://ftp.jp.debian.org/debian/ stretch-backports main contrib non-free
@@ -91,33 +91,29 @@
         - ntp
         - mailutils
         - unattended-upgrades
-        - aptitude
         - iptables
         - iptables-persistent
         - software-properties-common
         - ibus-mozc
         - clamav-daemon
         - gnome-tweak-tool
-        #- libgtk-3-common/testing
         - adapta-gtk-theme
         - paper-icon-theme
         - alacarte
         - policykit-1
-        #- notify-send
         - libnotify-bin
         - build-essential
         - libsystemd-dev
         - libgconf-2-4
         - gconf2-common
-        - python3-pip
       ignore_errors: "{{ ansible_check_mode }}"
-    - name: install packages
-      apt: 
-        name: libgtk-3-common
-        update_cache: yes 
-        cache_valid_time: 3600
-        default_release: testing
-      ignore_errors: "{{ ansible_check_mode }}"
+    #- name: install packages
+    #  apt: 
+    #    name: libgtk-3-common
+    #    update_cache: yes 
+    #    cache_valid_time: 3600
+    #    default_release: testing
+    #  ignore_errors: "{{ ansible_check_mode }}"
 
     - pip:
         name: "{{ item }}"
