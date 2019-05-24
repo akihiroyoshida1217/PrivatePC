@@ -125,6 +125,8 @@
           - pylint
           - systemd
       ignore_errors: "{{ ansible_check_mode }}"
+    - name: mkdir /opt/clamav
+      file: path=/opt/clamav state=directory owner=root group=root mode=0755
     - name: copy /opt/clamav/notify_viruscheck_watchdog.py
       copy: src=./files/opt/clamav/notify_viruscheck_watchdog.py dest=/opt/clamav/notify_viruscheck_watchdog.py owner=root group=root mode=0755
     - name: copy /opt/docker-image
