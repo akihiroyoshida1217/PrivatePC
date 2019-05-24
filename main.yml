@@ -148,6 +148,8 @@
       copy: src=./files/cron.monthly/docker_image_update.py dest=/etc/cron.monthly/docker_image_update.py owner=root group=root mode=0755
     - name: copy /etc/cron.monthly/notify_viruscheck_cron.py
       copy: src=./files/cron.monthly/notify_viruscheck_cron.py dest=/etc/cron.monthly/notify_viruscheck_cron.py owner=root group=root mode=0755
+    - name: mkdir /etc/skel/.config/dconf
+      file: path=/etc/skel/.config/dconf state=directory owner=root group=root mode=0755 recurse=yes
     - name: copy /etc/skel/.config/dconf/user
       copy: src=./files/dconf/user dest=/etc/skel/.config/dconf/user owner=root group=root mode=0644
     - name: copy /etc/apt/apt.conf.d/20auto-upgrades
