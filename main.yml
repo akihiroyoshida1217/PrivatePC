@@ -140,6 +140,8 @@
       copy: src=./files/systemd/system/vscode-extension-update-docker.service dest=/etc/systemd/system/vscode-extension-update-docker.service owner=root group=root mode=0644
     - name: copy /etc/systemd/system/vscode-update-docker.service
       copy: src=./files/systemd/system/vscode-update-docker.service dest=/etc/systemd/system/vscode-update-docker.service owner=root group=root mode=0644
+    - name: mkdir /etc/skel/.local/share/applications
+      file: path=/etc/skel/.local/share/applications state=directory owner=root group=root mode=0755 recurse=yes
     - name: copy /etc/skel/.local/share/applications/Firefox_with_Docker.desktop
       copy: src=./files/Firefox_with_Docker.desktop dest=/etc/skel/.local/share/applications/Firefox_with_Docker.desktop owner=root group=root mode=0644
     - name: copy /etc/cron.monthly/docker_image_update.py
