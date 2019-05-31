@@ -341,13 +341,13 @@
       iptables:
         comment: -A OUTPUT -o lo -j ACCEPT
         chain: OUTPUT
-        in_interface: lo
+        out_interface: lo
         jump: ACCEPT
     - name: -A OUTPUT ! -o lo -d 127.0.0.0/8 -j REJECT
       iptables:
         comment: -A OUTPUT ! -o lo -d 127.0.0.0/8 -j REJECT
         chain: OUTPUT
-        in_interface: ! lo
+        out_interface: ! lo
         destination: 127.0.0.0/8
         jump: REJECT
     - iptables:
