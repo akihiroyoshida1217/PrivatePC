@@ -286,7 +286,7 @@
       ignore_errors: "{{ ansible_check_mode }}"
     - name: mkdir HOME/.local/share/gnome-shell/extensions/activities-config@nls1729/"
       file: path="{{ansible_env.HOME}}/.local/share/gnome-shell/extensions/activities-config@nls1729/" state=directory owner=root group=root mode=0755 recurse=yes
-     - name: Unarchive activities-configurator
+    - name: Unarchive activities-configurator
       unarchive:
         src: https://extensions.gnome.org/extension-data/activities-config%40nls1729.v58.shell-extension.zip
         dest: "{{ansible_env.HOME}}/.local/share/gnome-shell/extensions/activities-config@nls1729/"
