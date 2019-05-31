@@ -7,6 +7,7 @@
         - ca-certificates
         - curl
         - gnupg2
+        - python-pip
       ignore_errors: "{{ ansible_check_mode }}"
 
     - name: Add an Apt signing key https://download.docker.com/linux/debian/gpg
@@ -106,6 +107,7 @@
         - libsystemd-dev
         - libgconf-2-4
         - gconf2-common
+        - docker-ce
       ignore_errors: "{{ ansible_check_mode }}"
     #- name: install packages
     #  apt: 
@@ -124,6 +126,10 @@
           - watchdog
           - pylint
           - systemd
+      ignore_errors: "{{ ansible_check_mode }}"
+    - pip:
+        name: docker
+        executable: pip
       ignore_errors: "{{ ansible_check_mode }}"
     - name: mkdir /opt/clamav
       file: path=/opt/clamav state=directory owner=root group=root mode=0755
@@ -232,7 +238,7 @@
     - name: tag "firefox-image"
       docker_image:
         name: firefox-image:ansible-build
-        tag: latest
+        repository: firefox-image:latest
       ignore_errors: "{{ ansible_check_mode }}"
     - name: build "freshclam"
       docker_image:
@@ -243,7 +249,7 @@
     - name: tag "freshclam"
       docker_image:
         name: freshclam:ansible-build
-        tag: latest
+        repository: freshclam:latest
       ignore_errors: "{{ ansible_check_mode }}"
     - name: build "vscode-image"
       docker_image:
@@ -254,37 +260,48 @@
     - name: tag "vscode-image"
       docker_image:
         name: vscode-image:ansible-build
-        tag: latest
+        repository: vscode-image:latest
       ignore_errors: "{{ ansible_check_mode }}"
     - name: build "vscode-extension-image"
       docker_image:
-        path: /opt/docker-image/vscode-extension-package/vscode-extension/
         name: vscode-extension-image
+        path: /opt/docker-image/vscode-extension-package/vscode-extension/
+        buildargs:
+          imagever: ansible-build
         tag: ansible-build
+        pull: no
       ignore_errors: "{{ ansible_check_mode }}"
     - name: tag "vscode-extension-image"
       docker_image:
         name: vscode-extension-image:ansible-build
-        tag: latest
+        repository: vscode-extension-image:latest
       ignore_errors: "{{ ansible_check_mode }}"
+    - name: mkdir HOME/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com
+      file: path="{{ansible_env.HOME}}/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com" state=directory owner=root group=root mode=0755 recurse=yes
     - name: Unarchive dash-to-dock
       unarchive:
         src: https://extensions.gnome.org/extension-data/dash-to-dockmicxgx.gmail.com.v65.shell-extension.zip
         dest: "{{ansible_env.HOME}}/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com"
         remote_src: yes
       ignore_errors: "{{ ansible_check_mode }}"
-    - name: Unarchive activities-configurator
+    - name: mkdir HOME/.local/share/gnome-shell/extensions/activities-config@nls1729/"
+      file: path="{{ansible_env.HOME}}/.local/share/gnome-shell/extensions/activities-config@nls1729/" state=directory owner=root group=root mode=0755 recurse=yes
+     - name: Unarchive activities-configurator
       unarchive:
         src: https://extensions.gnome.org/extension-data/activities-config%40nls1729.v58.shell-extension.zip
         dest: "{{ansible_env.HOME}}/.local/share/gnome-shell/extensions/activities-config@nls1729/"
         remote_src: yes
       ignore_errors: "{{ ansible_check_mode }}"
+    - name: mkdir HOME/.local/share/gnome-shell/extensions/Move_Clock@rmy.pobox.com/
+      file: path="{{ansible_env.HOME}}/.local/share/gnome-shell/extensions/Move_Clock@rmy.pobox.com/" state=directory owner=root group=root mode=0755 recurse=yes
     - name: Unarchive Frippery-Move-Clock
       unarchive:
         src: https://extensions.gnome.org/extension-data/Move_Clock%40rmy.pobox.com.v12.shell-extension.zip
         dest: "{{ansible_env.HOME}}/.local/share/gnome-shell/extensions/Move_Clock@rmy.pobox.com/"
         remote_src: yes
       ignore_errors: "{{ ansible_check_mode }}"
+    - name: mkdir HOME/.local/share/gnome-shell/extensions/panel-date-format@keiii.github.com/
+      file: path="{{ansible_env.HOME}}/.local/share/gnome-shell/extensions/panel-date-format@keiii.github.com/" state=directory owner=root group=root mode=0755 recurse=yes
     - name: Unarchive panel-date-format
       unarchive:
         src: https://extensions.gnome.org/extension-data/panel-date-format%40keiii.github.com.v1.shell-extension.zip

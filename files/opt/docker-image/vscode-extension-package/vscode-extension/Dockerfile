@@ -1,4 +1,5 @@
-FROM vscode-image:latest
+ARG imagever="latest"
+FROM vscode-image:${imagever}
 
 #RUN apt-get update -qq && \
 #    apt-get install -yq --no-install-recommends curl apt-transport-https gpg && \
