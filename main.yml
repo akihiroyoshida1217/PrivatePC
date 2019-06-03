@@ -161,6 +161,7 @@
       copy: src=./files/dconf/user dest=/etc/skel/.config/dconf/user owner=root group=root mode=0644
     - name: copy HOME/.config/dconf/user
       copy: src=./files/dconf/user dest="{{ansible_env.HOME}}/.config/dconf/user" owner="{{ansible_env.USER}}" group="{{ansible_env.USER}}" mode=0644
+      become: no
     - name: copy /etc/apt/apt.conf.d/20auto-upgrades
       copy: src=./files/apt/apt.conf.d/20auto-upgrades dest=/etc/apt/apt.conf.d/20auto-upgrades owner=root group=root mode=0644
     - name: copy /etc/iptables
@@ -284,35 +285,43 @@
       ignore_errors: "{{ ansible_check_mode }}"
     - name: mkdir HOME/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com
       file: path="{{ansible_env.HOME}}/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com" state=directory owner="{{ansible_env.USER}}" group="{{ansible_env.USER}}" mode=0755 recurse=yes
+      become: no
     - name: Unarchive dash-to-dock
       unarchive:
         src: https://extensions.gnome.org/extension-data/dash-to-dockmicxgx.gmail.com.v65.shell-extension.zip
         dest: "{{ansible_env.HOME}}/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com"
         remote_src: yes
+      become: no
       ignore_errors: "{{ ansible_check_mode }}"
     - name: mkdir HOME/.local/share/gnome-shell/extensions/activities-config@nls1729/"
       file: path="{{ansible_env.HOME}}/.local/share/gnome-shell/extensions/activities-config@nls1729/" state=directory owner="{{ansible_env.USER}}" group="{{ansible_env.USER}}" mode=0755 recurse=yes
+      become: no
     - name: Unarchive activities-configurator
       unarchive:
         src: https://extensions.gnome.org/extension-data/activities-config%40nls1729.v58.shell-extension.zip
         dest: "{{ansible_env.HOME}}/.local/share/gnome-shell/extensions/activities-config@nls1729/"
         remote_src: yes
+      become: no
       ignore_errors: "{{ ansible_check_mode }}"
     - name: mkdir HOME/.local/share/gnome-shell/extensions/Move_Clock@rmy.pobox.com/
       file: path="{{ansible_env.HOME}}/.local/share/gnome-shell/extensions/Move_Clock@rmy.pobox.com/" state=directory owner="{{ansible_env.USER}}" group="{{ansible_env.USER}}" mode=0755 recurse=yes
+      become: no
     - name: Unarchive Frippery-Move-Clock
       unarchive:
         src: https://extensions.gnome.org/extension-data/Move_Clock%40rmy.pobox.com.v12.shell-extension.zip
         dest: "{{ansible_env.HOME}}/.local/share/gnome-shell/extensions/Move_Clock@rmy.pobox.com/"
         remote_src: yes
+      become: no
       ignore_errors: "{{ ansible_check_mode }}"
     - name: mkdir HOME/.local/share/gnome-shell/extensions/panel-date-format@keiii.github.com/
       file: path="{{ansible_env.HOME}}/.local/share/gnome-shell/extensions/panel-date-format@keiii.github.com/" state=directory owner="{{ansible_env.USER}}" group="{{ansible_env.USER}}" mode=0755 recurse=yes
+      become: no
     - name: Unarchive panel-date-format
       unarchive:
         src: https://extensions.gnome.org/extension-data/panel-date-format%40keiii.github.com.v1.shell-extension.zip
         dest: "{{ansible_env.HOME}}/.local/share/gnome-shell/extensions/panel-date-format@keiii.github.com/"
         remote_src: yes
+      become: no
       ignore_errors: "{{ ansible_check_mode }}"
     - name: gnome-shell-extension-tool -e dash-to-dock@micxgx.gmail.com
       shell: gnome-shell-extension-tool -e dash-to-dock@micxgx.gmail.com
