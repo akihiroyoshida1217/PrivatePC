@@ -76,6 +76,10 @@
 -A OUTPUT -o wlp2s0 -d 13.33.213.48 -p tcp --dport 443 -j ACCEPT
 -A OUTPUT -o wlp2s0 -d 13.33.213.226 -p tcp --dport 443 -j ACCEPT
 -A OUTPUT -o wlp2s0 -d 13.33.213.17 -p tcp --dport 443 -j ACCEPT
+-A OUTPUT -o wlp2s0 -d 13.32.54.120 -p tcp --dport 443 -j ACCEPT
+-A OUTPUT -o wlp2s0 -d 13.32.54.18 -p tcp --dport 443 -j ACCEPT
+-A OUTPUT -o wlp2s0 -d 13.32.54.53 -p tcp --dport 443 -j ACCEPT
+-A OUTPUT -o wlp2s0 -d 13.32.54.77 -p tcp --dport 443 -j ACCEPT
 
 # registry-1.docker.io
 -A OUTPUT -o wlp2s0 -d 34.200.28.105 -p tcp --dport 443 -j ACCEPT
@@ -97,6 +101,7 @@
 # github.com
 -A OUTPUT -o wlp2s0 -d 192.30.255.113 -p tcp --dport 443 -j ACCEPT
 -A OUTPUT -o wlp2s0 -d 192.30.255.112 -p tcp --dport 443 -j ACCEPT
+-A OUTPUT -o wlp2s0 -d 52.69.186.44 -p tcp --dport 443 -j ACCEPT
 
 # codeload.github.com
 -A OUTPUT -o wlp2s0 -d 192.30.255.121 -p tcp --dport 443 -j ACCEPT
