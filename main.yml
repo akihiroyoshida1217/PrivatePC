@@ -138,6 +138,12 @@
     - name: copy /opt/docker-image
       copy: src=./files/opt/docker-image/ dest=/opt/docker-image/ owner=root group=root
       when: not ansible_check_mode
+    - name: chmod 755 /opt/docker-image/firefox-package/Firefox_with_Docker-pkexec
+      file: path=/opt/docker-image/firefox-package/Firefox_with_Docker-pkexec owner=root group=root mode=0755
+      when: not ansible_check_mode
+    - name: chmod 755 /opt/docker-image/vscode-extension-package/vscode-extension-update.py
+      file: path=/opt/docker-image/vscode-extension-package/vscode-extension-update.py owner=root group=root mode=0755
+      when: not ansible_check_mode
     - name: copy /etc/systemd/system/clamav-update-docker.service
       copy: src=./files/systemd/system/clamav-update-docker.service dest=/etc/systemd/system/clamav-update-docker.service owner=root group=root mode=0644
     - name: copy /etc/systemd/system/clamav-watchdog.service
@@ -149,7 +155,11 @@
     - name: mkdir /etc/skel/.local/share/applications
       file: path=/etc/skel/.local/share/applications state=directory owner=root group=root mode=0755 recurse=yes
     - name: copy /etc/skel/.local/share/applications/Firefox_with_Docker.desktop
-      copy: src=./files/Firefox_with_Docker.desktop dest=/etc/skel/.local/share/applications/Firefox_with_Docker.desktop owner=root group=root mode=0644
+      copy: src=./files/Firefox_with_Docker.desktop dest=/etc/skel/.local/share/applications/Firefox_with_Docker.desktop owner=root group=root mode=0755
+    - name: copy HOME/.local/share/applications/Firefox_with_Docker.desktop
+      copy: src=./files/Firefox_with_Docker.desktop dest="{{ansible_env.HOME}}/.local/share/applications/Firefox_with_Docker.desktop" owner=akihiro group=akihiro mode=0755
+      become: yes
+      become_user: akihiro
     - name: copy /etc/cron.monthly/docker_image_update.py
       copy: src=./files/cron.monthly/docker_image_update.py dest=/etc/cron.monthly/docker_image_update.py owner=root group=root mode=0755
     - name: copy /etc/cron.monthly/notify_viruscheck_cron.py
@@ -159,7 +169,7 @@
     - name: copy /etc/skel/.config/dconf/user
       copy: src=./files/dconf/user dest=/etc/skel/.config/dconf/user owner=root group=root mode=0644
     - name: copy HOME/.config/dconf/user
-      copy: src=./files/dconf/user dest="{{ansible_env.HOME}}/.config/dconf/user" owner="{{ lookup("env", "USER") }}" group="{{ lookup("env", "USER") }}" mode=0644
+      copy: src=./files/dconf/user dest="{{ansible_env.HOME}}/.config/dconf/user" owner=akihiro group=akihiro mode=0644
       become: yes
       become_user: akihiro
     - name: copy /etc/apt/apt.conf.d/20auto-upgrades
@@ -283,8 +293,31 @@
         name: vscode-extension-image:ansible-build
         repository: vscode-extension-image:latest
       ignore_errors: "{{ ansible_check_mode }}"
+    - name: systemctl reload
+      systemd:
+        daemon_reload: yes
+    - name: systemctl enable clamav-update-docker
+      systemd:
+        name: clamav-update-docker.service
+        state: stopped
+        enabled: yes
+    - name: systemctl enable clamav-watchdog
+      systemd:
+        name: clamav-watchdog.service
+        state: stopped
+        enabled: yes
+    - name: systemctl enable vscode-extension-update-docker
+      systemd:
+        name: vscode-extension-update-docker.service
+        state: stopped
+        enabled: yes
+    - name: systemctl enable vscode-update-docker
+      systemd:
+        name: vscode-update-docker.service
+        state: stopped
+        enabled: yes
     - name: mkdir HOME/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com
-      file: path="{{ansible_env.HOME}}/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com" state=directory owner="{{lookup("env", "USER")}}" group="{{lookup("env", "USER")}}" mode=0755 recurse=yes
+      file: path="{{ansible_env.HOME}}/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com" state=directory owner=akihiro group=akihiro mode=0755 recurse=yes
       become: yes
       become_user: akihiro
     - name: Unarchive dash-to-dock
@@ -296,7 +329,7 @@
       become_user: akihiro
       ignore_errors: "{{ ansible_check_mode }}"
     - name: mkdir HOME/.local/share/gnome-shell/extensions/activities-config@nls1729/"
-      file: path="{{ansible_env.HOME}}/.local/share/gnome-shell/extensions/activities-config@nls1729/" state=directory owner="{{lookup("env", "USER")}}" group="{{lookup("env", "USER")}}" mode=0755 recurse=yes
+      file: path="{{ansible_env.HOME}}/.local/share/gnome-shell/extensions/activities-config@nls1729/" state=directory owner=akihiro group=akihiro mode=0755 recurse=yes
       become: yes
       become_user: akihiro
     - name: Unarchive activities-configurator
@@ -308,7 +341,7 @@
       become_user: akihiro
       ignore_errors: "{{ ansible_check_mode }}"
     - name: mkdir HOME/.local/share/gnome-shell/extensions/Move_Clock@rmy.pobox.com/
-      file: path="{{ansible_env.HOME}}/.local/share/gnome-shell/extensions/Move_Clock@rmy.pobox.com/" state=directory owner="{{lookup("env", "USER")}}" group="{{lookup("env", "USER")}}" mode=0755 recurse=yes
+      file: path="{{ansible_env.HOME}}/.local/share/gnome-shell/extensions/Move_Clock@rmy.pobox.com/" state=directory owner=akihiro group=akihiro mode=0755 recurse=yes
       become: yes
       become_user: akihiro
     - name: Unarchive Frippery-Move-Clock
@@ -320,7 +353,7 @@
       become_user: akihiro
       ignore_errors: "{{ ansible_check_mode }}"
     - name: mkdir HOME/.local/share/gnome-shell/extensions/panel-date-format@keiii.github.com/
-      file: path="{{ansible_env.HOME}}/.local/share/gnome-shell/extensions/panel-date-format@keiii.github.com/" state=directory owner="{{lookup("env", "USER")}}" group="{{lookup("env", "USER")}}" mode=0755 recurse=yes
+      file: path="{{ansible_env.HOME}}/.local/share/gnome-shell/extensions/panel-date-format@keiii.github.com/" state=directory owner=akihiro group=akihiro mode=0755 recurse=yes
       become: yes
       become_user: akihiro
     - name: Unarchive panel-date-format
@@ -335,15 +368,19 @@
       shell: gnome-shell-extension-tool -e dash-to-dock@micxgx.gmail.com
       become: yes
       become_user: akihiro
+      ignore_errors: yes
     - name: gnome-shell-extension-tool -e activities-config@nls1729
       shell: gnome-shell-extension-tool -e activities-config@nls1729
       become: yes
       become_user: akihiro
+      ignore_errors: yes
     - name: gnome-shell-extension-tool -e Move_Clock@rmy.pobox.com
       shell: gnome-shell-extension-tool -e Move_Clock@rmy.pobox.com
       become: yes
       become_user: akihiro
+      ignore_errors: yes
     - name: gnome-shell-extension-tool -e panel-date-format@keiii.github.com
       shell: gnome-shell-extension-tool -e panel-date-format@keiii.github.com
       become: yes
       become_user: akihiro
+      ignore_errors: yes
