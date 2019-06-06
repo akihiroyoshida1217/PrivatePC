@@ -144,6 +144,17 @@
     - name: chmod 755 /opt/docker-image/vscode-extension-package/vscode-extension-update.py
       file: path=/opt/docker-image/vscode-extension-package/vscode-extension-update.py owner=root group=root mode=0755
       when: not ansible_check_mode
+    - name: chown 1001:1001 /opt/docker-image/clamav-package/clamav/patternfile
+      file: path=/opt/docker-image/clamav-package/clamav/patternfile state=directory owner=1001 group=1001
+      when: not ansible_check_mode
+    - name: ln -s /opt/docker-image/clamav-package/clamav/patternfile/bytecode.cvd /var/lib/clamav
+      file: src=/opt/docker-image/clamav-package/clamav/patternfile/bytecode.cvd dest=/var/lib/clamav state=link
+    - name: ln -s /opt/docker-image/clamav-package/clamav/patternfile/daily.cvd /var/lib/clamav
+      file: src=/opt/docker-image/clamav-package/clamav/patternfile/daily.cvd dest=/var/lib/clamav state=link
+    - name: ln -s /opt/docker-image/clamav-package/clamav/patternfile/main.cvd /var/lib/clamav
+      file: src=/opt/docker-image/clamav-package/clamav/patternfile/main.cvd dest=/var/lib/clamav state=link
+    - name: ln -s /opt/docker-image/clamav-package/clamav/patternfile/mirrors.dat /var/lib/clamav
+      file: src=/opt/docker-image/clamav-package/clamav/patternfile/mirrors.dat dest=/var/lib/clamav state=link
     - name: copy /etc/systemd/system/clamav-update-docker.service
       copy: src=./files/systemd/system/clamav-update-docker.service dest=/etc/systemd/system/clamav-update-docker.service owner=root group=root mode=0644
     - name: copy /etc/systemd/system/clamav-watchdog.service
