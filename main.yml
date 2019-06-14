@@ -147,12 +147,24 @@
     - name: chown 1001:1001 /opt/docker-image/clamav-package/clamav/patternfile
       file: path=/opt/docker-image/clamav-package/clamav/patternfile state=directory owner=1001 group=1001
       when: not ansible_check_mode
+    - name: mv /var/lib/clamav/bytecode.cvd /var/lib/clamav/bytecode.cvd.org
+      command: mv /var/lib/clamav/bytecode.cvd /var/lib/clamav/bytecode.cvd.org
+      ignore_errors: yes
     - name: ln -s /opt/docker-image/clamav-package/clamav/patternfile/bytecode.cvd /var/lib/clamav/bytecode.cvd
       file: src=/opt/docker-image/clamav-package/clamav/patternfile/bytecode.cvd dest=/var/lib/clamav/bytecode.cvd state=link
+    - name: mv /var/lib/clamav/daily.cvd /var/lib/clamav/daily.cvd.org
+      command: mv /var/lib/clamav/daily.cvd /var/lib/clamav/daily.cvd.org
+      ignore_errors: yes
     - name: ln -s /opt/docker-image/clamav-package/clamav/patternfile/daily.cvd /var/lib/clamav/daily.cvd
       file: src=/opt/docker-image/clamav-package/clamav/patternfile/daily.cvd dest=/var/lib/clamav/daily.cvd state=link
+    - name: mv /var/lib/clamav/main.cvd /var/lib/clamav/main.cvd.org
+      command: mv /var/lib/clamav/main.cvd /var/lib/clamav/main.cvd.org
+      ignore_errors: yes
     - name: ln -s /opt/docker-image/clamav-package/clamav/patternfile/main.cvd /var/lib/clamav/main.cvd
       file: src=/opt/docker-image/clamav-package/clamav/patternfile/main.cvd dest=/var/lib/clamav/main.cvd state=link
+    - name: mv /var/lib/clamav/mirrors.dat /var/lib/clamav/mirrors.dat.org
+      command: mv /var/lib/clamav/mirrors.dat /var/lib/clamav/mirrors.dat.org
+      ignore_errors: yes
     - name: ln -s /opt/docker-image/clamav-package/clamav/patternfile/mirrors.dat /var/lib/clamav/mirrors.dat
       file: src=/opt/docker-image/clamav-package/clamav/patternfile/mirrors.dat dest=/var/lib/clamav/mirrors.dat state=link
     - name: copy /etc/systemd/system/clamav-update-docker.service
