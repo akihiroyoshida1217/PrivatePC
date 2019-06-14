@@ -166,7 +166,7 @@
       command: mv /var/lib/clamav/main.cvd /var/lib/clamav/main.cvd.org
       ignore_errors: yes
     - name: ln -s /opt/docker-image/clamav-package/clamav/patternfile/main.cvd /var/lib/clamav/main.cvd
-      file: src=/opt/docker-image/clamav-package/clamav/patternfile/main.cvd dest=/var/lib/clamav/main.cvd state=linkf orce=yes
+      file: src=/opt/docker-image/clamav-package/clamav/patternfile/main.cvd dest=/var/lib/clamav/main.cvd state=link force=yes
     - name: mv /var/lib/clamav/mirrors.dat /var/lib/clamav/mirrors.dat.org
       command: mv /var/lib/clamav/mirrors.dat /var/lib/clamav/mirrors.dat.org
       ignore_errors: yes
