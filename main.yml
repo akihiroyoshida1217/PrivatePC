@@ -1,4 +1,8 @@
 - hosts: all
+  gather_facts: no
+  vars:
+    playing_user: akihiro
+    network_interface: wlp2s0
   tasks:
     - name: pre-install packages
       apt: name={{ item }} update_cache=yes cache_valid_time=3600
@@ -185,9 +189,9 @@
     - name: copy /etc/skel/.local/share/applications/Firefox_with_Docker.desktop
       copy: src=./files/Firefox_with_Docker.desktop dest=/etc/skel/.local/share/applications/Firefox_with_Docker.desktop owner=root group=root mode=0755
     - name: copy HOME/.local/share/applications/Firefox_with_Docker.desktop
-      copy: src=./files/Firefox_with_Docker.desktop dest="{{ansible_env.HOME}}/.local/share/applications/Firefox_with_Docker.desktop" owner=akihiro group=akihiro mode=0755
+      copy: src=./files/Firefox_with_Docker.desktop dest="{{ansible_env.HOME}}/.local/share/applications/Firefox_with_Docker.desktop" owner={{ playing_user }} group={{ playing_user }} mode=0755
       become: yes
-      become_user: akihiro
+      become_user: {{ playing_user }}
     - name: copy /etc/cron.monthly/docker_image_update.py
       copy: src=./files/cron.monthly/docker_image_update.py dest=/etc/cron.monthly/docker_image_update.py owner=root group=root mode=0755
     - name: copy /etc/cron.monthly/notify_viruscheck_cron.py
@@ -197,13 +201,18 @@
     - name: copy /etc/skel/.config/dconf/user
       copy: src=./files/dconf/user dest=/etc/skel/.config/dconf/user owner=root group=root mode=0644
     - name: copy HOME/.config/dconf/user
-      copy: src=./files/dconf/user dest="{{ansible_env.HOME}}/.config/dconf/user" owner=akihiro group=akihiro mode=0644
+      copy: src=./files/dconf/user dest="{{ansible_env.HOME}}/.config/dconf/user" owner={{ playing_user }} group={{ playing_user }} mode=0644
       become: yes
-      become_user: akihiro
+      become_user: {{ playing_user }}
     - name: copy /etc/apt/apt.conf.d/20auto-upgrades
       copy: src=./files/apt/apt.conf.d/20auto-upgrades dest=/etc/apt/apt.conf.d/20auto-upgrades owner=root group=root mode=0644
-    - name: copy /etc/iptables
-      copy: src=./files/iptables/ dest=/etc/iptables/ owner=root group=root
+    - template:
+        src: ./files/iptables/rules.v4.j2
+        dest: /etc/iptables/rules.v4
+        owner: root
+        group: root
+    - name: copy /etc/iptables/rules.v6
+      copy: src=./files/iptables/rules.v6 dest=/etc/iptables/rules.v6 owner=root group=root
       when: not ansible_check_mode
     - name: LocalSocketGroup root
       lineinfile: 
@@ -345,70 +354,70 @@
         state: stopped
         enabled: yes
     - name: mkdir HOME/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com
-      file: path="{{ansible_env.HOME}}/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com" state=directory owner=akihiro group=akihiro mode=0755 recurse=yes
+      file: path="{{ansible_env.HOME}}/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com" state=directory owner={{ playing_user }} group={{ playing_user }} mode=0755 recurse=yes
       become: yes
-      become_user: akihiro
+      become_user: {{ playing_user }}
     - name: Unarchive dash-to-dock
       unarchive:
         src: https://extensions.gnome.org/extension-data/dash-to-dockmicxgx.gmail.com.v65.shell-extension.zip
         dest: "{{ansible_env.HOME}}/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com"
         remote_src: yes
       become: yes
-      become_user: akihiro
+      become_user: {{ playing_user }}
       ignore_errors: "{{ ansible_check_mode }}"
     - name: mkdir HOME/.local/share/gnome-shell/extensions/activities-config@nls1729/"
-      file: path="{{ansible_env.HOME}}/.local/share/gnome-shell/extensions/activities-config@nls1729/" state=directory owner=akihiro group=akihiro mode=0755 recurse=yes
+      file: path="{{ansible_env.HOME}}/.local/share/gnome-shell/extensions/activities-config@nls1729/" state=directory owner={{ playing_user }} group={{ playing_user }} mode=0755 recurse=yes
       become: yes
-      become_user: akihiro
+      become_user: {{ playing_user }}
     - name: Unarchive activities-configurator
       unarchive:
         src: https://extensions.gnome.org/extension-data/activities-config%40nls1729.v58.shell-extension.zip
         dest: "{{ansible_env.HOME}}/.local/share/gnome-shell/extensions/activities-config@nls1729/"
         remote_src: yes
       become: yes
-      become_user: akihiro
+      become_user: {{ playing_user }}
       ignore_errors: "{{ ansible_check_mode }}"
     - name: mkdir HOME/.local/share/gnome-shell/extensions/Move_Clock@rmy.pobox.com/
-      file: path="{{ansible_env.HOME}}/.local/share/gnome-shell/extensions/Move_Clock@rmy.pobox.com/" state=directory owner=akihiro group=akihiro mode=0755 recurse=yes
+      file: path="{{ansible_env.HOME}}/.local/share/gnome-shell/extensions/Move_Clock@rmy.pobox.com/" state=directory owner={{ playing_user }} group={{ playing_user }} mode=0755 recurse=yes
       become: yes
-      become_user: akihiro
+      become_user: {{ playing_user }}
     - name: Unarchive Frippery-Move-Clock
       unarchive:
         src: https://extensions.gnome.org/extension-data/Move_Clock%40rmy.pobox.com.v12.shell-extension.zip
         dest: "{{ansible_env.HOME}}/.local/share/gnome-shell/extensions/Move_Clock@rmy.pobox.com/"
         remote_src: yes
       become: yes
-      become_user: akihiro
+      become_user: {{ playing_user }}
       ignore_errors: "{{ ansible_check_mode }}"
     - name: mkdir HOME/.local/share/gnome-shell/extensions/panel-date-format@keiii.github.com/
-      file: path="{{ansible_env.HOME}}/.local/share/gnome-shell/extensions/panel-date-format@keiii.github.com/" state=directory owner=akihiro group=akihiro mode=0755 recurse=yes
+      file: path="{{ansible_env.HOME}}/.local/share/gnome-shell/extensions/panel-date-format@keiii.github.com/" state=directory owner={{ playing_user }} group={{ playing_user }} mode=0755 recurse=yes
       become: yes
-      become_user: akihiro
+      become_user: {{ playing_user }}
     - name: Unarchive panel-date-format
       unarchive:
         src: https://extensions.gnome.org/extension-data/panel-date-format%40keiii.github.com.v1.shell-extension.zip
         dest: "{{ansible_env.HOME}}/.local/share/gnome-shell/extensions/panel-date-format@keiii.github.com/"
         remote_src: yes
       become: yes
-      become_user: akihiro
+      become_user: {{ playing_user }}
       ignore_errors: "{{ ansible_check_mode }}"
     - name: gnome-shell-extension-tool -e dash-to-dock@micxgx.gmail.com
       shell: gnome-shell-extension-tool -e dash-to-dock@micxgx.gmail.com
       become: yes
-      become_user: akihiro
+      become_user: {{ playing_user }}
       ignore_errors: yes
     - name: gnome-shell-extension-tool -e activities-config@nls1729
       shell: gnome-shell-extension-tool -e activities-config@nls1729
       become: yes
-      become_user: akihiro
+      become_user: {{ playing_user }}
       ignore_errors: yes
     - name: gnome-shell-extension-tool -e Move_Clock@rmy.pobox.com
       shell: gnome-shell-extension-tool -e Move_Clock@rmy.pobox.com
       become: yes
-      become_user: akihiro
+      become_user: {{ playing_user }}
       ignore_errors: yes
     - name: gnome-shell-extension-tool -e panel-date-format@keiii.github.com
       shell: gnome-shell-extension-tool -e panel-date-format@keiii.github.com
       become: yes
-      become_user: akihiro
+      become_user: {{ playing_user }}
       ignore_errors: yes
