@@ -1,5 +1,4 @@
 - hosts: all
-  gather_facts: no
   vars:
     playing_user: akihiro
     network_interface: wlp2s0
