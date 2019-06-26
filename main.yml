@@ -328,7 +328,7 @@
         - panel-date-format@keiii.github.com
     - name: Unarchive gnome plugin
       unarchive:
-        src: "https://extensions.gnome.org/extension-data/{{ item.src }}""
+        src: "https://extensions.gnome.org/extension-data/{{ item.src }}"
         dest: "{{ansible_env.HOME}}/.local/share/gnome-shell/extensions/{{ item.dest }}"
         remote_src: yes
       become: yes
