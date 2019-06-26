@@ -2,6 +2,7 @@
   vars:
     playing_user: akihiro
     network_interface: enp0s3
+
   tasks:
     - name: pre-install packages
       apt: name={{ item }} update_cache=yes cache_valid_time=3600
@@ -17,14 +18,14 @@
       apt_key:
         url: https://download.docker.com/linux/debian/gpg
         state: present
-    - name: Add an apt key adapta-gtk-theme by id from a keyserver
+
+    - name: Add an apt key adapta-gtk-theme and paper-icon-theme by id from a keyserver
       apt_key:
-        keyserver: keyserver.ubuntu.com
-        id: EAC0D406E5D79A82ADEEDFDFB76E53652D87398A
-    - name: Add an apt key paper-icon-theme by id from a keyserver
-      apt_key:
-        keyserver: keyserver.ubuntu.com
-        id: D320D0C30B02E64C5B2BB2743766223989993A70
+        keyserver: "{{ item.keyserver }}"
+        id: "{{ item.id }}"
+      with_items:
+        - { keyserver: keyserver.ubuntu.com, id: EAC0D406E5D79A82ADEEDFDFB76E53652D87398A }
+        - { keyserver: keyserver.ubuntu.com, id: D320D0C30B02E64C5B2BB2743766223989993A70 }
     #- name: add apt repository debian stretch
     #  apt_repository:
     #    repo: deb http://ftp.jp.debian.org/debian/ stretch main contrib non-free
@@ -65,23 +66,23 @@
       apt_repository:
         repo: deb-src http://ftp.jp.debian.org/debian/ testing main contrib non-free
         state: present
+
     - name: add apt repository docker
       apt_repository:
         repo: deb [arch=amd64] https://download.docker.com/linux/debian stretch stable
         state: present
         filename: docker
+
     - name: add apt repository ppa:snwh/ppa
       apt_repository:
-        repo: 'ppa:snwh/ppa'
+        repo: "{{ item }}"
         codename: bionic
         state: present
         filename: ppa
-    - name: add apt repository ppa:tista/adapta
-      apt_repository:
-        repo: 'ppa:tista/adapta'
-        codename: bionic
-        state: present
-        filename: ppa
+      with_items:
+        - 'ppa:snwh/ppa'
+        - 'ppa:tista/adapta'
+
     - name: remove packages
       apt: 
         name: "{{ item }}"
@@ -134,10 +135,12 @@
         name: docker
         executable: pip
       ignore_errors: "{{ ansible_check_mode }}"
+
     - name: mkdir /opt/clamav
       file: path=/opt/clamav state=directory owner=root group=root mode=0755
     - name: copy /opt/clamav/notify_viruscheck_watchdog.py
       copy: src=./files/opt/clamav/notify_viruscheck_watchdog.py dest=/opt/clamav/notify_viruscheck_watchdog.py owner=root group=root mode=0755
+
     - name: copy /opt/docker-image
       copy: src=./files/opt/docker-image/ dest=/opt/docker-image/ owner=root group=root
       when: not ansible_check_mode
@@ -152,42 +155,36 @@
     - name: chmod 755 /opt/docker-image/vscode-extension-package/vscode-extension-update.py
       file: path=/opt/docker-image/vscode-extension-package/vscode-extension-update.py owner=root group=root mode=0755
       when: not ansible_check_mode
+
     - name: chown 1001:1001 /opt/docker-image/clamav-package/clamav/patternfile
       file: path=/opt/docker-image/clamav-package/clamav/patternfile state=directory owner=1001 group=1001
       when: not ansible_check_mode
-    - name: mv /var/lib/clamav/bytecode.cvd /var/lib/clamav/bytecode.cvd.org
-      command: mv /var/lib/clamav/bytecode.cvd /var/lib/clamav/bytecode.cvd.org
+    - name: mv /var/lib/clamav/{{ item }} /var/lib/clamav/{{ item }}.org
+      command: "mv /var/lib/clamav/{{ item }} /var/lib/clamav/{{ item }}.org"
+      with_items:
+        - bytecode.cvd
+        - daily.cvd
+        - daily.cld
+        - main.cvd
+        - mirrors.dat
       ignore_errors: yes
-    - name: ln -s /opt/docker-image/clamav-package/clamav/patternfile/bytecode.cvd /var/lib/clamav/bytecode.cvd
-      file: src=/opt/docker-image/clamav-package/clamav/patternfile/bytecode.cvd dest=/var/lib/clamav/bytecode.cvd state=link force=yes
-    - name: mv /var/lib/clamav/daily.cvd /var/lib/clamav/daily.cvd.org
-      command: mv /var/lib/clamav/daily.cvd /var/lib/clamav/daily.cvd.org
-      ignore_errors: yes
-    - name: ln -s /opt/docker-image/clamav-package/clamav/patternfile/daily.cvd /var/lib/clamav/daily.cvd
-      file: src=/opt/docker-image/clamav-package/clamav/patternfile/daily.cvd dest=/var/lib/clamav/daily.cvd state=link force=yes
-    - name: mv /var/lib/clamav/daily.cld /var/lib/clamav/daily.cld.org
-      command: mv /var/lib/clamav/daily.cld /var/lib/clamav/daily.cld.org
-      ignore_errors: yes
-    - name: ln -s /opt/docker-image/clamav-package/clamav/patternfile/daily.cld /var/lib/clamav/daily.cld
-      file: src=/opt/docker-image/clamav-package/clamav/patternfile/daily.cld dest=/var/lib/clamav/daily.cld state=link force=yes
-    - name: mv /var/lib/clamav/main.cvd /var/lib/clamav/main.cvd.org
-      command: mv /var/lib/clamav/main.cvd /var/lib/clamav/main.cvd.org
-      ignore_errors: yes
-    - name: ln -s /opt/docker-image/clamav-package/clamav/patternfile/main.cvd /var/lib/clamav/main.cvd
-      file: src=/opt/docker-image/clamav-package/clamav/patternfile/main.cvd dest=/var/lib/clamav/main.cvd state=link force=yes
-    - name: mv /var/lib/clamav/mirrors.dat /var/lib/clamav/mirrors.dat.org
-      command: mv /var/lib/clamav/mirrors.dat /var/lib/clamav/mirrors.dat.org
-      ignore_errors: yes
-    - name: ln -s /opt/docker-image/clamav-package/clamav/patternfile/mirrors.dat /var/lib/clamav/mirrors.dat
-      file: src=/opt/docker-image/clamav-package/clamav/patternfile/mirrors.dat dest=/var/lib/clamav/mirrors.dat state=link force=yes
-    - name: copy /etc/systemd/system/clamav-update-docker.service
-      copy: src=./files/systemd/system/clamav-update-docker.service dest=/etc/systemd/system/clamav-update-docker.service owner=root group=root mode=0644
-    - name: copy /etc/systemd/system/clamav-watchdog.service
-      copy: src=./files/systemd/system/clamav-watchdog.service dest=/etc/systemd/system/clamav-watchdog.service owner=root group=root mode=0644
-    - name: copy /etc/systemd/system/vscode-extension-update-docker.service
-      copy: src=./files/systemd/system/vscode-extension-update-docker.service dest=/etc/systemd/system/vscode-extension-update-docker.service owner=root group=root mode=0644
-    - name: copy /etc/systemd/system/vscode-update-docker.service
-      copy: src=./files/systemd/system/vscode-update-docker.service dest=/etc/systemd/system/vscode-update-docker.service owner=root group=root mode=0644
+    - name: ln -s /opt/docker-image/clamav-package/clamav/patternfile/{{ item }} /var/lib/clamav/{{ item }}
+      file: src="/opt/docker-image/clamav-package/clamav/patternfile/{{ item }}" dest="/var/lib/clamav/{{ item }}" state=link force=yes
+      with_items:
+        - bytecode.cvd
+        - daily.cvd
+        - daily.cld
+        - main.cvd
+        - mirrors.dat
+
+    - name: copy /etc/systemd/system/{{ item }}
+      copy: src="./files/systemd/system/{{ item }}" dest="/etc/systemd/system/{{ item }}" owner=root group=root mode=0644
+      with_items:
+        - clamav-update-docker.service
+        - clamav-watchdog.service
+        - vscode-extension-update-docker.service
+        - vscode-update-docker.service
+
     - name: mkdir /etc/skel/.local/share/applications
       file: path=/etc/skel/.local/share/applications state=directory owner=root group=root mode=0755 recurse=yes
     - name: copy /etc/skel/.local/share/applications/Firefox_with_Docker.desktop
@@ -196,10 +193,6 @@
       copy: src=./files/Firefox_with_Docker.desktop dest="{{ansible_env.HOME}}/.local/share/applications/Firefox_with_Docker.desktop" owner="{{ playing_user }}" group="{{ playing_user }}" mode=0755
       become: yes
       become_user: "{{ playing_user }}"
-    - name: copy /etc/cron.monthly/docker_image_update.py
-      copy: src=./files/cron.monthly/docker_image_update.py dest=/etc/cron.monthly/docker_image_update.py owner=root group=root mode=0755
-    - name: copy /etc/cron.monthly/notify_viruscheck_cron.py
-      copy: src=./files/cron.monthly/notify_viruscheck_cron.py dest=/etc/cron.monthly/notify_viruscheck_cron.py owner=root group=root mode=0755
     - name: mkdir /etc/skel/.config/dconf
       file: path=/etc/skel/.config/dconf state=directory owner=root group=root mode=0755 recurse=yes
     - name: copy /etc/skel/.config/dconf/user
@@ -208,85 +201,60 @@
       copy: src=./files/dconf/user dest="{{ansible_env.HOME}}/.config/dconf/user" owner="{{ playing_user }}" group="{{ playing_user }}" mode=0644
       become: yes
       become_user: "{{ playing_user }}"
+
+    - name: copy /etc/cron.monthly/docker_image_update.py
+      copy: src=./files/cron.monthly/docker_image_update.py dest=/etc/cron.monthly/docker_image_update.py owner=root group=root mode=0755
+    - name: copy /etc/cron.monthly/notify_viruscheck_cron.py
+      copy: src=./files/cron.monthly/notify_viruscheck_cron.py dest=/etc/cron.monthly/notify_viruscheck_cron.py owner=root group=root mode=0755
     - name: copy /etc/apt/apt.conf.d/20auto-upgrades
       copy: src=./files/apt/apt.conf.d/20auto-upgrades dest=/etc/apt/apt.conf.d/20auto-upgrades owner=root group=root mode=0644
+
     - template:
         src: ./files/iptables/rules.v4.j2
         dest: /etc/iptables/rules.v4
         owner: root
         group: root
+
     - name: copy /etc/iptables/rules.v6
       copy: src=./files/iptables/rules.v6 dest=/etc/iptables/rules.v6 owner=root group=root
       when: not ansible_check_mode
-    - name: LocalSocketGroup root
+
+    - name: edit clamd.conf
       lineinfile: 
         path: /etc/clamav/clamd.conf
-        regexp: '^LocalSocketGroup'
-        line: 'LocalSocketGroup root'
-    - name: User root
-      lineinfile: 
-        path: /etc/clamav/clamd.conf
-        regexp: '^User'
-        line: 'User root'
-    - name: MaxDirectoryRecursion 20
-      lineinfile: 
-        path: /etc/clamav/clamd.conf
-        regexp: '^MaxDirectoryRecursion'
-        line: 'MaxDirectoryRecursion 20'
-    - name: ScanOnAccess true
-      lineinfile: 
-        path: /etc/clamav/clamd.conf
-        regexp: '^ScanOnAccess'
-        line: 'ScanOnAccess true'
-    - name: MaxScanSize 0M
-      lineinfile: 
-        path: /etc/clamav/clamd.conf
-        regexp: '^MaxScanSize'
-        line: 'MaxScanSize 0M'
-    - name: MaxFileSize 0M
-      lineinfile: 
-        path: /etc/clamav/clamd.conf
-        regexp: '^MaxFileSize'
-        line: 'MaxFileSize 0M'
-    - name: MaxFiles 100000
-      lineinfile: 
-        path: /etc/clamav/clamd.conf
-        regexp: '^MaxFiles'
-        line: 'MaxFiles 100000'
-    - name: OnAccessMountPath /
-      lineinfile: 
-        path: /etc/clamav/clamd.conf
-        regexp: '^OnAccessMountPath'
-        line: 'OnAccessMountPath /'
+        regexp: "{{ item.regexp }}"
+        line: "{{ item.line }}"
+      with_items:
+        - { regexp: '^LocalSocketGroup', line: 'LocalSocketGroup root'}
+        - { regexp: '^User', line: 'User root'}
+        - { regexp: '^MaxDirectoryRecursion', line: 'MaxDirectoryRecursion 20'}
+        - { regexp: '^ScanOnAccess', line: 'ScanOnAccess true'}
+        - { regexp: '^MaxScanSize', line: 'MaxScanSize 0M'}
+        - { regexp: '^MaxFileSize', line: 'MaxFileSize 0M'}
+        - { regexp: '^MaxFiles', line: 'MaxFiles 100000'}
+        - { regexp: '^OnAccessMountPath', line: 'OnAccessMountPath /'}
+
     - name: Unattended-Upgrade::Remove-Unused-Dependencies "true";
       lineinfile: 
         path: /etc/apt/apt.conf.d/50unattended-upgrades
         regexp: '^(//)?Unattended-Upgrade::Remove-Unused-Dependencies'
         line: 'Unattended-Upgrade::Remove-Unused-Dependencies "true";'
-    - name: pool 0.debian.pool.ntp.org iburst
+
+    - name: edit ntp.conf
       lineinfile: 
         path: /etc/ntp.conf
-        regexp: '^pool 0.debian.pool.ntp.org iburst'
-        line: '#pool 0.debian.pool.ntp.org iburst'
-    - name: pool 1.debian.pool.ntp.org iburst
-      lineinfile: 
-        path: /etc/ntp.conf
-        regexp: '^pool 1.debian.pool.ntp.org iburst'
-        line: '#pool 1.debian.pool.ntp.org iburst'
-    - name: pool 2.debian.pool.ntp.org iburst
-      lineinfile: 
-        path: /etc/ntp.conf
-        regexp: '^pool 2.debian.pool.ntp.org iburst'
-        line: '#pool 2.debian.pool.ntp.org iburst'
-    - name: pool 3.debian.pool.ntp.org iburst
-      lineinfile: 
-        path: /etc/ntp.conf
-        regexp: '^pool 3.debian.pool.ntp.org iburst'
-        line: '#pool 3.debian.pool.ntp.org iburst'
+        regexp: "{{ item.regexp }}"
+        line: "{{ item.line }}"
+      with_items:
+        - { regexp: '^pool 0.debian.pool.ntp.org iburst', line: '#pool 0.debian.pool.ntp.org iburst'}
+        - { regexp: '^pool 1.debian.pool.ntp.org iburst', line: '#pool 1.debian.pool.ntp.org iburst'}
+        - { regexp: '^pool 2.debian.pool.ntp.org iburst', line: '#pool 2.debian.pool.ntp.org iburst'}
+        - { regexp: '^pool 3.debian.pool.ntp.org iburst', line: '#pool 3.debian.pool.ntp.org iburst'}
     - name: pool ntp.nict.jp iburst
       lineinfile: 
         path: /etc/ntp.conf
         line: 'pool ntp.nict.jp iburst'
+
     - name: build "firefox-image"
       docker_image:
         path: /opt/docker-image/firefox-package/firefox/
@@ -334,94 +302,51 @@
         name: vscode-extension-image:ansible-build
         repository: vscode-extension-image:latest
       ignore_errors: "{{ ansible_check_mode }}"
+
     - name: systemctl reload
       systemd:
         daemon_reload: yes
-    - name: systemctl enable clamav-update-docker
+    - name: systemctl enable
       systemd:
-        name: clamav-update-docker.service
+        name: "{{ item }}"
         state: stopped
         enabled: yes
-    - name: systemctl enable clamav-watchdog
-      systemd:
-        name: clamav-watchdog.service
-        state: stopped
-        enabled: yes
-    - name: systemctl enable vscode-extension-update-docker
-      systemd:
-        name: vscode-extension-update-docker.service
-        state: stopped
-        enabled: yes
-    - name: systemctl enable vscode-update-docker
-      systemd:
-        name: vscode-update-docker.service
-        state: stopped
-        enabled: yes
-    - name: mkdir HOME/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com
-      file: path="{{ansible_env.HOME}}/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com" state=directory owner="{{ playing_user }}" group="{{ playing_user }}" mode=0755 recurse=yes
+      with_items:
+        - clamav-update-docker.service
+        - clamav-watchdog.service
+        - vscode-extension-update-docker.service
+        - vscode-update-docker.service
+
+    - name: mkdir HOME/.local/share/gnome-shell/extensions/{{ item }}
+      file: path="{{ansible_env.HOME}}/.local/share/gnome-shell/extensions/{{ item }}" state=directory owner="{{ playing_user }}" group="{{ playing_user }}" mode=0755 recurse=yes
       become: yes
       become_user: "{{ playing_user }}"
-    - name: Unarchive dash-to-dock
+      with_items:
+        - dash-to-dock@micxgx.gmail.com
+        - activities-config@nls1729
+        - Move_Clock@rmy.pobox.com
+        - panel-date-format@keiii.github.com
+    - name: Unarchive gnome plugin
       unarchive:
-        src: https://extensions.gnome.org/extension-data/dash-to-dockmicxgx.gmail.com.v65.shell-extension.zip
-        dest: "{{ansible_env.HOME}}/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com"
+        src: "https://extensions.gnome.org/extension-data/{{ item.src }}""
+        dest: "{{ansible_env.HOME}}/.local/share/gnome-shell/extensions/{{ item.dest }}"
         remote_src: yes
       become: yes
       become_user: "{{ playing_user }}"
+      with_items:
+        - { src: dash-to-dockmicxgx.gmail.com.v65.shell-extension.zip, dest: dash-to-dock@micxgx.gmail.com }
+        - { src: activities-config%40nls1729.v58.shell-extension.zip, dest: activities-config@nls1729 }
+        - { src: Move_Clock%40rmy.pobox.com.v12.shell-extension.zip, dest: Move_Clock@rmy.pobox.com }
+        - { src: panel-date-format%40keiii.github.com.v1.shell-extension.zip, dest: panel-date-format@keiii.github.com }
       ignore_errors: "{{ ansible_check_mode }}"
-    - name: mkdir HOME/.local/share/gnome-shell/extensions/activities-config@nls1729/"
-      file: path="{{ansible_env.HOME}}/.local/share/gnome-shell/extensions/activities-config@nls1729/" state=directory owner="{{ playing_user }}" group="{{ playing_user }}" mode=0755 recurse=yes
+    - name: gnome-shell-extension-tool -e
+      shell: gnome-shell-extension-tool -e {{ item }}
       become: yes
       become_user: "{{ playing_user }}"
-    - name: Unarchive activities-configurator
-      unarchive:
-        src: https://extensions.gnome.org/extension-data/activities-config%40nls1729.v58.shell-extension.zip
-        dest: "{{ansible_env.HOME}}/.local/share/gnome-shell/extensions/activities-config@nls1729/"
-        remote_src: yes
-      become: yes
-      become_user: "{{ playing_user }}"
-      ignore_errors: "{{ ansible_check_mode }}"
-    - name: mkdir HOME/.local/share/gnome-shell/extensions/Move_Clock@rmy.pobox.com/
-      file: path="{{ansible_env.HOME}}/.local/share/gnome-shell/extensions/Move_Clock@rmy.pobox.com/" state=directory owner="{{ playing_user }}" group="{{ playing_user }}" mode=0755 recurse=yes
-      become: yes
-      become_user: "{{ playing_user }}"
-    - name: Unarchive Frippery-Move-Clock
-      unarchive:
-        src: https://extensions.gnome.org/extension-data/Move_Clock%40rmy.pobox.com.v12.shell-extension.zip
-        dest: "{{ansible_env.HOME}}/.local/share/gnome-shell/extensions/Move_Clock@rmy.pobox.com/"
-        remote_src: yes
-      become: yes
-      become_user: "{{ playing_user }}"
-      ignore_errors: "{{ ansible_check_mode }}"
-    - name: mkdir HOME/.local/share/gnome-shell/extensions/panel-date-format@keiii.github.com/
-      file: path="{{ansible_env.HOME}}/.local/share/gnome-shell/extensions/panel-date-format@keiii.github.com/" state=directory owner="{{ playing_user }}" group="{{ playing_user }}" mode=0755 recurse=yes
-      become: yes
-      become_user: "{{ playing_user }}"
-    - name: Unarchive panel-date-format
-      unarchive:
-        src: https://extensions.gnome.org/extension-data/panel-date-format%40keiii.github.com.v1.shell-extension.zip
-        dest: "{{ansible_env.HOME}}/.local/share/gnome-shell/extensions/panel-date-format@keiii.github.com/"
-        remote_src: yes
-      become: yes
-      become_user: "{{ playing_user }}"
-      ignore_errors: "{{ ansible_check_mode }}"
-    - name: gnome-shell-extension-tool -e dash-to-dock@micxgx.gmail.com
-      shell: gnome-shell-extension-tool -e dash-to-dock@micxgx.gmail.com
-      become: yes
-      become_user: "{{ playing_user }}"
+      with_items:
+        - dash-to-dock@micxgx.gmail.com
+        - activities-config@nls1729
+        - Move_Clock@rmy.pobox.com
+        - panel-date-format@keiii.github.com
       ignore_errors: yes
-    - name: gnome-shell-extension-tool -e activities-config@nls1729
-      shell: gnome-shell-extension-tool -e activities-config@nls1729
-      become: yes
-      become_user: "{{ playing_user }}"
-      ignore_errors: yes
-    - name: gnome-shell-extension-tool -e Move_Clock@rmy.pobox.com
-      shell: gnome-shell-extension-tool -e Move_Clock@rmy.pobox.com
-      become: yes
-      become_user: "{{ playing_user }}"
-      ignore_errors: yes
-    - name: gnome-shell-extension-tool -e panel-date-format@keiii.github.com
-      shell: gnome-shell-extension-tool -e panel-date-format@keiii.github.com
-      become: yes
-      become_user: "{{ playing_user }}"
-      ignore_errors: yes
+
