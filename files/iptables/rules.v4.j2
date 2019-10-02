@@ -94,6 +94,15 @@
 -A OUTPUT -o {{ network_interface }} -d 34.201.236.93 -p tcp --dport 443 -j ACCEPT
 -A OUTPUT -o {{ network_interface }} -d 34.233.151.211 -p tcp --dport 443 -j ACCEPT
 -A OUTPUT -o {{ network_interface }} -d 52.70.175.131 -p tcp --dport 443 -j ACCEPT
+-A OUTPUT -o {{ network_interface }} -d 3.224.11.4 -p tcp --dport 443 -j ACCEPT
+-A OUTPUT -o {{ network_interface }} -d 54.88.231.116 -p tcp --dport 443 -j ACCEPT
+-A OUTPUT -o {{ network_interface }} -d 3.224.75.242 -p tcp --dport 443 -j ACCEPT
+-A OUTPUT -o {{ network_interface }} -d 34.192.182.239 -p tcp --dport 443 -j ACCEPT
+-A OUTPUT -o {{ network_interface }} -d 3.221.133.86 -p tcp --dport 443 -j ACCEPT
+-A OUTPUT -o {{ network_interface }} -d 100.24.246.89 -p tcp --dport 443 -j ACCEPT
+-A OUTPUT -o {{ network_interface }} -d 34.197.189.129 -p tcp --dport 443 -j ACCEPT
+-A OUTPUT -o {{ network_interface }} -d 3.210.179.11 -p tcp --dport 443 -j ACCEPT
+
 
 # production.cloudflare.docker.com
 -A OUTPUT -o {{ network_interface }} -d 104.18.121.25 -p tcp --dport 443 -j ACCEPT
