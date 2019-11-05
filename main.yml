@@ -184,6 +184,7 @@
         - clamav-watchdog.service
         - vscode-extension-update-docker.service
         - vscode-update-docker.service
+        - docker-update-docker.service
 
     - name: mkdir /etc/skel/.local/share/applications
       file: path=/etc/skel/.local/share/applications state=directory owner=root group=root mode=0755 recurse=yes
@@ -302,6 +303,17 @@
         name: vscode-extension-image:ansible-build
         repository: vscode-extension-image:latest
       ignore_errors: "{{ ansible_check_mode }}"
+    - name: build "docker-image"
+      docker_image:
+        path: /opt/docker-image/docker-package/docker/
+        name: docker-image
+        tag: ansible-build
+      ignore_errors: "{{ ansible_check_mode }}"
+    - name: tag "docker-image"
+      docker_image:
+        name: docker-image:ansible-build
+        repository: docker-image:latest
+      ignore_errors: "{{ ansible_check_mode }}"
 
     - name: systemctl reload
       systemd:
@@ -316,6 +328,7 @@
         - clamav-watchdog.service
         - vscode-extension-update-docker.service
         - vscode-update-docker.service
+        - docker-update-docker.service
 
     - name: mkdir HOME/.local/share/gnome-shell/extensions/{{ item }}
       file: path="{{ansible_env.HOME}}/.local/share/gnome-shell/extensions/{{ item }}" state=directory owner="{{ playing_user }}" group="{{ playing_user }}" mode=0755 recurse=yes

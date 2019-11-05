@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+  docker:
+    image: "docker-image"
+    container_name: docker1
+    volumes:
+      - /opt/docker-image/docker-package/docker/package/:/var/cache/apt/archives/
+    cap_drop:
+      - ALL
+    cap_add:
+      - SETGID
+      - SETUID
+      - SETFCAP
+      - CHOWN
+      - FOWNER
+      - FSETID
+      - DAC_OVERRIDE
