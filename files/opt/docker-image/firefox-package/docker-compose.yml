@@ -4,6 +4,7 @@ services:
   firefox:
 #    build: ./firefox
     image: "firefox-image"
+    shm_size: 1g
     container_name: firefox1
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix

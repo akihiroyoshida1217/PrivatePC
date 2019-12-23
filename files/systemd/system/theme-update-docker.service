@@ -1,0 +1,16 @@
+[Unit]
+Description=Gnome Theme Update with Docker
+After=docker.service
+
+[Service]
+TimeoutSec=15min
+ExecStartPre=/usr/local/bin/docker-compose -f /opt/docker-image/theme-package/docker-compose.yml run --rm theme
+ExecStart=/bin/bash -c "/usr/bin/apt-get install -y `ls /opt/docker-image/theme-package/theme/package/adapta-gtk-theme*` `ls /opt/docker-image/theme-package/theme/package/paper-icon-theme*`"
+#Restart=always
+#Restart=no
+Type=simple
+#Type=notify
+#WatchdogSec=1
+
+[Install]
+WantedBy=multi-user.target

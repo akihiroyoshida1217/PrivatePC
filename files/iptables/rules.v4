@@ -115,6 +115,7 @@
 -A OUTPUT -o wlp2s0 -d 151.101.196.204 -p tcp --dport 80 -j ACCEPT
 -A OUTPUT -o wlp2s0 -d 151.101.72.204 -p tcp --dport 80 -j ACCEPT
 -A OUTPUT -o wlp2s0 -d 151.101.228.204 -p tcp --dport 80 -j ACCEPT
+-A OUTPUT -o wlp2s0 -d 151.101.108.204 -p tcp --dport 80 -j ACCEPT
 
 # ppa.launchpad.net
 -A OUTPUT -o wlp2s0 -d 91.189.95.83 -p tcp --dport 80 -j ACCEPT

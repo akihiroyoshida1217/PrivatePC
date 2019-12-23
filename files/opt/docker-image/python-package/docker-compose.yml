@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+  python:
+    image: "python-image"
+    container_name: python1
+    volumes:
+      - /opt/docker-image/python-package/docker/package/:/src
+    cap_drop:
+      - ALL
+    cap_add:
+      - SETGID
+      - SETUID
+      - SETFCAP
+      - CHOWN
+      - FOWNER
+      - FSETID
+      - DAC_OVERRIDE

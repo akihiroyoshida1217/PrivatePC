@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+  theme:
+    image: "theme-image"
+    container_name: theme1
+    volumes:
+      - /opt/docker-image/theme-package/theme/package/:/var/cache/apt/archives/
+    cap_drop:
+      - ALL
+    cap_add:
+      - SETGID
+      - SETUID
+      - SETFCAP
+      - CHOWN
+      - FOWNER
+      - FSETID
+      - DAC_OVERRIDE
