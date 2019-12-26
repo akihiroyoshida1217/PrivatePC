@@ -4,15 +4,30 @@
 import datetime
 import docker
 import traceback
+import re
 
 def imageupdate():
     try:
+        with open("/etc/os-release) as ld:
+            lines = ld.readlines()
+
+        version_code = [line.strip() for line in lines if re.search("VERSION_CODENAME",line)][0].split("=")[1]
+        
         client = docker.from_env()
+        client.images.pull("debian:" + version_code)
         client.images.pull("debian:latest")
+        imagelists_with_buildarg = { "vscode-image" : "/opt/docker-image/vscode-package/vscode/" , 
+                  "docker-image" : "/opt/docker-image/docker-package/docker/" , 
+                  "python-image" : "/opt/docker-image/python-package/python/"}
+        [ client.images.build(path = v , 
+                               tag = k + ":" +  "{0:%Y%m}".format(datetime.datetime.now()), 
+                               nocache = True , 
+                               buildargs = { "imagever": version_code }
+                               dockerfile = v + "Dockerfile"
+                               )[0].tag(repository = k , tag = "latest") for k, v in imagelists.items() ]
         imagelists = { "firefox-image" : "/opt/docker-image/firefox-package/firefox/" , 
                   "freshclam" : "/opt/docker-image/clamav-package/clamav/" , 
-                  "vscode-image" : "/opt/docker-image/vscode-package/vscode/" , 
-                  "vscode-extension-image" : "/opt/docker-image/vscode-extension-package/vscode-extension/"}
+                  "vscode-extension-image" : "/opt/docker-image/vscode-extension-package/vscode-extension/"
         [ client.images.build(path = v , 
                                tag = k + ":" +  "{0:%Y%m}".format(datetime.datetime.now()), 
                                nocache = True , 

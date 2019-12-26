@@ -1,4 +1,4 @@
-FROM debian:latest
+FROM debian:stretch
 
 RUN apt-get update -qq && \
     apt-get install -yq --no-install-recommends curl apt-transport-https gpg && \

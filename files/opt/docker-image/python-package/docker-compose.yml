@@ -5,7 +5,7 @@ services:
     image: "python-image"
     container_name: python1
     volumes:
-      - /opt/docker-image/python-package/docker/package/:/src
+      - /opt/docker-image/python-package/python/package/:/src
     cap_drop:
       - ALL
     cap_add:

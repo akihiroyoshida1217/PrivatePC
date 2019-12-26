@@ -10,7 +10,7 @@
 -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
 #-A OUTPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
 
--A OUTPUT -p udp --dport 53 -j ACCEPT
+#-A OUTPUT -p udp --dport 53 -j ACCEPT
 
 # ntp.nict.jp
 -A OUTPUT -o {{ network_interface }} -d 133.243.238.163 -p udp --dport 123 -j ACCEPT
@@ -46,44 +46,44 @@
 -A OUTPUT -o {{ network_interface }} -d 210.159.71.23 -p tcp --dport 80 -j ACCEPT
 # ring.ix.oita-u.ac.jp
 -A OUTPUT -o {{ network_interface }} -d 133.37.44.6 -p tcp --dport 80 -j ACCEPT
-# security.debin.org
+# security.debian.org
 -A OUTPUT -o {{ network_interface }} -d 133.242.99.74 -p tcp --dport 80 -j ACCEPT
 # ftp.jp.debian.org
 -A OUTPUT -o {{ network_interface }} -d 150.65.7.130 -p tcp --dport 80 -j ACCEPT
 
 # download.docker.com
--A OUTPUT -o {{ network_interface }} -d 13.32.52.90 -p tcp --dport 443 -j ACCEPT
--A OUTPUT -o {{ network_interface }} -d 13.32.52.25 -p tcp --dport 443 -j ACCEPT
--A OUTPUT -o {{ network_interface }} -d 13.32.52.64 -p tcp --dport 443 -j ACCEPT
--A OUTPUT -o {{ network_interface }} -d 13.32.52.78 -p tcp --dport 443 -j ACCEPT
--A OUTPUT -o {{ network_interface }} -d 13.35.67.89 -p tcp --dport 443 -j ACCEPT
--A OUTPUT -o {{ network_interface }} -d 13.35.67.104 -p tcp --dport 443 -j ACCEPT
--A OUTPUT -o {{ network_interface }} -d 13.35.67.79 -p tcp --dport 443 -j ACCEPT
--A OUTPUT -o {{ network_interface }} -d 13.35.67.42 -p tcp --dport 443 -j ACCEPT
--A OUTPUT -o {{ network_interface }} -d 143.204.83.95 -p tcp --dport 443 -j ACCEPT
--A OUTPUT -o {{ network_interface }} -d 143.204.83.49 -p tcp --dport 443 -j ACCEPT
--A OUTPUT -o {{ network_interface }} -d 143.204.83.32 -p tcp --dport 443 -j ACCEPT
--A OUTPUT -o {{ network_interface }} -d 143.204.83.37 -p tcp --dport 443 -j ACCEPT
--A OUTPUT -o {{ network_interface }} -d 52.85.12.83 -p tcp --dport 443 -j ACCEPT
--A OUTPUT -o {{ network_interface }} -d 52.85.12.107 -p tcp --dport 443 -j ACCEPT
--A OUTPUT -o {{ network_interface }} -d 52.85.12.177 -p tcp --dport 443 -j ACCEPT
--A OUTPUT -o {{ network_interface }} -d 52.85.12.245 -p tcp --dport 443 -j ACCEPT
--A OUTPUT -o {{ network_interface }} -d 99.84.59.78 -p tcp --dport 443 -j ACCEPT
--A OUTPUT -o {{ network_interface }} -d 99.84.59.129 -p tcp --dport 443 -j ACCEPT
--A OUTPUT -o {{ network_interface }} -d 99.84.59.89 -p tcp --dport 443 -j ACCEPT
--A OUTPUT -o {{ network_interface }} -d 99.84.59.29 -p tcp --dport 443 -j ACCEPT
--A OUTPUT -o {{ network_interface }} -d 13.33.213.65 -p tcp --dport 443 -j ACCEPT
--A OUTPUT -o {{ network_interface }} -d 13.33.213.48 -p tcp --dport 443 -j ACCEPT
--A OUTPUT -o {{ network_interface }} -d 13.33.213.226 -p tcp --dport 443 -j ACCEPT
--A OUTPUT -o {{ network_interface }} -d 13.33.213.17 -p tcp --dport 443 -j ACCEPT
--A OUTPUT -o {{ network_interface }} -d 13.32.54.120 -p tcp --dport 443 -j ACCEPT
--A OUTPUT -o {{ network_interface }} -d 13.32.54.18 -p tcp --dport 443 -j ACCEPT
--A OUTPUT -o {{ network_interface }} -d 13.32.54.53 -p tcp --dport 443 -j ACCEPT
--A OUTPUT -o {{ network_interface }} -d 13.32.54.77 -p tcp --dport 443 -j ACCEPT
--A OUTPUT -o {{ network_interface }} -d 54.240.188.20 -p tcp --dport 443 -j ACCEPT
--A OUTPUT -o {{ network_interface }} -d 54.240.188.10 -p tcp --dport 443 -j ACCEPT
--A OUTPUT -o {{ network_interface }} -d 54.240.188.37 -p tcp --dport 443 -j ACCEPT
--A OUTPUT -o {{ network_interface }} -d 54.240.188.71 -p tcp --dport 443 -j ACCEPT
+#-A OUTPUT -o {{ network_interface }} -d 13.32.52.90 -p tcp --dport 443 -j ACCEPT
+#-A OUTPUT -o {{ network_interface }} -d 13.32.52.25 -p tcp --dport 443 -j ACCEPT
+#-A OUTPUT -o {{ network_interface }} -d 13.32.52.64 -p tcp --dport 443 -j ACCEPT
+#-A OUTPUT -o {{ network_interface }} -d 13.32.52.78 -p tcp --dport 443 -j ACCEPT
+#-A OUTPUT -o {{ network_interface }} -d 13.35.67.89 -p tcp --dport 443 -j ACCEPT
+#-A OUTPUT -o {{ network_interface }} -d 13.35.67.104 -p tcp --dport 443 -j ACCEPT
+#-A OUTPUT -o {{ network_interface }} -d 13.35.67.79 -p tcp --dport 443 -j ACCEPT
+#-A OUTPUT -o {{ network_interface }} -d 13.35.67.42 -p tcp --dport 443 -j ACCEPT
+#-A OUTPUT -o {{ network_interface }} -d 143.204.83.95 -p tcp --dport 443 -j ACCEPT
+#-A OUTPUT -o {{ network_interface }} -d 143.204.83.49 -p tcp --dport 443 -j ACCEPT
+#-A OUTPUT -o {{ network_interface }} -d 143.204.83.32 -p tcp --dport 443 -j ACCEPT
+#-A OUTPUT -o {{ network_interface }} -d 143.204.83.37 -p tcp --dport 443 -j ACCEPT
+#-A OUTPUT -o {{ network_interface }} -d 52.85.12.83 -p tcp --dport 443 -j ACCEPT
+#-A OUTPUT -o {{ network_interface }} -d 52.85.12.107 -p tcp --dport 443 -j ACCEPT
+#-A OUTPUT -o {{ network_interface }} -d 52.85.12.177 -p tcp --dport 443 -j ACCEPT
+#-A OUTPUT -o {{ network_interface }} -d 52.85.12.245 -p tcp --dport 443 -j ACCEPT
+#-A OUTPUT -o {{ network_interface }} -d 99.84.59.78 -p tcp --dport 443 -j ACCEPT
+#-A OUTPUT -o {{ network_interface }} -d 99.84.59.129 -p tcp --dport 443 -j ACCEPT
+#-A OUTPUT -o {{ network_interface }} -d 99.84.59.89 -p tcp --dport 443 -j ACCEPT
+#-A OUTPUT -o {{ network_interface }} -d 99.84.59.29 -p tcp --dport 443 -j ACCEPT
+#-A OUTPUT -o {{ network_interface }} -d 13.33.213.65 -p tcp --dport 443 -j ACCEPT
+#-A OUTPUT -o {{ network_interface }} -d 13.33.213.48 -p tcp --dport 443 -j ACCEPT
+#-A OUTPUT -o {{ network_interface }} -d 13.33.213.226 -p tcp --dport 443 -j ACCEPT
+#-A OUTPUT -o {{ network_interface }} -d 13.33.213.17 -p tcp --dport 443 -j ACCEPT
+#-A OUTPUT -o {{ network_interface }} -d 13.32.54.120 -p tcp --dport 443 -j ACCEPT
+#-A OUTPUT -o {{ network_interface }} -d 13.32.54.18 -p tcp --dport 443 -j ACCEPT
+#-A OUTPUT -o {{ network_interface }} -d 13.32.54.53 -p tcp --dport 443 -j ACCEPT
+#-A OUTPUT -o {{ network_interface }} -d 13.32.54.77 -p tcp --dport 443 -j ACCEPT
+#-A OUTPUT -o {{ network_interface }} -d 54.240.188.20 -p tcp --dport 443 -j ACCEPT
+#-A OUTPUT -o {{ network_interface }} -d 54.240.188.10 -p tcp --dport 443 -j ACCEPT
+#-A OUTPUT -o {{ network_interface }} -d 54.240.188.37 -p tcp --dport 443 -j ACCEPT
+#-A OUTPUT -o {{ network_interface }} -d 54.240.188.71 -p tcp --dport 443 -j ACCEPT
 
 # registry-1.docker.io
 -A OUTPUT -o {{ network_interface }} -d 34.200.28.105 -p tcp --dport 443 -j ACCEPT
@@ -102,7 +102,6 @@
 -A OUTPUT -o {{ network_interface }} -d 100.24.246.89 -p tcp --dport 443 -j ACCEPT
 -A OUTPUT -o {{ network_interface }} -d 34.197.189.129 -p tcp --dport 443 -j ACCEPT
 -A OUTPUT -o {{ network_interface }} -d 3.210.179.11 -p tcp --dport 443 -j ACCEPT
-
 
 # production.cloudflare.docker.com
 -A OUTPUT -o {{ network_interface }} -d 104.18.121.25 -p tcp --dport 443 -j ACCEPT
@@ -126,35 +125,43 @@
 -A OUTPUT -o {{ network_interface }} -d 151.101.228.204 -p tcp --dport 80 -j ACCEPT
 
 # ppa.launchpad.net
--A OUTPUT -o {{ network_interface }} -d 91.189.95.83 -p tcp --dport 80 -j ACCEPT
+#-A OUTPUT -o {{ network_interface }} -d 91.189.95.83 -p tcp --dport 80 -j ACCEPT
 
 # keyserver.ubuntu.com
--A OUTPUT -o {{ network_interface }} -d 91.189.90.55 -p tcp --dport 80 -j ACCEPT
--A OUTPUT -o {{ network_interface }} -d 91.189.89.49 -p tcp --dport 80 -j ACCEPT
+#-A OUTPUT -o {{ network_interface }} -d 91.189.90.55 -p tcp --dport 80 -j ACCEPT
+#-A OUTPUT -o {{ network_interface }} -d 91.189.89.49 -p tcp --dport 80 -j ACCEPT
 
 # extentions.gnome.org
 #-A OUTPUT -o {{ network_interface }} -d 209.132.180.168 -p tcp --dport 443 -j ACCEPT
 #-A OUTPUT -o {{ network_interface }} -d 209.132.180.180 -p tcp --dport 443 -j ACCEPT
 
 # pypi.org
--A OUTPUT -o {{ network_interface }} -d 151.101.192.223 -p tcp --dport 443 -j ACCEPT
--A OUTPUT -o {{ network_interface }} -d 151.101.128.223 -p tcp --dport 443 -j ACCEPT
--A OUTPUT -o {{ network_interface }} -d 151.101.64.223 -p tcp --dport 443 -j ACCEPT
--A OUTPUT -o {{ network_interface }} -d 151.101.0.223 -p tcp --dport 443 -j ACCEPT
+#-A OUTPUT -o {{ network_interface }} -d 151.101.192.223 -p tcp --dport 443 -j ACCEPT
+#-A OUTPUT -o {{ network_interface }} -d 151.101.128.223 -p tcp --dport 443 -j ACCEPT
+#-A OUTPUT -o {{ network_interface }} -d 151.101.64.223 -p tcp --dport 443 -j ACCEPT
+#-A OUTPUT -o {{ network_interface }} -d 151.101.0.223 -p tcp --dport 443 -j ACCEPT
 #-A OUTPUT -o {{ network_interface }} -d 151.101.192.223 -p tcp --dport 80 -j ACCEPT
 #-A OUTPUT -o {{ network_interface }} -d 151.101.128.223 -p tcp --dport 80 -j ACCEPT
 #-A OUTPUT -o {{ network_interface }} -d 151.101.64.223 -p tcp --dport 80 -j ACCEPT
 #-A OUTPUT -o {{ network_interface }} -d 151.101.0.223 -p tcp --dport 80 -j ACCEPT
 
 # bootstrap.pypa.io
--A OUTPUT -o {{ network_interface }} -d 151.101.228.175 -p tcp --dport 443 -j ACCEPT
+#-A OUTPUT -o {{ network_interface }} -d 151.101.228.175 -p tcp --dport 443 -j ACCEPT
 #-A OUTPUT -o {{ network_interface }} -d 151.101.228.175 -p tcp --dport 80 -j ACCEPT
 
 # pypi.python.org
--A OUTPUT -o {{ network_interface }} -d 151.101.228.223 -p tcp --dport 443 -j ACCEPT
+#-A OUTPUT -o {{ network_interface }} -d 151.101.228.223 -p tcp --dport 443 -j ACCEPT
 
 # files.pythonhosted.org
--A OUTPUT -o {{ network_interface }} -d 151.101.229.63 -p tcp --dport 443 -j ACCEPT
+#-A OUTPUT -o {{ network_interface }} -d 151.101.229.63 -p tcp --dport 443 -j ACCEPT
+
+#-A OUTPUT -o {{ network_interface }} -d 192.168.0.0/16 -p tcp --dport 443 -j ACCEPT
+#-A OUTPUT -o {{ network_interface }} -d 192.168.0.0/16 -p tcp --dport 80 -j ACCEPT
+#-A OUTPUT -o {{ network_interface }} -d 192.168.0.0/16 -p tcp --dport 22 -j ACCEPT
+#-A OUTPUT -o {{ network_interface }} -d 192.168.0.0/16 -p tcp --dport 23 -j ACCEPT
+#-A OUTPUT -o {{ network_interface }} -d 192.168.0.0/16 -p tcp --dport 3389 -j ACCEPT
+#-A OUTPUT -o {{ network_interface }} -d 192.168.0.0/16 -p udp --dport 3389 -j ACCEPT
+#-A OUTPUT -o {{ network_interface }} -d 192.168.0.0/16 -p tcp --dport 445 -j ACCEPT
 
 -A INPUT -m limit --limit 5/min -j LOG --log-prefix "iptables denied: " --log-level 7
 -A OUTPUT -m limit --limit 5/min -j LOG --log-prefix "iptables denied: " --log-level 7

@@ -1,9 +1,13 @@
 - hosts: all
   vars:
     playing_user: akihiro
-    network_interface: enp0s3
+    network_interface: eth0
 
   tasks:
+    - name: Get version_code
+      shell: cat /etc/os-release | grep VERSION_CODENAME | awk -F'=' '{print $2}'
+      register: version_code
+
     - name: pre-install packages
       apt: name={{ item }} update_cache=yes cache_valid_time=3600
       with_items:
@@ -26,50 +30,10 @@
       with_items:
         - { keyserver: keyserver.ubuntu.com, id: EAC0D406E5D79A82ADEEDFDFB76E53652D87398A }
         - { keyserver: keyserver.ubuntu.com, id: D320D0C30B02E64C5B2BB2743766223989993A70 }
-    #- name: add apt repository debian stretch
-    #  apt_repository:
-    #    repo: deb http://ftp.jp.debian.org/debian/ stretch main contrib non-free
-    #    state: present
-    #- name: add apt repository debian source stretch
-    #  apt_repository:
-    #    repo: deb-src http://ftp.jp.debian.org/debian/ stretch main contrib non-free
-    #    state: present
-    #- name: add apt repository debian stretch security
-    #  apt_repository:
-    #    repo: deb http://security.debian.org/debian-security stretch/updates main contrib non-free
-    #    state: present
-    #- name: add apt repository debian source stretch security
-    #  apt_repository:
-    #    repo: deb-src http://security.debian.org/debian-security stretch/updates main contrib non-free
-    #    state: present
-    #- name: add apt repository debian stretch updates
-    #  apt_repository:
-    #    repo: deb http://ftp.jp.debian.org/debian/ stretch-updates main contrib non-free
-    #    state: present
-    #- name: add apt repository debian source stretch updates
-    #  apt_repository:
-    #    repo: deb-src http://ftp.jp.debian.org/debian/ stretch-updates main contrib non-free
-    #    state: present
-    - name: add apt repository debian stretch backports
-      apt_repository:
-        repo: deb http://ftp.jp.debian.org/debian/ stretch-backports main contrib non-free
-        state: present
-    - name: add apt repository debian source stretch backports
-      apt_repository:
-        repo: deb-src http://ftp.jp.debian.org/debian/ stretch-backports main contrib non-free
-        state: present
-    - name: add apt repository debian testing
-      apt_repository:
-        repo: deb http://ftp.jp.debian.org/debian/ testing main contrib non-free
-        state: present
-    - name: add apt repository debian source testing
-      apt_repository:
-        repo: deb-src http://ftp.jp.debian.org/debian/ testing main contrib non-free
-        state: present
 
     - name: add apt repository docker
       apt_repository:
-        repo: deb [arch=amd64] https://download.docker.com/linux/debian stretch stable
+        repo: deb [arch=amd64] https://download.docker.com/linux/debian {{ version_code }} stable
         state: present
         filename: docker
 
@@ -112,6 +76,7 @@
         - libgconf-2-4
         - gconf2-common
         - docker-ce
+        - cifs-utils
       ignore_errors: "{{ ansible_check_mode }}"
     #- name: install packages
     #  apt: 
@@ -207,6 +172,8 @@
       copy: src=./files/cron.monthly/docker_image_update.py dest=/etc/cron.monthly/docker_image_update.py owner=root group=root mode=0755
     - name: copy /etc/cron.monthly/notify_viruscheck_cron.py
       copy: src=./files/cron.monthly/notify_viruscheck_cron.py dest=/etc/cron.monthly/notify_viruscheck_cron.py owner=root group=root mode=0755
+    - name: copy /etc/cron.monthly/notify_viruscheck_cron.py
+      copy: src=./files/cron.monthly/notify_viruscheck_cron.py dest=/etc/cron.monthly/python_pip_upgrade owner=root group=root mode=0755
     - name: copy /etc/apt/apt.conf.d/20auto-upgrades
       copy: src=./files/apt/apt.conf.d/20auto-upgrades dest=/etc/apt/apt.conf.d/20auto-upgrades owner=root group=root mode=0644
 
@@ -282,6 +249,8 @@
       docker_image:
         path: /opt/docker-image/vscode-package/vscode/
         name: vscode-image
+        buildargs:
+          imagever: "{{ version_code }}"
         tag: ansible-build
       ignore_errors: "{{ ansible_check_mode }}"
     - name: tag "vscode-image"
@@ -307,12 +276,27 @@
       docker_image:
         path: /opt/docker-image/docker-package/docker/
         name: docker-image
+        buildargs:
+          imagever: "{{ version_code }}"
         tag: ansible-build
       ignore_errors: "{{ ansible_check_mode }}"
     - name: tag "docker-image"
       docker_image:
         name: docker-image:ansible-build
         repository: docker-image:latest
+      ignore_errors: "{{ ansible_check_mode }}"
+    - name: build "python-image"
+      docker_image:
+        path: /opt/docker-image/python-package/python/
+        name: python-image
+        buildargs:
+          imagever: "{{ version_code }}"
+        tag: ansible-build
+      ignore_errors: "{{ ansible_check_mode }}"
+    - name: tag "python-image"
+      docker_image:
+        name: python-image:ansible-build
+        repository: python-image:latest
       ignore_errors: "{{ ansible_check_mode }}"
 
     - name: systemctl reload

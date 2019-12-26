@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+/usr/local/bin/docker-compose -f /opt/docker-image/python-package/docker-compose.yml run --rm python > /var/log/python_pip_download.log
+/usr/bin/pip3 install -U --no-index --find-links=/opt/docker-image/python-package/python/package/* /opt/docker-image/python-package/python/package/* > /var/log/python_pip_upgrade.log

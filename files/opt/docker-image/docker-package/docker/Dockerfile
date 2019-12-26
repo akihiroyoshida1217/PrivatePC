@@ -1,4 +1,5 @@
-FROM debian:latest
+ARG imagever="latest"
+FROM debian:${imagever}
 
 RUN apt-get update -qq && \
     apt-get install -yq --no-install-recommends curl apt-transport-https gpg && \
