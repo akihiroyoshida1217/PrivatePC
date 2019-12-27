@@ -8,7 +8,7 @@ import re
 
 def imageupdate():
     try:
-        with open("/etc/os-release) as ld:
+        with open("/etc/os-release") as ld:
             lines = ld.readlines()
 
         version_code = [line.strip() for line in lines if re.search("VERSION_CODENAME",line)][0].split("=")[1]
@@ -22,12 +22,12 @@ def imageupdate():
         [ client.images.build(path = v , 
                                tag = k + ":" +  "{0:%Y%m}".format(datetime.datetime.now()), 
                                nocache = True , 
-                               buildargs = { "imagever": version_code }
+                               buildargs = { "imagever": version_code } ,
                                dockerfile = v + "Dockerfile"
                                )[0].tag(repository = k , tag = "latest") for k, v in imagelists.items() ]
         imagelists = { "firefox-image" : "/opt/docker-image/firefox-package/firefox/" , 
                   "freshclam" : "/opt/docker-image/clamav-package/clamav/" , 
-                  "vscode-extension-image" : "/opt/docker-image/vscode-extension-package/vscode-extension/"
+                  "vscode-extension-image" : "/opt/docker-image/vscode-extension-package/vscode-extension/"}
         [ client.images.build(path = v , 
                                tag = k + ":" +  "{0:%Y%m}".format(datetime.datetime.now()), 
                                nocache = True , 

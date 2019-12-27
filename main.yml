@@ -33,7 +33,7 @@
 
     - name: add apt repository docker
       apt_repository:
-        repo: deb [arch=amd64] https://download.docker.com/linux/debian {{ version_code }} stable
+        repo: deb [arch=amd64] https://download.docker.com/linux/debian {{ version_code.stdout }} stable
         state: present
         filename: docker
 
@@ -250,7 +250,7 @@
         path: /opt/docker-image/vscode-package/vscode/
         name: vscode-image
         buildargs:
-          imagever: "{{ version_code }}"
+          imagever: "{{ version_code.stdout }}"
         tag: ansible-build
       ignore_errors: "{{ ansible_check_mode }}"
     - name: tag "vscode-image"
@@ -277,7 +277,7 @@
         path: /opt/docker-image/docker-package/docker/
         name: docker-image
         buildargs:
-          imagever: "{{ version_code }}"
+          imagever: "{{ version_code.stdout }}"
         tag: ansible-build
       ignore_errors: "{{ ansible_check_mode }}"
     - name: tag "docker-image"
@@ -290,7 +290,7 @@
         path: /opt/docker-image/python-package/python/
         name: python-image
         buildargs:
-          imagever: "{{ version_code }}"
+          imagever: "{{ version_code.stdout }}"
         tag: ansible-build
       ignore_errors: "{{ ansible_check_mode }}"
     - name: tag "python-image"
