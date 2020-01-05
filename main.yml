@@ -1,7 +1,7 @@
 - hosts: all
   vars:
     playing_user: akihiro
-    network_interface: eth0
+    network_interface: ens33
 
   tasks:
     - name: Get version_code
@@ -77,6 +77,7 @@
         - gconf2-common
         - docker-ce
         - cifs-utils
+        - python3-pkgconfig
       ignore_errors: "{{ ansible_check_mode }}"
     #- name: install packages
     #  apt: 
@@ -94,12 +95,12 @@
           - docker
           - watchdog
           - pylint
-          - systemd
+          - systemd-python
       ignore_errors: "{{ ansible_check_mode }}"
-    - pip:
-        name: docker
-        executable: pip
-      ignore_errors: "{{ ansible_check_mode }}"
+    #- pip:
+    #    name: docker
+    #    executable: pip2
+    #  ignore_errors: "{{ ansible_check_mode }}"
 
     - name: mkdir /opt/clamav
       file: path=/opt/clamav state=directory owner=root group=root mode=0755
@@ -225,7 +226,8 @@
 
     - name: build "firefox-image"
       docker_image:
-        path: /opt/docker-image/firefox-package/firefox/
+        build:
+          path: /opt/docker-image/firefox-package/firefox/
         name: firefox-image
         tag: ansible-build
       ignore_errors: "{{ ansible_check_mode }}"
@@ -236,7 +238,8 @@
       ignore_errors: "{{ ansible_check_mode }}"
     - name: build "freshclam"
       docker_image:
-        path: /opt/docker-image/clamav-package/clamav/
+        build:
+          path: /opt/docker-image/clamav-package/clamav/
         name: freshclam
         tag: ansible-build
       ignore_errors: "{{ ansible_check_mode }}"
@@ -247,10 +250,11 @@
       ignore_errors: "{{ ansible_check_mode }}"
     - name: build "vscode-image"
       docker_image:
-        path: /opt/docker-image/vscode-package/vscode/
+        build:
+          path: /opt/docker-image/vscode-package/vscode/
+          args:
+            imagever: "{{ version_code.stdout }}"
         name: vscode-image
-        buildargs:
-          imagever: "{{ version_code.stdout }}"
         tag: ansible-build
       ignore_errors: "{{ ansible_check_mode }}"
     - name: tag "vscode-image"
@@ -261,9 +265,10 @@
     - name: build "vscode-extension-image"
       docker_image:
         name: vscode-extension-image
-        path: /opt/docker-image/vscode-extension-package/vscode-extension/
-        buildargs:
-          imagever: ansible-build
+        build:
+          path: /opt/docker-image/vscode-extension-package/vscode-extension/
+          args:
+            imagever: ansible-build
         tag: ansible-build
         pull: no
       ignore_errors: "{{ ansible_check_mode }}"
@@ -274,10 +279,11 @@
       ignore_errors: "{{ ansible_check_mode }}"
     - name: build "docker-image"
       docker_image:
-        path: /opt/docker-image/docker-package/docker/
+        build:
+          path: /opt/docker-image/docker-package/docker/
+          args:
+            imagever: "{{ version_code.stdout }}"
         name: docker-image
-        buildargs:
-          imagever: "{{ version_code.stdout }}"
         tag: ansible-build
       ignore_errors: "{{ ansible_check_mode }}"
     - name: tag "docker-image"
@@ -287,10 +293,11 @@
       ignore_errors: "{{ ansible_check_mode }}"
     - name: build "python-image"
       docker_image:
-        path: /opt/docker-image/python-package/python/
+        build:
+          path: /opt/docker-image/python-package/python/
+          args:
+            imagever: "{{ version_code.stdout }}"
         name: python-image
-        buildargs:
-          imagever: "{{ version_code.stdout }}"
         tag: ansible-build
       ignore_errors: "{{ ansible_check_mode }}"
     - name: tag "python-image"
