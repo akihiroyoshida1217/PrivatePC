@@ -335,8 +335,9 @@
         src: "https://extensions.gnome.org/extension-data/{{ item.src }}"
         dest: "{{ansible_env.HOME}}/.local/share/gnome-shell/extensions/{{ item.dest }}"
         remote_src: yes
-      become: yes
-      become_user: "{{ playing_user }}"
+        owner: "{{ playing_user }}"
+      #become: yes
+      #become_user: "{{ playing_user }}"
       with_items:
         - { src: dash-to-dockmicxgx.gmail.com.v65.shell-extension.zip, dest: dash-to-dock@micxgx.gmail.com }
         - { src: activities-config%40nls1729.v58.shell-extension.zip, dest: activities-config@nls1729 }
