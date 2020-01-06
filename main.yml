@@ -1,3 +1,5 @@
+#sudo -E ansible-playbook -i 127.0.0.1, main.yml --ask-become-pass -u akihiro --ask-pass --connection=local -vvvv
+
 - hosts: all
   vars:
     playing_user: akihiro
@@ -78,6 +80,8 @@
         - docker-ce
         - cifs-utils
         - python3-pkgconfig
+        - inotify-tools
+        - auditd
       ignore_errors: "{{ ansible_check_mode }}"
     #- name: install packages
     #  apt: 
@@ -96,6 +100,7 @@
           - watchdog
           - pylint
           - systemd-python
+          - psutil
       ignore_errors: "{{ ansible_check_mode }}"
     #- pip:
     #    name: docker
