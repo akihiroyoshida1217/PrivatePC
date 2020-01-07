@@ -27,7 +27,7 @@ class MyHandler(PatternMatchingEventHandler):
 
             target_line = [l for l in lines if re.search("etc",l)][-1].replace('\n','').split()
 
-            [subprocess.call(["sudo", "-u#" + str(u) , "DISPLAY=:0", "DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/" + str(u) + "/bus", "/usr/bin/notify-send", " Falsify Found in " + target_line[3] + target_line[2] + " ,Type is " + target_line[4] ]) for u in range(1000, 1003)]
+            [subprocess.call(["sudo", "-u#" + str(u) , "DISPLAY=:0", "DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/" + str(u) + "/bus", "/usr/bin/notify-send", "Falsify Found in " + target_line[3] + target_line[2] + " ,Type is " + target_line[4] ]) for u in range(1000, 1003)]
         except:
             None
 

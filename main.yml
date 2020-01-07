@@ -112,6 +112,11 @@
     - name: copy /opt/clamav/notify_viruscheck_watchdog.py
       copy: src=./files/opt/clamav/notify_viruscheck_watchdog.py dest=/opt/clamav/notify_viruscheck_watchdog.py owner=root group=root mode=0755
 
+    - name: mkdir /opt/inotify
+      file: path=/opt/inotify state=directory owner=root group=root mode=0755
+    - name: copy /opt/inotify/inotify_watchdog.py
+      copy: src=./files/opt/inotify/inotify_watchdog.py dest=/opt/inotify/inotify_watchdog.py owner=root group=root mode=0755
+
     - name: copy /opt/docker-image
       copy: src=./files/opt/docker-image/ dest=/opt/docker-image/ owner=root group=root
       when: not ansible_check_mode
@@ -127,6 +132,12 @@
       file: path=/opt/docker-image/vscode-extension-package/vscode-extension-update.py owner=root group=root mode=0755
       when: not ansible_check_mode
 
+    - name: mv /etc/audit/audit.rules etc/audit/audit.rules.org
+      command: "mv /etc/audit/audit.rules etc/audit/audit.rules.org"
+      ignore_errors: yes
+    - name: copy /opt/inotify/inotify_watchdog.py
+      copy: src=./files/auditd.rules dest=/etc/audit/audit.rules owner=root group=root mode=0640
+      
     - name: chown 1001:1001 /opt/docker-image/clamav-package/clamav/patternfile
       file: path=/opt/docker-image/clamav-package/clamav/patternfile state=directory owner=1001 group=1001
       when: not ansible_check_mode
@@ -156,6 +167,7 @@
         - vscode-extension-update-docker.service
         - vscode-update-docker.service
         - docker-update-docker.service
+        - inotify-watchdog.service
 
     - name: mkdir /etc/skel/.local/share/applications
       file: path=/etc/skel/.local/share/applications state=directory owner=root group=root mode=0755 recurse=yes
@@ -178,8 +190,8 @@
       copy: src=./files/cron.monthly/docker_image_update.py dest=/etc/cron.monthly/docker_image_update.py owner=root group=root mode=0755
     - name: copy /etc/cron.monthly/notify_viruscheck_cron.py
       copy: src=./files/cron.monthly/notify_viruscheck_cron.py dest=/etc/cron.monthly/notify_viruscheck_cron.py owner=root group=root mode=0755
-    - name: copy /etc/cron.monthly/notify_viruscheck_cron.py
-      copy: src=./files/cron.monthly/notify_viruscheck_cron.py dest=/etc/cron.monthly/python_pip_upgrade owner=root group=root mode=0755
+    - name: copy /etc/cron.monthly/python_pip_upgrade
+      copy: src=./files/cron.monthly/python_pip_upgrade dest=/etc/cron.monthly/python_pip_upgrade owner=root group=root mode=0755
     - name: copy /etc/apt/apt.conf.d/20auto-upgrades
       copy: src=./files/apt/apt.conf.d/20auto-upgrades dest=/etc/apt/apt.conf.d/20auto-upgrades owner=root group=root mode=0644
 
