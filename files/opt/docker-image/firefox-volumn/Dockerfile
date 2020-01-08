@@ -68,12 +68,12 @@ RUN mkdir /profile
 
 USER 1000
 RUN /usr/bin/firefox -CreateProfile "1000 /profile/1000/profile" && \
-    echo user_pref("browser.download.dir", "/home/1000/Downloads"); > /profile/1000/profile/user.js
+    echo "user_pref(\"browser.download.dir\", \"/home/1000/Downloads\");" > /profile/1000/profile/user.js
 USER 1001
 RUN /usr/bin/firefox -CreateProfile "1001 /profile/1001/profile" && \
-    echo user_pref("browser.download.dir", "/home/1001/Downloads"); > /profile/1001/profile/user.js
+    echo "user_pref(\"browser.download.dir\", \"/home/1001/Downloads\");" > /profile/1001/profile/user.js
 USER 1002
 RUN /usr/bin/firefox -CreateProfile "1002 /profile/1002/profile" && \
-    echo user_pref("browser.download.dir", "/home/1001/Downloads"); > /profile/1002/profile/user.js
+    echo "user_pref(\"browser.download.dir\", \"/home/1002/Downloads\");" > /profile/1002/profile/user.js
 
 VOLUME /profile
