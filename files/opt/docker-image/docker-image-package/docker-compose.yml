@@ -1,0 +1,20 @@
+version: '3'
+
+services:
+  docker-image:
+    image: "docker-image-image"
+    container_name: docker1
+    volumes:
+      - /opt/docker-image/docker-image-package/docker-image/image/:/image
+    environment:
+      - pullver
+    cap_drop:
+      - ALL
+    cap_add:
+      - SETGID
+      - SETUID
+      - SETFCAP
+      - CHOWN
+      - FOWNER
+      - FSETID
+      - DAC_OVERRIDE

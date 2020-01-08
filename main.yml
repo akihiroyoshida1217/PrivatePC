@@ -197,6 +197,8 @@
       copy: src=./files/cron.monthly/notify_viruscheck_cron.py dest=/etc/cron.monthly/notify_viruscheck_cron.py owner=root group=root mode=0755
     - name: copy /etc/cron.monthly/python_pip_upgrade
       copy: src=./files/cron.monthly/python_pip_upgrade dest=/etc/cron.monthly/python_pip_upgrade owner=root group=root mode=0755
+    - name: copy /etc/cron.monthly/docker_baseimage_upgrade
+      copy: src=./files/cron.monthly/docker_baseimage_upgrade dest=/etc/cron.monthly/docker_baseimage_upgrade owner=root group=root mode=0755
     - name: copy /etc/apt/apt.conf.d/20auto-upgrades
       copy: src=./files/apt/apt.conf.d/20auto-upgrades dest=/etc/apt/apt.conf.d/20auto-upgrades owner=root group=root mode=0644
 
@@ -327,6 +329,20 @@
       docker_image:
         name: docker-image:ansible-build
         repository: docker-image:latest
+      ignore_errors: "{{ ansible_check_mode }}"
+    - name: build "docker-image-image"
+      docker_image:
+        build:
+          path: /opt/docker-image/docker-image-package/docker-image/
+          args:
+            imagever: "{{ version_code.stdout }}"
+        name: docker-image-image
+        tag: ansible-build
+      ignore_errors: "{{ ansible_check_mode }}"
+    - name: tag "docker-image"-image
+      docker_image:
+        name: docker-image-image:ansible-build
+        repository: docker-image-image:latest
       ignore_errors: "{{ ansible_check_mode }}"
     - name: build "python-image"
       docker_image:
