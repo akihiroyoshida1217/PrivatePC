@@ -10,7 +10,7 @@ services:
       - /tmp/.X11-unix:/tmp/.X11-unix
       - ${HOME}/Downloads/:/home/${UID}/Downloads
 #      - ${HOME}/docker-image/firefox-package/firefox/profile/:/home/${UID}/profile
-      - ${HOME}/profile/:/home/${UID}/profile
+      - firefox-volume:/profile
       - /run/user/${UID}/pulse/native/:/tmp/pulse/native
       - ${HOME}/.config/pulse/cookie/:/tmp/pulse/cookie
     user: ${UID}

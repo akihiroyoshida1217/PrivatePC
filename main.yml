@@ -258,6 +258,21 @@
         name: firefox-image:ansible-build
         repository: firefox-image:latest
       ignore_errors: "{{ ansible_check_mode }}"
+    - name: build "firefox-volume"
+      docker_image:
+        build:
+          path: /opt/docker-image/firefox-volume/
+        name: firefox-volume
+          args:
+            imagever: ansible-build
+        tag: ansible-build
+        pull: no
+      ignore_errors: "{{ ansible_check_mode }}"
+    - name: tag "firefox-volume"
+      docker_image:
+        name: firefox-volume:ansible-build
+        repository: firefox-volume:latest
+      ignore_errors: "{{ ansible_check_mode }}"
     - name: build "freshclam"
       docker_image:
         build:
@@ -328,6 +343,13 @@
         repository: python-image:latest
       ignore_errors: "{{ ansible_check_mode }}"
 
+    - name: create firefox-volume
+      docker_container:
+        name: firefox-volume
+        image: firefox-volume
+        volumes:
+          - /profile
+      
     - name: systemctl reload
       systemd:
         daemon_reload: yes
