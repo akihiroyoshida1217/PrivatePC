@@ -1,0 +1,13 @@
+[Unit]
+Description=Process Monitor with psutil
+
+[Service]
+#ExecStart=/usr/bin/python3 /opt/clamav/notify_viruscheck_watchdog.py
+ExecStart=/opt/psutil/psutil_processmonitor.py
+Restart=always
+#Type=simple
+Type=notify
+#WatchdogSec=1
+
+[Install]
+WantedBy=multi-user.target

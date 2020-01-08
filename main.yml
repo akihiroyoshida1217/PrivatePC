@@ -80,7 +80,6 @@
         - docker-ce
         - cifs-utils
         - python3-pkgconfig
-        - inotify-tools
         - auditd
       ignore_errors: "{{ ansible_check_mode }}"
     #- name: install packages
@@ -112,10 +111,15 @@
     - name: copy /opt/clamav/notify_viruscheck_watchdog.py
       copy: src=./files/opt/clamav/notify_viruscheck_watchdog.py dest=/opt/clamav/notify_viruscheck_watchdog.py owner=root group=root mode=0755
 
-    - name: mkdir /opt/inotify
-      file: path=/opt/inotify state=directory owner=root group=root mode=0755
-    - name: copy /opt/inotify/inotify_watchdog.py
-      copy: src=./files/opt/inotify/inotify_watchdog.py dest=/opt/inotify/inotify_watchdog.py owner=root group=root mode=0755
+    - name: mkdir /opt/etc_watchdog
+      file: path=/opt/etc_watchdog state=directory owner=root group=root mode=0755
+    - name: copy /opt/etc_watchdog/etc_watchdog.py
+      copy: src=./files/opt/etc_watchdog/etc_watchdog.py dest=/opt/etc_watchdog/etc_watchdog.py owner=root group=root mode=0755
+
+    - name: mkdir /opt/psutil
+      file: path=/opt/psutil state=directory owner=root group=root mode=0755
+    - name: copy /opt/psutil/psutil_processmonitor.py
+      copy: src=./files/opt/psutil/psutil_processmonitor.py dest=/opt/psutil/psutil_processmonitor.py owner=root group=root mode=0755
 
     - name: copy /opt/docker-image
       copy: src=./files/opt/docker-image/ dest=/opt/docker-image/ owner=root group=root
@@ -167,7 +171,8 @@
         - vscode-extension-update-docker.service
         - vscode-update-docker.service
         - docker-update-docker.service
-        - inotify-watchdog.service
+        - etc_watchdog.service
+        - psutil_processmonitor
 
     - name: mkdir /etc/skel/.local/share/applications
       file: path=/etc/skel/.local/share/applications state=directory owner=root group=root mode=0755 recurse=yes

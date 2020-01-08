@@ -8,7 +8,7 @@ import subprocess
 import re
 from watchdog.observers import Observer
 from watchdog.events import PatternMatchingEventHandler
-from systemd.daemon import notify, Notification
+from systemd.daemon import notify
 
 
 class MyHandler(PatternMatchingEventHandler):
@@ -60,9 +60,9 @@ def watch(path, patterns):
         observer.stop()
     finally:
         observer.stop()
-        notify(Notification.STOPPING)
+        notify("STOPPING=1")
     observer.join()
 
 if __name__ == "__main__":
-    notify(Notification.READY)
+    notify("READY=1")
     watch("/var/log/clamav/", "clamav.log*")
