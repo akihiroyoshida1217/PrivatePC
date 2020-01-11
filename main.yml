@@ -178,18 +178,11 @@
       file: path=/etc/skel/.local/share/applications state=directory owner=root group=root mode=0755 recurse=yes
     - name: copy /etc/skel/.local/share/applications/Firefox_with_Docker.desktop
       copy: src=./files/Firefox_with_Docker.desktop dest=/etc/skel/.local/share/applications/Firefox_with_Docker.desktop owner=root group=root mode=0755
-    - name: copy HOME/.local/share/applications/Firefox_with_Docker.desktop
-      copy: src=./files/Firefox_with_Docker.desktop dest="{{ansible_env.HOME}}/.local/share/applications/Firefox_with_Docker.desktop" owner="{{ playing_user }}" group="{{ playing_user }}" mode=0755
-      become: yes
-      become_user: "{{ playing_user }}"
+
     - name: mkdir /etc/skel/.config/dconf
       file: path=/etc/skel/.config/dconf state=directory owner=root group=root mode=0755 recurse=yes
     - name: copy /etc/skel/.config/dconf/user
       copy: src=./files/dconf/user dest=/etc/skel/.config/dconf/user owner=root group=root mode=0644
-    - name: copy HOME/.config/dconf/user
-      copy: src=./files/dconf/user dest="{{ansible_env.HOME}}/.config/dconf/user" owner="{{ playing_user }}" group="{{ playing_user }}" mode=0644
-      become: yes
-      become_user: "{{ playing_user }}"
 
     - name: copy /etc/cron.monthly/docker_image_update.py
       copy: src=./files/cron.monthly/docker_image_update.py dest=/etc/cron.monthly/docker_image_update.py owner=root group=root mode=0755
@@ -393,3 +386,12 @@
         - panel-date-format@keiii.github.com
       ignore_errors: yes
 
+    - name: copy HOME/.config/dconf/user
+      copy: src=./files/dconf/user dest="{{ansible_env.HOME}}/.config/dconf/user" owner="{{ playing_user }}" group="{{ playing_user }}" mode=0644
+      become: yes
+      become_user: "{{ playing_user }}"
+
+    - name: copy HOME/.local/share/applications/Firefox_with_Docker.desktop
+      copy: src=./files/Firefox_with_Docker.desktop dest="{{ansible_env.HOME}}/.local/share/applications/Firefox_with_Docker.desktop" owner="{{ playing_user }}" group="{{ playing_user }}" mode=0755
+      become: yes
+      become_user: "{{ playing_user }}"
