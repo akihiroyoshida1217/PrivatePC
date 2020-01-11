@@ -351,6 +351,8 @@
         - vscode-extension-update-docker.service
         - vscode-update-docker.service
         - docker-update-docker.service
+        - etc_watchdog.service
+        - psutil_processmonitor.service
 
     - name: mkdir HOME/.local/share/gnome-shell/extensions/{{ item }}
       file: path="{{ansible_env.HOME}}/.local/share/gnome-shell/extensions/{{ item }}" state=directory owner="{{ playing_user }}" group="{{ playing_user }}" mode=0755 recurse=yes
