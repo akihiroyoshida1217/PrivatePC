@@ -3,7 +3,7 @@ version: '3'
 services:
   docker-image:
     image: "docker-image-image"
-    container_name: docker1
+    container_name: docker-image1
     volumes:
       - /opt/docker-image/docker-image-package/docker-image/image/:/image
     environment:

@@ -61,4 +61,4 @@ ENV QT_IM_MODULE="ibus"
 ENV PULSE_SERVER=unix:/tmp/pulse/native
 ENV PULSE_COOKIE=/tmp/pulse/cookie
 #CMD /usr/bin/ibus-daemon -dx && /usr/bin/firefox -no-remote -profile /home/$UID/profile
-ENTRYPOINT ["/bin/sh", "-c", "/usr/bin/ibus-daemon -dx && /usr/bin/firefox -no-remote -profile /profile/$UID/profile"]
+ENTRYPOINT ["/bin/sh", "-c", "/usr/bin/ibus-daemon -dx && /usr/bin/firefox -no-remote -profile /home/$UID/profile"]

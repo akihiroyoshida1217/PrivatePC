@@ -124,11 +124,11 @@
     - name: copy /opt/docker-image
       copy: src=./files/opt/docker-image/ dest=/opt/docker-image/ owner=root group=root
       when: not ansible_check_mode
-    - name: Unarchive profile
-      unarchive:
-        src: ./files/profile.zip
-        dest: /opt/docker-image/firefox-package/firefox/
-      ignore_errors: "{{ ansible_check_mode }}"
+    #- name: Unarchive profile
+    #  unarchive:
+    #    src: ./files/profile.zip
+    #    dest: /opt/docker-image/firefox-package/firefox/
+    #  ignore_errors: "{{ ansible_check_mode }}"
     - name: chmod 755 /opt/docker-image/firefox-package/Firefox_with_Docker-pkexec
       file: path=/opt/docker-image/firefox-package/Firefox_with_Docker-pkexec owner=root group=root mode=0755
       when: not ansible_check_mode
@@ -172,7 +172,7 @@
         - vscode-update-docker.service
         - docker-update-docker.service
         - etc_watchdog.service
-        - psutil_processmonitor
+        - psutil_processmonitor.service
 
     - name: mkdir /etc/skel/.local/share/applications
       file: path=/etc/skel/.local/share/applications state=directory owner=root group=root mode=0755 recurse=yes
@@ -260,21 +260,6 @@
         name: firefox-image:ansible-build
         repository: firefox-image:latest
       ignore_errors: "{{ ansible_check_mode }}"
-    - name: build "firefox-volume"
-      docker_image:
-        build:
-          path: /opt/docker-image/firefox-volume/
-        name: firefox-volume
-          args:
-            imagever: ansible-build
-        tag: ansible-build
-        pull: no
-      ignore_errors: "{{ ansible_check_mode }}"
-    - name: tag "firefox-volume"
-      docker_image:
-        name: firefox-volume:ansible-build
-        repository: firefox-volume:latest
-      ignore_errors: "{{ ansible_check_mode }}"
     - name: build "freshclam"
       docker_image:
         build:
@@ -335,7 +320,7 @@
         build:
           path: /opt/docker-image/docker-image-package/docker-image/
           args:
-            imagever: "{{ version_code.stdout }}"
+            imagever: ansible-build
         name: docker-image-image
         tag: ansible-build
       ignore_errors: "{{ ansible_check_mode }}"
@@ -359,13 +344,6 @@
         repository: python-image:latest
       ignore_errors: "{{ ansible_check_mode }}"
 
-    - name: create firefox-volume
-      docker_container:
-        name: firefox-volume
-        image: firefox-volume
-        volumes:
-          - /profile
-      
     - name: systemctl reload
       systemd:
         daemon_reload: yes
