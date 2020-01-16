@@ -4,6 +4,6 @@ if [ ! -d "$HOME/profile" ];then
 #  pkexec env HOME=$HOME cp -r /opt/docker-image/firefox-package/firefox/profile $HOME/profile
 #  pkexec env USERNAME=$USERNAME chown -R $USERNAME:$USERNAME $HOME/profile
    /usr/bin/firefox -CreateProfile  "$UID $HOME/profile"
-   echo user_pref("browser.download.dir", "$HOME/profile/Downloads"); > $HOME/profile/user.js
+   echo -e "user_pref(\"browser.download.folderList\", 2);\nuser_pref(\"browser.download.dir\", \"/home/$UID/Downloads\");" > $HOME/profile/user.js
 fi
 pkexec env DISPLAY=$DISPLAY UID=$UID HOME=$HOME PWD=$PWD /usr/local/bin/docker-compose -f `dirname $0`/docker-compose.yml run --rm firefox

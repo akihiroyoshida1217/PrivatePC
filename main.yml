@@ -3,7 +3,7 @@
 - hosts: all
   vars:
     playing_user: akihiro
-    network_interface: ens33
+    network_interface: eth0
 
   tasks:
     - name: Get version_code
