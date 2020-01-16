@@ -52,4 +52,4 @@ def watch(path):
 
 if __name__ == "__main__":
     notify("READY=1")
-    watch("/etc)
+    watch("/etc")
