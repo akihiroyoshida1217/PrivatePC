@@ -1,10 +1,10 @@
-#sudo -E ansible-playbook -i 127.0.0.1, main.yml --ask-become-pass -u akihiro --ask-pass --connection=local -vvvv
+#sudo -E ansible-playbook main.yml --ask-become-pass --ask-pass -vvvv
 
 - hosts: localhost
   connection: local
   become: yes
   vars:
-    playing_user: akihiro
+    #playing_user: akihiro
     network_interface: eth0
 
   tasks:
@@ -356,9 +356,9 @@
         - psutil_processmonitor.service
 
     - name: mkdir HOME/.local/share/gnome-shell/extensions/{{ item }}
-      file: path="{{ansible_env.HOME}}/.local/share/gnome-shell/extensions/{{ item }}" state=directory owner="{{ playing_user }}" group="{{ playing_user }}" mode=0755 recurse=yes
+      file: path="{{ansible_env.HOME}}/.local/share/gnome-shell/extensions/{{ item }}" state=directory owner="{{ansible_env.USERNAME}}" group="{{ansible_env.USERNAME}}" mode=0755 recurse=yes
       become: no
-      #become_user: "{{ playing_user }}"
+      #become_user: "{{ansible_env.USERNAME}}"
       with_items:
         - dash-to-dock@micxgx.gmail.com
         - activities-config@nls1729
@@ -369,9 +369,10 @@
         src: "https://extensions.gnome.org/extension-data/{{ item.src }}"
         dest: "{{ansible_env.HOME}}/.local/share/gnome-shell/extensions/{{ item.dest }}"
         remote_src: yes
-        owner: "{{ playing_user }}"
+        owner: "{{ansible_env.USERNAME}}"
+        group: "{{ansible_env.USERNAME}}"
       #become: yes
-      #become_user: "{{ playing_user }}"
+      #become_user: "{{ansible_env.USERNAME}}"
       with_items:
         - { src: dash-to-dockmicxgx.gmail.com.v65.shell-extension.zip, dest: dash-to-dock@micxgx.gmail.com }
         - { src: activities-config%40nls1729.v58.shell-extension.zip, dest: activities-config@nls1729 }
@@ -381,7 +382,7 @@
     - name: gnome-shell-extension-tool -e
       shell: gnome-shell-extension-tool -e {{ item }}
       become: no
-      #become_user: "{{ playing_user }}"
+      #become_user: "{{ansible_env.USERNAME}}"
       with_items:
         - dash-to-dock@micxgx.gmail.com
         - activities-config@nls1729
@@ -390,11 +391,11 @@
       ignore_errors: yes
 
     - name: copy HOME/.config/dconf/user
-      copy: src=./files/dconf/user dest="{{ansible_env.HOME}}/.config/dconf/user" owner="{{ playing_user }}" group="{{ playing_user }}" mode=0644
+      copy: src=./files/dconf/user dest="{{ansible_env.HOME}}/.config/dconf/user" owner="{{ansible_env.USERNAME}}" group="{{ansible_env.USERNAME}}" mode=0644
       become: no
-      #become_user: "{{ playing_user }}"
+      #become_user: "{{ansible_env.USERNAME}}"
 
     - name: copy HOME/.local/share/applications/Firefox_with_Docker.desktop
-      copy: src=./files/Firefox_with_Docker.desktop dest="{{ansible_env.HOME}}/.local/share/applications/Firefox_with_Docker.desktop" owner="{{ playing_user }}" group="{{ playing_user }}" mode=0755
+      copy: src=./files/Firefox_with_Docker.desktop dest="{{ansible_env.HOME}}/.local/share/applications/Firefox_with_Docker.desktop" owner="{{ansible_env.USERNAME}}" group="{{ansible_env.USERNAME}}" mode=0755
       become: no
-      #become_user: "{{ playing_user }}"
+      #become_user: "{{ansible_env.USERNAME}}"
