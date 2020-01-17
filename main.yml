@@ -390,12 +390,28 @@
         - panel-date-format@keiii.github.com
       ignore_errors: yes
 
-    - name: copy HOME/.config/dconf/user
-      copy: src=./files/dconf/user dest="{{ansible_env.HOME}}/.config/dconf/user" owner="{{ansible_env.USERNAME}}" group="{{ansible_env.USERNAME}}" mode=0644
-      become: no
-      #become_user: "{{ansible_env.USERNAME}}"
+    #- name: copy HOME/.config/dconf/user
+    #  copy: src=./files/dconf/user dest="{{ansible_env.HOME}}/.config/dconf/user" owner="{{ansible_env.USERNAME}}" group="{{ansible_env.USERNAME}}" mode=0644
+    #  become: no
+    #  #become_user: "{{ansible_env.USERNAME}}"
 
-    - name: copy HOME/.local/share/applications/Firefox_with_Docker.desktop
-      copy: src=./files/Firefox_with_Docker.desktop dest="{{ansible_env.HOME}}/.local/share/applications/Firefox_with_Docker.desktop" owner="{{ansible_env.USERNAME}}" group="{{ansible_env.USERNAME}}" mode=0755
+    #- name: copy HOME/.local/share/applications/Firefox_with_Docker.desktop
+    #  copy: src=./files/Firefox_with_Docker.desktop dest="{{ansible_env.HOME}}/.local/share/applications/Firefox_with_Docker.desktop" owner="{{ansible_env.USERNAME}}" group="{{ansible_env.USERNAME}}" mode=0755
+    #  become: no
+    #  #become_user: "{{ansible_env.USERNAME}}"
+
+    - name: gsettings
+      shell: "{{ item }}"
       become: no
       #become_user: "{{ansible_env.USERNAME}}"
+      with_items:
+        - gsettings --schemadir {{ansible_env.USERNAME}}/.local/share/gnome-shell/extensions/activities-config@nls1729/schemas set org.gnome.shell.extensions.activities-config activities-config-button-no-icon true
+        - gsettings --schemadir {{ansible_env.USERNAME}}/.local/share/gnome-shell/extensions/activities-config@nls1729/schemas set org.gnome.shell.extensions.activities-config activities-config-button-no-text true
+        - gsettings --schemadir {{ansible_env.USERNAME}}/.local/share/gnome-shell/extensions/activities-config@nls1729/schemas set org.gnome.shell.extensions.activities-config transparent-panel 100
+        - gsettings --schemadir {{ansible_env.USERNAME}}/.local/share/gnome-shell/extensions/activities-config@nls1729/schemas set org.gnome.shell.extensions.activities-config transparent-shadow 50
+        - gsettings set org.gnome.shell.extensions.user-theme name 'Adapta-Nokto'
+        - gsettings set org.gnome.desktop.interface gtk-theme 'Adapta-Nokto'
+        - gsettings set org.gnome.desktop.interface icon-theme 'Paper'
+        - gsettings set org.gnome.shell enabled-extensions ['dash-to-dock@micxgx.gmail.com', 'user-theme@gnome-shell-extensions.gcampax.github.com', 'drive-menu@gnome-shell-extensions.gcampax.github.com', 'activities-config@nls1729', 'Move_Clock@rmy.pobox.com', 'panel-date-format@keiii.github.com']
+         - gsettings set org.gnome.shell favorite-apps ['Firefox_with_Docker.desktop', 'org.gnome.Nautilus.desktop', 'code.desktop', 'org.gnome.Terminal.desktop']
+     ignore_errors: yes
