@@ -10,7 +10,7 @@
 -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
 #-A OUTPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
 
-#-A OUTPUT -p udp --dport 53 -j ACCEPT
+-A OUTPUT -p udp --dport 53 -j ACCEPT
 
 # ntp.nict.jp
 -A OUTPUT -o {{ network_interface }} -d 133.243.238.163 -p udp --dport 123 -j ACCEPT
