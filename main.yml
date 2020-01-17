@@ -400,18 +400,34 @@
     #  become: no
     #  #become_user: "{{ansible_env.USERNAME}}"
 
-    - name: gsettings
-      shell: "{{ item }}"
-      become: no
-      #become_user: "{{ansible_env.USERNAME}}"
+    - name: gsettings --schemadir
+      shell: gsettings --schemadir {{ansible_env.HOME}}/.local/share/gnome-shell/extensions/activities-config@nls1729/schemas set org.gnome.shell.extensions.activities-config {{ item.key }} {{ item.value }}
+      become: yes
+      become_user: "{{ansible_env.USERNAME}}"
       with_items:
-        - gsettings --schemadir {{ansible_env.USERNAME}}/.local/share/gnome-shell/extensions/activities-config@nls1729/schemas set org.gnome.shell.extensions.activities-config activities-config-button-no-icon true
-        - gsettings --schemadir {{ansible_env.USERNAME}}/.local/share/gnome-shell/extensions/activities-config@nls1729/schemas set org.gnome.shell.extensions.activities-config activities-config-button-no-text true
-        - gsettings --schemadir {{ansible_env.USERNAME}}/.local/share/gnome-shell/extensions/activities-config@nls1729/schemas set org.gnome.shell.extensions.activities-config transparent-panel 100
-        - gsettings --schemadir {{ansible_env.USERNAME}}/.local/share/gnome-shell/extensions/activities-config@nls1729/schemas set org.gnome.shell.extensions.activities-config transparent-shadow 50
-        - gsettings set org.gnome.shell.extensions.user-theme name 'Adapta-Nokto'
-        - gsettings set org.gnome.desktop.interface gtk-theme 'Adapta-Nokto'
-        - gsettings set org.gnome.desktop.interface icon-theme 'Paper'
-        - gsettings set org.gnome.shell enabled-extensions ['dash-to-dock@micxgx.gmail.com', 'user-theme@gnome-shell-extensions.gcampax.github.com', 'drive-menu@gnome-shell-extensions.gcampax.github.com', 'activities-config@nls1729', 'Move_Clock@rmy.pobox.com', 'panel-date-format@keiii.github.com']
-         - gsettings set org.gnome.shell favorite-apps ['Firefox_with_Docker.desktop', 'org.gnome.Nautilus.desktop', 'code.desktop', 'org.gnome.Terminal.desktop']
-     ignore_errors: yes
+        - { key: activities-config-button-no-icon, value: True }
+        - { key: activities-config-button-no-text, value: True }
+        - { key: transparent-panel, value: 100 }
+        - { key: transparent-shadow, value: 50 }
+      ignore_errors: yes
+    - name: gsettings
+      shell: gsettings set {{ item.schema }} {{ item.key }} {{ item.value }}
+      become: yes
+      become_user: "{{ansible_env.USERNAME}}"
+      with_items:
+        - { schema: org.gnome.shell.extensions.user-theme, key: name, value: 'Adapta-Nokto' }
+        - { schema: org.gnome.desktop.interface, key: gtk-theme, value: 'Adapta-Nokto' }
+        - { schema: org.gnome.desktop.interface, key: icon-theme, value: 'Paper' }
+        #- { schema: org.gnome.shell, key: enabled-extensions, value: "{{ '"' }}"['dash-to-dock@micxgx.gmail.com', 'user-theme@gnome-shell-extensions.gcampax.github.com', 'drive-menu@gnome-shell-extensions.gcampax.github.com', 'activities-config@nls1729', 'Move_Clock@rmy.pobox.com', 'panel-date-format@keiii.github.com']"{{ '"' }}" }
+        #- { schema: org.gnome.shell, key: favorite-apps, value: "{{ '"' }}"['Firefox_with_Docker.desktop', 'org.gnome.Nautilus.desktop', 'code.desktop', 'org.gnome.Terminal.desktop']"{{ '"' }}" }
+      ignore_errors: yes
+    - name: gsettings
+      shell: gsettings set org.gnome.shell enabled-extensions "['dash-to-dock@micxgx.gmail.com', 'user-theme@gnome-shell-extensions.gcampax.github.com', 'drive-menu@gnome-shell-extensions.gcampax.github.com', 'activities-config@nls1729', 'Move_Clock@rmy.pobox.com', 'panel-date-format@keiii.github.com']"
+      become: yes
+      become_user: "{{ansible_env.USERNAME}}"
+      ignore_errors: yes
+    - name: gsettings
+      shell: gsettings set org.gnome.shell favorite-apps "['Firefox_with_Docker.desktop', 'org.gnome.Nautilus.desktop', 'code.desktop', 'org.gnome.Terminal.desktop']"
+      become: yes
+      become_user: "{{ansible_env.USERNAME}}"
+      ignore_errors: yes
