@@ -1,6 +1,8 @@
 #sudo -E ansible-playbook -i 127.0.0.1, main.yml --ask-become-pass -u akihiro --ask-pass --connection=local -vvvv
 
-- hosts: all
+- hosts: localhost
+  connection: local
+  become: yes
   vars:
     playing_user: akihiro
     network_interface: eth0
@@ -124,14 +126,11 @@
     - name: copy /opt/docker-image
       copy: src=./files/opt/docker-image/ dest=/opt/docker-image/ owner=root group=root
       when: not ansible_check_mode
-    #- name: Unarchive profile
-    #  unarchive:
-    #    src: ./files/profile.zip
-    #    dest: /opt/docker-image/firefox-package/firefox/
-    #  ignore_errors: "{{ ansible_check_mode }}"
+
     - name: chmod 755 /opt/docker-image/firefox-package/Firefox_with_Docker-pkexec
       file: path=/opt/docker-image/firefox-package/Firefox_with_Docker-pkexec owner=root group=root mode=0755
       when: not ansible_check_mode
+
     - name: chmod 755 /opt/docker-image/vscode-extension-package/vscode-extension-update.py
       file: path=/opt/docker-image/vscode-extension-package/vscode-extension-update.py owner=root group=root mode=0755
       when: not ansible_check_mode
@@ -139,6 +138,7 @@
     - name: mv /etc/audit/audit.rules etc/audit/audit.rules.org
       command: "mv /etc/audit/audit.rules etc/audit/audit.rules.org"
       ignore_errors: yes
+
     - name: copy /opt/inotify/inotify_watchdog.py
       copy: src=./files/auditd.rules dest=/etc/audit/audit.rules owner=root group=root mode=0640
       
@@ -190,8 +190,9 @@
       copy: src=./files/cron.monthly/notify_viruscheck_cron.py dest=/etc/cron.monthly/notify_viruscheck_cron.py owner=root group=root mode=0755
     - name: copy /etc/cron.monthly/python_pip_upgrade
       copy: src=./files/cron.monthly/python_pip_upgrade dest=/etc/cron.monthly/python_pip_upgrade owner=root group=root mode=0755
-    - name: copy /etc/cron.monthly/docker_baseimage_upgrade
-      copy: src=./files/cron.monthly/docker_baseimage_upgrade dest=/etc/cron.monthly/docker_baseimage_upgrade owner=root group=root mode=0755
+    #- name: copy /etc/cron.monthly/docker_baseimage_upgrade
+    #  copy: src=./files/cron.monthly/docker_baseimage_upgrade dest=/etc/cron.monthly/docker_baseimage_upgrade owner=root group=root mode=0755
+
     - name: copy /etc/apt/apt.conf.d/20auto-upgrades
       copy: src=./files/apt/apt.conf.d/20auto-upgrades dest=/etc/apt/apt.conf.d/20auto-upgrades owner=root group=root mode=0644
 
@@ -308,20 +309,20 @@
         name: docker-image:ansible-build
         repository: docker-image:latest
       ignore_errors: "{{ ansible_check_mode }}"
-    - name: build "docker-image-image"
-      docker_image:
-        build:
-          path: /opt/docker-image/docker-image-package/docker-image/
-          args:
-            imagever: ansible-build
-        name: docker-image-image
-        tag: ansible-build
-      ignore_errors: "{{ ansible_check_mode }}"
-    - name: tag "docker-image"-image
-      docker_image:
-        name: docker-image-image:ansible-build
-        repository: docker-image-image:latest
-      ignore_errors: "{{ ansible_check_mode }}"
+    #- name: build "docker-image-image"
+    #  docker_image:
+    #    build:
+    #      path: /opt/docker-image/docker-image-package/docker-image/
+    #      args:
+    #        imagever: ansible-build
+    #    name: docker-image-image
+    #    tag: ansible-build
+    #  ignore_errors: "{{ ansible_check_mode }}"
+    #- name: tag "docker-image-image"
+    #  docker_image:
+    #    name: docker-image-image:ansible-build
+    #    repository: docker-image-image:latest
+    #  ignore_errors: "{{ ansible_check_mode }}"
     - name: build "python-image"
       docker_image:
         build:
@@ -356,8 +357,8 @@
 
     - name: mkdir HOME/.local/share/gnome-shell/extensions/{{ item }}
       file: path="{{ansible_env.HOME}}/.local/share/gnome-shell/extensions/{{ item }}" state=directory owner="{{ playing_user }}" group="{{ playing_user }}" mode=0755 recurse=yes
-      become: yes
-      become_user: "{{ playing_user }}"
+      become: no
+      #become_user: "{{ playing_user }}"
       with_items:
         - dash-to-dock@micxgx.gmail.com
         - activities-config@nls1729
@@ -379,8 +380,8 @@
       ignore_errors: "{{ ansible_check_mode }}"
     - name: gnome-shell-extension-tool -e
       shell: gnome-shell-extension-tool -e {{ item }}
-      become: yes
-      become_user: "{{ playing_user }}"
+      become: no
+      #become_user: "{{ playing_user }}"
       with_items:
         - dash-to-dock@micxgx.gmail.com
         - activities-config@nls1729
@@ -390,10 +391,10 @@
 
     - name: copy HOME/.config/dconf/user
       copy: src=./files/dconf/user dest="{{ansible_env.HOME}}/.config/dconf/user" owner="{{ playing_user }}" group="{{ playing_user }}" mode=0644
-      become: yes
-      become_user: "{{ playing_user }}"
+      become: no
+      #become_user: "{{ playing_user }}"
 
     - name: copy HOME/.local/share/applications/Firefox_with_Docker.desktop
       copy: src=./files/Firefox_with_Docker.desktop dest="{{ansible_env.HOME}}/.local/share/applications/Firefox_with_Docker.desktop" owner="{{ playing_user }}" group="{{ playing_user }}" mode=0755
-      become: yes
-      become_user: "{{ playing_user }}"
+      become: no
+      #become_user: "{{ playing_user }}"
