@@ -401,16 +401,6 @@
       #become_user: "{{ lookup('env', 'USERNAME') }}"
 
     - name: gsettings --schemadir
-      shell: gsettings --schemadir {{ lookup('env', 'HOME') }}/.local/share/gnome-shell/extensions/activities-config@nls1729/schemas set org.gnome.shell.extensions.activities-config {{ item.key }} {{ item.value }}
-      become: no
-      #become_user: "{{ lookup('env', 'USERNAME') }}"
-      with_items:
-        - { key: activities-config-button-no-icon, value: 'True' }
-        - { key: activities-config-button-no-text, value: 'True' }
-        - { key: transparent-panel, value: '100' }
-        - { key: transparent-shadow, value: '50' }
-      ignore_errors: yes
-    - name: gsettings --schemadir
       shell: gsettings --schemadir {{ lookup('env', 'HOME') }}/.local/share/gnome-shell/extensions/activities-config@nls1729/schemas set org.gnome.shell.extensions.activities-config activities-config-button-no-icon 'True'
       become: no
       #become_user: "{{ lookup('env', 'USERNAME') }}"
