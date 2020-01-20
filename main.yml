@@ -356,9 +356,9 @@
         - psutil_processmonitor.service
 
     - name: mkdir HOME/.local/share/gnome-shell/extensions/{{ item }}
-      file: path="{{ansible_env.HOME}}/.local/share/gnome-shell/extensions/{{ item }}" state=directory owner="{{ansible_env.USERNAME}}" group="{{ansible_env.USERNAME}}" mode=0755 recurse=yes
+      file: path="{{ lookup('env', 'HOME') }}/.local/share/gnome-shell/extensions/{{ item }}" state=directory owner="{{ lookup('env', 'USERNAME') }}" group="{{ lookup('env', 'USERNAME') }}" mode=0755 recurse=yes
       become: no
-      #become_user: "{{ansible_env.USERNAME}}"
+      #become_user: "{{ lookup('env', 'USERNAME') }}"
       with_items:
         - dash-to-dock@micxgx.gmail.com
         - activities-config@nls1729
@@ -367,12 +367,12 @@
     - name: Unarchive gnome plugin
       unarchive:
         src: "https://extensions.gnome.org/extension-data/{{ item.src }}"
-        dest: "{{ansible_env.HOME}}/.local/share/gnome-shell/extensions/{{ item.dest }}"
+        dest: "{{ lookup('env', 'HOME') }}/.local/share/gnome-shell/extensions/{{ item.dest }}"
         remote_src: yes
-        owner: "{{ansible_env.USERNAME}}"
-        group: "{{ansible_env.USERNAME}}"
+        owner: "{{ lookup('env', 'USERNAME') }}"
+        group: "{{ lookup('env', 'USERNAME') }}"
       #become: yes
-      #become_user: "{{ansible_env.USERNAME}}"
+      #become_user: "{{ lookup('env', 'USERNAME') }}"
       with_items:
         - { src: dash-to-dockmicxgx.gmail.com.v65.shell-extension.zip, dest: dash-to-dock@micxgx.gmail.com }
         - { src: activities-config%40nls1729.v58.shell-extension.zip, dest: activities-config@nls1729 }
@@ -382,7 +382,7 @@
     - name: gnome-shell-extension-tool -e
       shell: gnome-shell-extension-tool -e {{ item }}
       become: no
-      #become_user: "{{ansible_env.USERNAME}}"
+      #become_user: "{{ lookup('env', 'USERNAME') }}"
       with_items:
         - dash-to-dock@micxgx.gmail.com
         - activities-config@nls1729
@@ -391,19 +391,19 @@
       ignore_errors: yes
 
     #- name: copy HOME/.config/dconf/user
-    #  copy: src=./files/dconf/user dest="{{ansible_env.HOME}}/.config/dconf/user" owner="{{ansible_env.USERNAME}}" group="{{ansible_env.USERNAME}}" mode=0644
+    #  copy: src=./files/dconf/user dest="{{ lookup('env', 'HOME') }}/.config/dconf/user" owner="{{ lookup('env', 'USERNAME') }}" group="{{ lookup('env', 'USERNAME') }}" mode=0644
     #  become: no
-    #  #become_user: "{{ansible_env.USERNAME}}"
+    #  #become_user: "{{ lookup('env', 'USERNAME') }}"
 
-    #- name: copy HOME/.local/share/applications/Firefox_with_Docker.desktop
-    #  copy: src=./files/Firefox_with_Docker.desktop dest="{{ansible_env.HOME}}/.local/share/applications/Firefox_with_Docker.desktop" owner="{{ansible_env.USERNAME}}" group="{{ansible_env.USERNAME}}" mode=0755
-    #  become: no
-    #  #become_user: "{{ansible_env.USERNAME}}"
+    - name: copy HOME/.local/share/applications/Firefox_with_Docker.desktop
+      copy: src=./files/Firefox_with_Docker.desktop dest="{{ lookup('env', 'HOME') }}/.local/share/applications/Firefox_with_Docker.desktop" owner="{{ lookup('env', 'USERNAME') }}" group="{{ lookup('env', 'USERNAME') }}" mode=0755
+      become: no
+      #become_user: "{{ lookup('env', 'USERNAME') }}"
 
     - name: gsettings --schemadir
-      shell: gsettings --schemadir {{ansible_env.HOME}}/.local/share/gnome-shell/extensions/activities-config@nls1729/schemas set org.gnome.shell.extensions.activities-config {{ item.key }} {{ item.value }}
-      become: yes
-      become_user: "{{ansible_env.USERNAME}}"
+      shell: gsettings --schemadir {{ lookup('env', 'HOME') }}/.local/share/gnome-shell/extensions/activities-config@nls1729/schemas set org.gnome.shell.extensions.activities-config {{ item.key }} {{ item.value }}
+      become: no
+      #become_user: "{{ lookup('env', 'USERNAME') }}"
       with_items:
         - { key: activities-config-button-no-icon, value: True }
         - { key: activities-config-button-no-text, value: True }
@@ -412,8 +412,8 @@
       ignore_errors: yes
     - name: gsettings
       shell: gsettings set {{ item.schema }} {{ item.key }} {{ item.value }}
-      become: yes
-      become_user: "{{ansible_env.USERNAME}}"
+      become: no
+      #become_user: "{{ lookup('env', 'USERNAME') }}"
       with_items:
         - { schema: org.gnome.shell.extensions.user-theme, key: name, value: 'Adapta-Nokto' }
         - { schema: org.gnome.desktop.interface, key: gtk-theme, value: 'Adapta-Nokto' }
@@ -423,11 +423,11 @@
       ignore_errors: yes
     - name: gsettings
       shell: gsettings set org.gnome.shell enabled-extensions "['dash-to-dock@micxgx.gmail.com', 'user-theme@gnome-shell-extensions.gcampax.github.com', 'drive-menu@gnome-shell-extensions.gcampax.github.com', 'activities-config@nls1729', 'Move_Clock@rmy.pobox.com', 'panel-date-format@keiii.github.com']"
-      become: yes
-      become_user: "{{ansible_env.USERNAME}}"
+      become: no
+      #become_user: "{{ lookup('env', 'USERNAME') }}"
       ignore_errors: yes
     - name: gsettings
       shell: gsettings set org.gnome.shell favorite-apps "['Firefox_with_Docker.desktop', 'org.gnome.Nautilus.desktop', 'code.desktop', 'org.gnome.Terminal.desktop']"
-      become: yes
-      become_user: "{{ansible_env.USERNAME}}"
+      become: no
+      #become_user: "{{ lookup('env', 'USERNAME') }}"
       ignore_errors: yes
