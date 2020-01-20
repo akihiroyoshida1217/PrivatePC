@@ -405,10 +405,15 @@
       become: no
       #become_user: "{{ lookup('env', 'USERNAME') }}"
       with_items:
-        - { key: activities-config-button-no-icon, value: True }
-        - { key: activities-config-button-no-text, value: True }
-        - { key: transparent-panel, value: 100 }
-        - { key: transparent-shadow, value: 50 }
+        - { key: activities-config-button-no-icon, value: 'True' }
+        - { key: activities-config-button-no-text, value: 'True' }
+        - { key: transparent-panel, value: '100' }
+        - { key: transparent-shadow, value: '50' }
+      ignore_errors: yes
+    - name: gsettings --schemadir
+      shell: gsettings --schemadir {{ lookup('env', 'HOME') }}/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com/schemas set org.gnome.shell.extensions.dash-to-dock dock-position 'BOTTOM'
+      become: no
+      #become_user: "{{ lookup('env', 'USERNAME') }}"
       ignore_errors: yes
     - name: gsettings
       shell: gsettings set {{ item.schema }} {{ item.key }} {{ item.value }}
@@ -418,6 +423,8 @@
         - { schema: org.gnome.shell.extensions.user-theme, key: name, value: 'Adapta-Nokto' }
         - { schema: org.gnome.desktop.interface, key: gtk-theme, value: 'Adapta-Nokto' }
         - { schema: org.gnome.desktop.interface, key: icon-theme, value: 'Paper' }
+        - { schema: org.gnome.desktop.wm.preferences, key: button-layout, value: 'appmenu:minimize,maximize,close' }
+        - { schema: org.gnome.settings-daemon.plugins.xsettings, key: overrides, value: {'Gtk/ShellShowsAppMenu': <0>} }
         #- { schema: org.gnome.shell, key: enabled-extensions, value: "{{ '"' }}"['dash-to-dock@micxgx.gmail.com', 'user-theme@gnome-shell-extensions.gcampax.github.com', 'drive-menu@gnome-shell-extensions.gcampax.github.com', 'activities-config@nls1729', 'Move_Clock@rmy.pobox.com', 'panel-date-format@keiii.github.com']"{{ '"' }}" }
         #- { schema: org.gnome.shell, key: favorite-apps, value: "{{ '"' }}"['Firefox_with_Docker.desktop', 'org.gnome.Nautilus.desktop', 'code.desktop', 'org.gnome.Terminal.desktop']"{{ '"' }}" }
       ignore_errors: yes
