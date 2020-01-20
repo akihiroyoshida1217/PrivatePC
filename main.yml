@@ -5,7 +5,7 @@
   become: yes
   vars:
     #playing_user: akihiro
-    network_interface: eth0
+    network_interface: ens33
 
   tasks:
     - name: Get version_code
@@ -411,6 +411,31 @@
         - { key: transparent-shadow, value: '50' }
       ignore_errors: yes
     - name: gsettings --schemadir
+      shell: gsettings --schemadir {{ lookup('env', 'HOME') }}/.local/share/gnome-shell/extensions/activities-config@nls1729/schemas set org.gnome.shell.extensions.activities-config activities-config-button-no-icon 'True'
+      become: no
+      #become_user: "{{ lookup('env', 'USERNAME') }}"
+      ignore_errors: yes
+    - name: gsettings --schemadir
+      shell: gsettings --schemadir {{ lookup('env', 'HOME') }}/.local/share/gnome-shell/extensions/activities-config@nls1729/schemas set org.gnome.shell.extensions.activities-config activities-config-button-no-text 'True'
+      become: no
+      #become_user: "{{ lookup('env', 'USERNAME') }}"
+      ignore_errors: yes
+    - name: gsettings --schemadir
+      shell: gsettings --schemadir {{ lookup('env', 'HOME') }}/.local/share/gnome-shell/extensions/activities-config@nls1729/schemas set org.gnome.shell.extensions.activities-config transparent-panel '100'
+      become: no
+      #become_user: "{{ lookup('env', 'USERNAME') }}"
+      ignore_errors: yes
+    - name: gsettings --schemadir
+      shell: gsettings --schemadir {{ lookup('env', 'HOME') }}/.local/share/gnome-shell/extensions/activities-config@nls1729/schemas set org.gnome.shell.extensions.activities-config transparent-shadow '50'
+      become: no
+      #become_user: "{{ lookup('env', 'USERNAME') }}"
+      ignore_errors: yes
+    - name: gsettings --schemadir
+      shell: gsettings --schemadir {{ lookup('env', 'HOME') }}/.local/share/gnome-shell/extensions/activities-config@nls1729/schemas set org.gnome.shell.extensions.activities-config override-theme 'True'
+      become: no
+      #become_user: "{{ lookup('env', 'USERNAME') }}"
+      ignore_errors: yes
+    - name: gsettings --schemadir
       shell: gsettings --schemadir {{ lookup('env', 'HOME') }}/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com/schemas set org.gnome.shell.extensions.dash-to-dock dock-position 'BOTTOM'
       become: no
       #become_user: "{{ lookup('env', 'USERNAME') }}"
@@ -424,9 +449,14 @@
         - { schema: org.gnome.desktop.interface, key: gtk-theme, value: 'Adapta-Nokto' }
         - { schema: org.gnome.desktop.interface, key: icon-theme, value: 'Paper' }
         - { schema: org.gnome.desktop.wm.preferences, key: button-layout, value: 'appmenu:minimize,maximize,close' }
-        - { schema: org.gnome.settings-daemon.plugins.xsettings, key: overrides, value: {'Gtk/ShellShowsAppMenu': <0>} }
+        #- { schema: org.gnome.settings-daemon.plugins.xsettings, key: overrides, value: {'Gtk/ShellShowsAppMenu': <0>} }
         #- { schema: org.gnome.shell, key: enabled-extensions, value: "{{ '"' }}"['dash-to-dock@micxgx.gmail.com', 'user-theme@gnome-shell-extensions.gcampax.github.com', 'drive-menu@gnome-shell-extensions.gcampax.github.com', 'activities-config@nls1729', 'Move_Clock@rmy.pobox.com', 'panel-date-format@keiii.github.com']"{{ '"' }}" }
         #- { schema: org.gnome.shell, key: favorite-apps, value: "{{ '"' }}"['Firefox_with_Docker.desktop', 'org.gnome.Nautilus.desktop', 'code.desktop', 'org.gnome.Terminal.desktop']"{{ '"' }}" }
+      ignore_errors: yes
+    - name: gsettings
+      shell: gsettings set org.gnome.settings-daemon.plugins.xsettings overrides "{'Gtk/ShellShowsAppMenu': <0>}"
+      become: no
+      #become_user: "{{ lookup('env', 'USERNAME') }}"
       ignore_errors: yes
     - name: gsettings
       shell: gsettings set org.gnome.shell enabled-extensions "['dash-to-dock@micxgx.gmail.com', 'user-theme@gnome-shell-extensions.gcampax.github.com', 'drive-menu@gnome-shell-extensions.gcampax.github.com', 'activities-config@nls1729', 'Move_Clock@rmy.pobox.com', 'panel-date-format@keiii.github.com']"
