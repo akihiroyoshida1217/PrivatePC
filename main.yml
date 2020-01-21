@@ -5,7 +5,7 @@
   become: yes
   vars:
     #playing_user: akihiro
-    network_interface: ens33
+    network_interface: eth0
 
   tasks:
     - name: Get version_code
@@ -401,22 +401,22 @@
       #become_user: "{{ lookup('env', 'USERNAME') }}"
 
     - name: gsettings --schemadir
-      shell: gsettings --schemadir {{ lookup('env', 'HOME') }}/.local/share/gnome-shell/extensions/activities-config@nls1729/schemas set org.gnome.shell.extensions.activities-config activities-config-button-no-icon 'True'
+      shell: gsettings --schemadir {{ lookup('env', 'HOME') }}/.local/share/gnome-shell/extensions/activities-config@nls1729/schemas set org.gnome.shell.extensions.activities-config activities-config-button-no-icon true
       become: no
       #become_user: "{{ lookup('env', 'USERNAME') }}"
       ignore_errors: yes
     - name: gsettings --schemadir
-      shell: gsettings --schemadir {{ lookup('env', 'HOME') }}/.local/share/gnome-shell/extensions/activities-config@nls1729/schemas set org.gnome.shell.extensions.activities-config activities-config-button-no-text 'True'
+      shell: gsettings --schemadir {{ lookup('env', 'HOME') }}/.local/share/gnome-shell/extensions/activities-config@nls1729/schemas set org.gnome.shell.extensions.activities-config activities-config-button-no-text true
       become: no
       #become_user: "{{ lookup('env', 'USERNAME') }}"
       ignore_errors: yes
     - name: gsettings --schemadir
-      shell: gsettings --schemadir {{ lookup('env', 'HOME') }}/.local/share/gnome-shell/extensions/activities-config@nls1729/schemas set org.gnome.shell.extensions.activities-config transparent-panel '100'
+      shell: gsettings --schemadir {{ lookup('env', 'HOME') }}/.local/share/gnome-shell/extensions/activities-config@nls1729/schemas set org.gnome.shell.extensions.activities-config transparent-panel 100
       become: no
       #become_user: "{{ lookup('env', 'USERNAME') }}"
       ignore_errors: yes
     - name: gsettings --schemadir
-      shell: gsettings --schemadir {{ lookup('env', 'HOME') }}/.local/share/gnome-shell/extensions/activities-config@nls1729/schemas set org.gnome.shell.extensions.activities-config transparent-shadow '50'
+      shell: gsettings --schemadir {{ lookup('env', 'HOME') }}/.local/share/gnome-shell/extensions/activities-config@nls1729/schemas set org.gnome.shell.extensions.activities-config transparent-shadow 50
       become: no
       #become_user: "{{ lookup('env', 'USERNAME') }}"
       ignore_errors: yes
@@ -427,6 +427,16 @@
       ignore_errors: yes
     - name: gsettings --schemadir
       shell: gsettings --schemadir {{ lookup('env', 'HOME') }}/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com/schemas set org.gnome.shell.extensions.dash-to-dock dock-position 'BOTTOM'
+      become: no
+      #become_user: "{{ lookup('env', 'USERNAME') }}"
+      ignore_errors: yes
+    - name: gsettings --schemadir
+      shell: gsettings --schemadir {{ lookup('env', 'HOME') }}/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com/schemas set org.gnome.shell.extensions.dash-to-dock transparency-mode 'FIXED'
+      become: no
+      #become_user: "{{ lookup('env', 'USERNAME') }}"
+      ignore_errors: yes
+    - name: gsettings --schemadir
+      shell: gsettings --schemadir {{ lookup('env', 'HOME') }}/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com/schemas set org.gnome.shell.extensions.dash-to-dock background-opacity 0.5
       become: no
       #become_user: "{{ lookup('env', 'USERNAME') }}"
       ignore_errors: yes
@@ -444,7 +454,7 @@
         #- { schema: org.gnome.shell, key: favorite-apps, value: "{{ '"' }}"['Firefox_with_Docker.desktop', 'org.gnome.Nautilus.desktop', 'code.desktop', 'org.gnome.Terminal.desktop']"{{ '"' }}" }
       ignore_errors: yes
     - name: gsettings
-      shell: gsettings set org.gnome.settings-daemon.plugins.xsettings overrides "{'Gtk/ShellShowsAppMenu': <0>}"
+      shell: gsettings set org.gnome.settings-daemon.plugins.xsettings overrides "{'Gtk/ShellShowsAppMenu'{{ ':' }} <0>}"
       become: no
       #become_user: "{{ lookup('env', 'USERNAME') }}"
       ignore_errors: yes
