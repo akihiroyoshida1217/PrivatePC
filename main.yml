@@ -400,11 +400,11 @@
       become: no
       #become_user: "{{ lookup('env', 'USERNAME') }}"
 
-    - name: copy HOME/gsetting_configure
-      copy: src=./files/gsetting_configure dest="{{ lookup('env', 'HOME') }}/gsetting_configure" owner="{{ lookup('env', 'USERNAME') }}" group="{{ lookup('env', 'USERNAME') }}" mode=0755
+    - name: copy HOME/gsettings_configure
+      copy: src=./files/gsettings_configure dest="{{ lookup('env', 'HOME') }}/gsettings_configure" owner="{{ lookup('env', 'USERNAME') }}" group="{{ lookup('env', 'USERNAME') }}" mode=0755
       become: no
     - name: execute gsetting_configure
-      shell: {{ lookup('env', 'HOME') }}/gsetting_configure
+      shell: "{{ lookup('env', 'HOME') }}/gsettings_configure"
       become: no
       ignore_errors: yes
       
