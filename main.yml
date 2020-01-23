@@ -110,38 +110,57 @@
     #    executable: pip2
     #  ignore_errors: "{{ ansible_check_mode }}"
 
-    - name: mkdir /opt/clamav
-      file: path=/opt/clamav state=directory owner=root group=root mode=0755
-    - name: copy /opt/clamav/notify_viruscheck_watchdog.py
-      copy: src=./files/opt/clamav/notify_viruscheck_watchdog.py dest=/opt/clamav/notify_viruscheck_watchdog.py owner=root group=root mode=0755
-
-    - name: mkdir /opt/etc_watchdog
-      file: path=/opt/etc_watchdog state=directory owner=root group=root mode=0755
-    - name: copy /opt/etc_watchdog/etc_watchdog.py
-      copy: src=./files/opt/etc_watchdog/etc_watchdog.py dest=/opt/etc_watchdog/etc_watchdog.py owner=root group=root mode=0755
-
-    - name: mkdir /opt/psutil
-      file: path=/opt/psutil state=directory owner=root group=root mode=0755
-    - name: copy /opt/psutil/psutil_processmonitor.py
-      copy: src=./files/opt/psutil/psutil_processmonitor.py dest=/opt/psutil/psutil_processmonitor.py owner=root group=root mode=0755
-
-    - name: copy /opt/docker-image
-      copy: src=./files/opt/docker-image/ dest=/opt/docker-image/ owner=root group=root
+    - name: copy /opt
+      copy: src=./files/opt/* dest=/opt
+        owner: root
+        group: root
       when: not ansible_check_mode
 
-    - name: chmod 755 /opt/docker-image/firefox-package/Firefox_with_Docker-pkexec
-      file: path=/opt/docker-image/firefox-package/Firefox_with_Docker-pkexec owner=root group=root mode=0755
+    - name: chmod 755 /opt
+      file: 
+        path: "{{ item }}"
+        owner: root 
+        group: root
+        mode: 0755
+      with_items:
+        - /opt/clamav/notify_viruscheck_watchdog.py
+        - /opt/etc_watchdog/etc_watchdog.py
+        - /opt/psutil/psutil_processmonitor.py
+        - /opt/docker-image/firefox-package/Firefox_with_Docker-pkexec
+        - /opt/docker-image/vscode-extension-package/vscode-extension-update.py
       when: not ansible_check_mode
 
-    - name: chmod 755 /opt/docker-image/vscode-extension-package/vscode-extension-update.py
-      file: path=/opt/docker-image/vscode-extension-package/vscode-extension-update.py owner=root group=root mode=0755
-      when: not ansible_check_mode
+    #- name: mkdir /opt/clamav
+    #  file: path=/opt/clamav state=directory owner=root group=root mode=0755
+    #- name: copy /opt/clamav/notify_viruscheck_watchdog.py
+    #  copy: src=./files/opt/clamav/notify_viruscheck_watchdog.py dest=/opt/clamav/notify_viruscheck_watchdog.py owner=root group=root mode=0755
+
+    #- name: mkdir /opt/etc_watchdog
+    #  file: path=/opt/etc_watchdog state=directory owner=root group=root mode=0755
+    #- name: copy /opt/etc_watchdog/etc_watchdog.py
+    #  copy: src=./files/opt/etc_watchdog/etc_watchdog.py dest=/opt/etc_watchdog/etc_watchdog.py owner=root group=root mode=0755
+
+    #- name: mkdir /opt/psutil
+    #  file: path=/opt/psutil state=directory owner=root group=root mode=0755
+    #- name: copy /opt/psutil/psutil_processmonitor.py
+    #  copy: src=./files/opt/psutil/psutil_processmonitor.py dest=/opt/psutil/psutil_processmonitor.py owner=root group=root mode=0755
+
+    #- name: copy /opt/docker-image
+    #  copy: src=./files/opt/docker-image/ dest=/opt/docker-image/ owner=root group=root
+    #  when: not ansible_check_mode
+
+    #- name: chmod 755 /opt/docker-image/firefox-package/Firefox_with_Docker-pkexec
+    #  file: path=/opt/docker-image/firefox-package/Firefox_with_Docker-pkexec owner=root group=root mode=0755
+    #  when: not ansible_check_mode
+
+    #- name: chmod 755 /opt/docker-image/vscode-extension-package/vscode-extension-update.py
+    #  file: path=/opt/docker-image/vscode-extension-package/vscode-extension-update.py owner=root group=root mode=0755
+    #  when: not ansible_check_mode
 
     - name: mv /etc/audit/audit.rules etc/audit/audit.rules.org
       command: "mv /etc/audit/audit.rules etc/audit/audit.rules.org"
       ignore_errors: yes
-
-    - name: copy /opt/inotify/inotify_watchdog.py
+    - name: copy /etc/audit/audit.rules
       copy: src=./files/auditd.rules dest=/etc/audit/audit.rules owner=root group=root mode=0640
       
     - name: chown 1001:1001 /opt/docker-image/clamav-package/clamav/patternfile
@@ -164,6 +183,20 @@
         - daily.cld
         - main.cvd
         - mirrors.dat
+    - name: edit clamd.conf
+      lineinfile: 
+        path: /etc/clamav/clamd.conf
+        regexp: "{{ item.regexp }}"
+        line: "{{ item.line }}"
+      with_items:
+        - { regexp: '^LocalSocketGroup', line: 'LocalSocketGroup root'}
+        - { regexp: '^User', line: 'User root'}
+        - { regexp: '^MaxDirectoryRecursion', line: 'MaxDirectoryRecursion 20'}
+        - { regexp: '^ScanOnAccess', line: 'ScanOnAccess true'}
+        - { regexp: '^MaxScanSize', line: 'MaxScanSize 0M'}
+        - { regexp: '^MaxFileSize', line: 'MaxFileSize 0M'}
+        - { regexp: '^MaxFiles', line: 'MaxFiles 100000'}
+        - { regexp: '^OnAccessMountPath', line: 'OnAccessMountPath /'}
 
     - name: copy /etc/systemd/system/{{ item }}
       copy: src="./files/systemd/system/{{ item }}" dest="/etc/systemd/system/{{ item }}" owner=root group=root mode=0644
@@ -187,37 +220,20 @@
 
     - name: copy /etc/apt/apt.conf.d/20auto-upgrades
       copy: src=./files/apt/apt.conf.d/20auto-upgrades dest=/etc/apt/apt.conf.d/20auto-upgrades owner=root group=root mode=0644
+    - name: Unattended-Upgrade::Remove-Unused-Dependencies "true";
+      lineinfile: 
+        path: /etc/apt/apt.conf.d/50unattended-upgrades
+        regexp: '^(//)?Unattended-Upgrade::Remove-Unused-Dependencies'
+        line: 'Unattended-Upgrade::Remove-Unused-Dependencies "true";'
 
     - template:
         src: ./files/iptables/rules.v4.j2
         dest: /etc/iptables/rules.v4
         owner: root
         group: root
-
     - name: copy /etc/iptables/rules.v6
       copy: src=./files/iptables/rules.v6 dest=/etc/iptables/rules.v6 owner=root group=root
       when: not ansible_check_mode
-
-    - name: edit clamd.conf
-      lineinfile: 
-        path: /etc/clamav/clamd.conf
-        regexp: "{{ item.regexp }}"
-        line: "{{ item.line }}"
-      with_items:
-        - { regexp: '^LocalSocketGroup', line: 'LocalSocketGroup root'}
-        - { regexp: '^User', line: 'User root'}
-        - { regexp: '^MaxDirectoryRecursion', line: 'MaxDirectoryRecursion 20'}
-        - { regexp: '^ScanOnAccess', line: 'ScanOnAccess true'}
-        - { regexp: '^MaxScanSize', line: 'MaxScanSize 0M'}
-        - { regexp: '^MaxFileSize', line: 'MaxFileSize 0M'}
-        - { regexp: '^MaxFiles', line: 'MaxFiles 100000'}
-        - { regexp: '^OnAccessMountPath', line: 'OnAccessMountPath /'}
-
-    - name: Unattended-Upgrade::Remove-Unused-Dependencies "true";
-      lineinfile: 
-        path: /etc/apt/apt.conf.d/50unattended-upgrades
-        regexp: '^(//)?Unattended-Upgrade::Remove-Unused-Dependencies'
-        line: 'Unattended-Upgrade::Remove-Unused-Dependencies "true";'
 
     - name: edit ntp.conf
       lineinfile: 
