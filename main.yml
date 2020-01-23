@@ -367,6 +367,7 @@
         #- activities-config@nls1729
         #- Move_Clock@rmy.pobox.com
         - panel-date-format@keiii.github.com
+        - dynamicTopBar@gnomeshell.feildel.fr
     - name: Unarchive gnome plugin
       unarchive:
         src: "https://extensions.gnome.org/extension-data/{{ item.src }}"
@@ -381,6 +382,7 @@
         #- { src: activities-config%40nls1729.v58.shell-extension.zip, dest: activities-config@nls1729 }
         #- { src: Move_Clock%40rmy.pobox.com.v12.shell-extension.zip, dest: Move_Clock@rmy.pobox.com }
         - { src: panel-date-format%40keiii.github.com.v1.shell-extension.zip, dest: panel-date-format@keiii.github.com }
+        - { src: dynamicTopBar@gnomeshell.feildel.fr.v14.shell-extension.zip, dest: dynamicTopBar@gnomeshell.feildel.fr }
       ignore_errors: "{{ ansible_check_mode }}"
     - name: gnome-shell-extension-tool -e
       shell: gnome-shell-extension-tool -e {{ item }}
@@ -391,6 +393,7 @@
         #- activities-config@nls1729
         #- Move_Clock@rmy.pobox.com
         - panel-date-format@keiii.github.com
+        - dynamicTopBar@gnomeshell.feildel.fr
       ignore_errors: yes
 
     #- name: copy HOME/.config/dconf/user
@@ -476,7 +479,7 @@
       #become_user: "{{ lookup('env', 'USERNAME') }}"
       ignore_errors: yes
     - name: gsettings
-      shell: gsettings set org.gnome.shell enabled-extensions "['dash-to-dock@micxgx.gmail.com', 'user-theme@gnome-shell-extensions.gcampax.github.com', 'drive-menu@gnome-shell-extensions.gcampax.github.com', 'activities-config@nls1729', 'Move_Clock@rmy.pobox.com', 'panel-date-format@keiii.github.com']"
+      shell: gsettings set org.gnome.shell enabled-extensions "['dash-to-dock@micxgx.gmail.com', 'user-theme@gnome-shell-extensions.gcampax.github.com', 'drive-menu@gnome-shell-extensions.gcampax.github.com', 'panel-date-format@keiii.github.com', 'Move_Clock@jonathan.bluemosh.com', 'dynamicTopBar@gnomeshell.feildel.fr', 'Hide_Activities@shay.shayel.org']"
       become: no
       #become_user: "{{ lookup('env', 'USERNAME') }}"
       ignore_errors: yes
