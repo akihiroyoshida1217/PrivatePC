@@ -83,6 +83,9 @@
         - cifs-utils
         - python3-pkgconfig
         - auditd
+        - gnome-shell-extension-move-clock
+        - gnome-shell-extension-hide-activities
+        - gnome-shell-extension-dashtodock
       ignore_errors: "{{ ansible_check_mode }}"
     #- name: install packages
     #  apt: 
@@ -360,9 +363,9 @@
       become: no
       #become_user: "{{ lookup('env', 'USERNAME') }}"
       with_items:
-        - dash-to-dock@micxgx.gmail.com
-        - activities-config@nls1729
-        - Move_Clock@rmy.pobox.com
+        #- dash-to-dock@micxgx.gmail.com
+        #- activities-config@nls1729
+        #- Move_Clock@rmy.pobox.com
         - panel-date-format@keiii.github.com
     - name: Unarchive gnome plugin
       unarchive:
@@ -374,9 +377,9 @@
       #become: yes
       #become_user: "{{ lookup('env', 'USERNAME') }}"
       with_items:
-        - { src: dash-to-dockmicxgx.gmail.com.v65.shell-extension.zip, dest: dash-to-dock@micxgx.gmail.com }
-        - { src: activities-config%40nls1729.v58.shell-extension.zip, dest: activities-config@nls1729 }
-        - { src: Move_Clock%40rmy.pobox.com.v12.shell-extension.zip, dest: Move_Clock@rmy.pobox.com }
+        #- { src: dash-to-dockmicxgx.gmail.com.v65.shell-extension.zip, dest: dash-to-dock@micxgx.gmail.com }
+        #- { src: activities-config%40nls1729.v58.shell-extension.zip, dest: activities-config@nls1729 }
+        #- { src: Move_Clock%40rmy.pobox.com.v12.shell-extension.zip, dest: Move_Clock@rmy.pobox.com }
         - { src: panel-date-format%40keiii.github.com.v1.shell-extension.zip, dest: panel-date-format@keiii.github.com }
       ignore_errors: "{{ ansible_check_mode }}"
     - name: gnome-shell-extension-tool -e
@@ -384,9 +387,9 @@
       become: no
       #become_user: "{{ lookup('env', 'USERNAME') }}"
       with_items:
-        - dash-to-dock@micxgx.gmail.com
-        - activities-config@nls1729
-        - Move_Clock@rmy.pobox.com
+        #- dash-to-dock@micxgx.gmail.com
+        #- activities-config@nls1729
+        #- Move_Clock@rmy.pobox.com
         - panel-date-format@keiii.github.com
       ignore_errors: yes
 
@@ -400,23 +403,19 @@
       become: no
       #become_user: "{{ lookup('env', 'USERNAME') }}"
 
-    - name: copy HOME/gsettings_configure
-      copy: src=./files/gsettings_configure dest="{{ lookup('env', 'HOME') }}/gsettings_configure" owner="{{ lookup('env', 'USERNAME') }}" group="{{ lookup('env', 'USERNAME') }}" mode=0755
-      become: no
+    #- name: copy HOME/gsettings_configure
+    #  copy: src=./files/gsettings_configure dest="{{ lookup('env', 'HOME') }}/gsettings_configure" owner="{{ lookup('env', 'USERNAME') }}" group="{{ lookup('env', 'USERNAME') }}" mode=0755
+    #  become: no
     #- name: mkdir HOME/.config/autostart
     #  file: path="{{ lookup('env', 'HOME') }}/.config/autostart" state=directory owner="{{ lookup('env', 'USERNAME') }}" group="{{ lookup('env', 'USERNAME') }}" mode=0755 recurse=yes
     #  become: no
     #- name: copy HOME/.config/autostart/dconf.desktop
     #  copy: src=./files/dconf.desktop dest="{{ lookup('env', 'HOME') }}/.config/autostart/dconf.desktop" owner="{{ lookup('env', 'USERNAME') }}" group="{{ lookup('env', 'USERNAME') }}" mode=0755
     #  become: no
-    - name: execute gsetting_configure
-      shell: "{{ lookup('env', 'HOME') }}/gsettings_configure"
-      become: no
-      ignore_errors: yes
-    - name: execute gsetting_configure
-      shell: "{{ lookup('env', 'HOME') }}/gsettings_configure"
-      become: no
-      ignore_errors: yes
+    #- name: execute gsetting_configure
+    #  shell: "{{ lookup('env', 'HOME') }}/gsettings_configure"
+    #  become: no
+    #  ignore_errors: yes
       
     #- name: gsettings --schemadir
     #  shell: gsettings --schemadir {{ lookup('env', 'HOME') }}/.local/share/gnome-shell/extensions/activities-config@nls1729/schemas set org.gnome.shell.extensions.activities-config activities-config-button-no-icon true
@@ -443,46 +442,46 @@
     #  become: no
     #  #become_user: "{{ lookup('env', 'USERNAME') }}"
     #  ignore_errors: yes
-    #- name: gsettings --schemadir
-    #  shell: gsettings --schemadir {{ lookup('env', 'HOME') }}/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com/schemas set org.gnome.shell.extensions.dash-to-dock dock-position 'BOTTOM'
-    #  become: no
-    #  #become_user: "{{ lookup('env', 'USERNAME') }}"
-    #  ignore_errors: yes
-    #- name: gsettings --schemadir
-    #  shell: gsettings --schemadir {{ lookup('env', 'HOME') }}/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com/schemas set org.gnome.shell.extensions.dash-to-dock transparency-mode 'FIXED'
-    #  become: no
-    #  #become_user: "{{ lookup('env', 'USERNAME') }}"
-    #  ignore_errors: yes
-    #- name: gsettings --schemadir
-    #  shell: gsettings --schemadir {{ lookup('env', 'HOME') }}/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com/schemas set org.gnome.shell.extensions.dash-to-dock background-opacity 0.5
-    #  become: no
-    #  #become_user: "{{ lookup('env', 'USERNAME') }}"
-    #  ignore_errors: yes
-    #- name: gsettings
-    #  shell: gsettings set {{ item.schema }} {{ item.key }} {{ item.value }}
-    #  become: no
-    #  #become_user: "{{ lookup('env', 'USERNAME') }}"
-    #  with_items:
-    #    - { schema: org.gnome.shell.extensions.user-theme, key: name, value: 'Adapta-Nokto' }
-    #    - { schema: org.gnome.desktop.interface, key: gtk-theme, value: 'Adapta-Nokto' }
-    #    - { schema: org.gnome.desktop.interface, key: icon-theme, value: 'Paper' }
-    #    - { schema: org.gnome.desktop.wm.preferences, key: button-layout, value: 'appmenu:minimize,maximize,close' }
-    #    #- { schema: org.gnome.settings-daemon.plugins.xsettings, key: overrides, value: {'Gtk/ShellShowsAppMenu': <0>} }
-    #    #- { schema: org.gnome.shell, key: enabled-extensions, value: "{{ '"' }}"['dash-to-dock@micxgx.gmail.com', 'user-theme@gnome-shell-extensions.gcampax.github.com', 'drive-menu@gnome-shell-extensions.gcampax.github.com', 'activities-config@nls1729', 'Move_Clock@rmy.pobox.com', 'panel-date-format@keiii.github.com']"{{ '"' }}" }
-    #    #- { schema: org.gnome.shell, key: favorite-apps, value: "{{ '"' }}"['Firefox_with_Docker.desktop', 'org.gnome.Nautilus.desktop', 'code.desktop', 'org.gnome.Terminal.desktop']"{{ '"' }}" }
-    #  ignore_errors: yes
-    #- name: gsettings
-    #  shell: gsettings set org.gnome.settings-daemon.plugins.xsettings overrides "{'Gtk/ShellShowsAppMenu'{{ ':' }} <0>}"
-    #  become: no
-    #  #become_user: "{{ lookup('env', 'USERNAME') }}"
-    #  ignore_errors: yes
-    #- name: gsettings
-    #  shell: gsettings set org.gnome.shell enabled-extensions "['dash-to-dock@micxgx.gmail.com', 'user-theme@gnome-shell-extensions.gcampax.github.com', 'drive-menu@gnome-shell-extensions.gcampax.github.com', 'activities-config@nls1729', 'Move_Clock@rmy.pobox.com', 'panel-date-format@keiii.github.com']"
-    #  become: no
-    #  #become_user: "{{ lookup('env', 'USERNAME') }}"
-    #  ignore_errors: yes
-    #- name: gsettings
-    #  shell: gsettings set org.gnome.shell favorite-apps "['Firefox_with_Docker.desktop', 'org.gnome.Nautilus.desktop', 'code.desktop', 'org.gnome.Terminal.desktop']"
-    #  become: no
-    #  #become_user: "{{ lookup('env', 'USERNAME') }}"
-    #  ignore_errors: yes
+    - name: gsettings --schemadir
+      shell: gsettings --schemadir {{ lookup('env', 'HOME') }}/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com/schemas set org.gnome.shell.extensions.dash-to-dock dock-position 'BOTTOM'
+      become: no
+      #become_user: "{{ lookup('env', 'USERNAME') }}"
+      ignore_errors: yes
+    - name: gsettings --schemadir
+      shell: gsettings --schemadir {{ lookup('env', 'HOME') }}/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com/schemas set org.gnome.shell.extensions.dash-to-dock transparency-mode 'FIXED'
+      become: no
+      #become_user: "{{ lookup('env', 'USERNAME') }}"
+      ignore_errors: yes
+    - name: gsettings --schemadir
+      shell: gsettings --schemadir {{ lookup('env', 'HOME') }}/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com/schemas set org.gnome.shell.extensions.dash-to-dock background-opacity 0.5
+      become: no
+      #become_user: "{{ lookup('env', 'USERNAME') }}"
+      ignore_errors: yes
+    - name: gsettings
+      shell: gsettings set {{ item.schema }} {{ item.key }} {{ item.value }}
+      become: no
+      #become_user: "{{ lookup('env', 'USERNAME') }}"
+      with_items:
+        - { schema: org.gnome.shell.extensions.user-theme, key: name, value: 'Adapta-Nokto' }
+        - { schema: org.gnome.desktop.interface, key: gtk-theme, value: 'Adapta-Nokto' }
+        - { schema: org.gnome.desktop.interface, key: icon-theme, value: 'Paper' }
+        - { schema: org.gnome.desktop.wm.preferences, key: button-layout, value: 'appmenu:minimize,maximize,close' }
+        #- { schema: org.gnome.settings-daemon.plugins.xsettings, key: overrides, value: {'Gtk/ShellShowsAppMenu': <0>} }
+        #- { schema: org.gnome.shell, key: enabled-extensions, value: "{{ '"' }}"['dash-to-dock@micxgx.gmail.com', 'user-theme@gnome-shell-extensions.gcampax.github.com', 'drive-menu@gnome-shell-extensions.gcampax.github.com', 'activities-config@nls1729', 'Move_Clock@rmy.pobox.com', 'panel-date-format@keiii.github.com']"{{ '"' }}" }
+        #- { schema: org.gnome.shell, key: favorite-apps, value: "{{ '"' }}"['Firefox_with_Docker.desktop', 'org.gnome.Nautilus.desktop', 'code.desktop', 'org.gnome.Terminal.desktop']"{{ '"' }}" }
+      ignore_errors: yes
+    - name: gsettings
+      shell: gsettings set org.gnome.settings-daemon.plugins.xsettings overrides "{'Gtk/ShellShowsAppMenu'{{ ':' }} <0>}"
+      become: no
+      #become_user: "{{ lookup('env', 'USERNAME') }}"
+      ignore_errors: yes
+    - name: gsettings
+      shell: gsettings set org.gnome.shell enabled-extensions "['dash-to-dock@micxgx.gmail.com', 'user-theme@gnome-shell-extensions.gcampax.github.com', 'drive-menu@gnome-shell-extensions.gcampax.github.com', 'activities-config@nls1729', 'Move_Clock@rmy.pobox.com', 'panel-date-format@keiii.github.com']"
+      become: no
+      #become_user: "{{ lookup('env', 'USERNAME') }}"
+      ignore_errors: yes
+    - name: gsettings
+      shell: gsettings set org.gnome.shell favorite-apps "['Firefox_with_Docker.desktop', 'org.gnome.Nautilus.desktop', 'code.desktop', 'org.gnome.Terminal.desktop']"
+      become: no
+      #become_user: "{{ lookup('env', 'USERNAME') }}"
+      ignore_errors: yes
