@@ -1,10 +1,9 @@
-#sudo -E ansible-playbook main.yml --ask-become-pass --ask-pass -vvvv
+#ansible-playbook main.yml --ask-become-pass --ask-pass -vvvv
 
 - hosts: localhost
   connection: local
   become: yes
   vars:
-    #playing_user: akihiro
     network_interface: eth0
 
   tasks:
@@ -176,16 +175,6 @@
         - docker-update-docker.service
         - etc_watchdog.service
         - psutil_processmonitor.service
-
-    - name: mkdir /etc/skel/.local/share/applications
-      file: path=/etc/skel/.local/share/applications state=directory owner=root group=root mode=0755 recurse=yes
-    - name: copy /etc/skel/.local/share/applications/Firefox_with_Docker.desktop
-      copy: src=./files/Firefox_with_Docker.desktop dest=/etc/skel/.local/share/applications/Firefox_with_Docker.desktop owner=root group=root mode=0755
-
-    - name: mkdir /etc/skel/.config/dconf
-      file: path=/etc/skel/.config/dconf state=directory owner=root group=root mode=0755 recurse=yes
-    - name: copy /etc/skel/.config/dconf/user
-      copy: src=./files/dconf/user dest=/etc/skel/.config/dconf/user owner=root group=root mode=0644
 
     - name: copy /etc/cron.monthly/docker_image_update.py
       copy: src=./files/cron.monthly/docker_image_update.py dest=/etc/cron.monthly/docker_image_update.py owner=root group=root mode=0755
@@ -361,11 +350,7 @@
     - name: mkdir HOME/.local/share/gnome-shell/extensions/{{ item }}
       file: path="{{ lookup('env', 'HOME') }}/.local/share/gnome-shell/extensions/{{ item }}" state=directory owner="{{ lookup('env', 'USERNAME') }}" group="{{ lookup('env', 'USERNAME') }}" mode=0755 recurse=yes
       become: no
-      #become_user: "{{ lookup('env', 'USERNAME') }}"
       with_items:
-        #- dash-to-dock@micxgx.gmail.com
-        #- activities-config@nls1729
-        #- Move_Clock@rmy.pobox.com
         - panel-date-format@keiii.github.com
         - dynamic-panel-transparency@rockon999.github.io
     - name: Unarchive gnome plugin
@@ -375,95 +360,37 @@
         remote_src: yes
         owner: "{{ lookup('env', 'USERNAME') }}"
         group: "{{ lookup('env', 'USERNAME') }}"
-      #become: yes
-      #become_user: "{{ lookup('env', 'USERNAME') }}"
       with_items:
-        #- { src: dash-to-dockmicxgx.gmail.com.v65.shell-extension.zip, dest: dash-to-dock@micxgx.gmail.com }
-        #- { src: activities-config%40nls1729.v58.shell-extension.zip, dest: activities-config@nls1729 }
-        #- { src: Move_Clock%40rmy.pobox.com.v12.shell-extension.zip, dest: Move_Clock@rmy.pobox.com }
         - { src: panel-date-format%40keiii.github.com.v1.shell-extension.zip, dest: panel-date-format@keiii.github.com }
         - { src: dynamic-panel-transparencyrockon999.github.io.v32.shell-extension.zip, dest: dynamic-panel-transparency@rockon999.github.io }
       ignore_errors: "{{ ansible_check_mode }}"
     - name: gnome-shell-extension-tool -e
       shell: gnome-shell-extension-tool -e {{ item }}
       become: no
-      #become_user: "{{ lookup('env', 'USERNAME') }}"
       with_items:
-        #- dash-to-dock@micxgx.gmail.com
-        #- activities-config@nls1729
-        #- Move_Clock@rmy.pobox.com
         - panel-date-format@keiii.github.com
         - dynamic-panel-transparency@rockon999.github.io
       ignore_errors: yes
 
-    #- name: copy HOME/.config/dconf/user
-    #  copy: src=./files/dconf/user dest="{{ lookup('env', 'HOME') }}/.config/dconf/user" owner="{{ lookup('env', 'USERNAME') }}" group="{{ lookup('env', 'USERNAME') }}" mode=0644
-    #  become: no
-    #  #become_user: "{{ lookup('env', 'USERNAME') }}"
-
     - name: copy HOME/.local/share/applications/Firefox_with_Docker.desktop
       copy: src=./files/Firefox_with_Docker.desktop dest="{{ lookup('env', 'HOME') }}/.local/share/applications/Firefox_with_Docker.desktop" owner="{{ lookup('env', 'USERNAME') }}" group="{{ lookup('env', 'USERNAME') }}" mode=0755
       become: no
-      #become_user: "{{ lookup('env', 'USERNAME') }}"
 
-    #- name: copy HOME/gsettings_configure
-    #  copy: src=./files/gsettings_configure dest="{{ lookup('env', 'HOME') }}/gsettings_configure" owner="{{ lookup('env', 'USERNAME') }}" group="{{ lookup('env', 'USERNAME') }}" mode=0755
-    #  become: no
-    #- name: mkdir HOME/.config/autostart
-    #  file: path="{{ lookup('env', 'HOME') }}/.config/autostart" state=directory owner="{{ lookup('env', 'USERNAME') }}" group="{{ lookup('env', 'USERNAME') }}" mode=0755 recurse=yes
-    #  become: no
-    #- name: copy HOME/.config/autostart/dconf.desktop
-    #  copy: src=./files/dconf.desktop dest="{{ lookup('env', 'HOME') }}/.config/autostart/dconf.desktop" owner="{{ lookup('env', 'USERNAME') }}" group="{{ lookup('env', 'USERNAME') }}" mode=0755
-    #  become: no
-    #- name: execute gsetting_configure
-    #  shell: "{{ lookup('env', 'HOME') }}/gsettings_configure"
-    #  become: no
-    #  ignore_errors: yes
-      
-    #- name: gsettings --schemadir
-    #  shell: gsettings --schemadir {{ lookup('env', 'HOME') }}/.local/share/gnome-shell/extensions/activities-config@nls1729/schemas set org.gnome.shell.extensions.activities-config activities-config-button-no-icon true
-    #  become: no
-    #  #become_user: "{{ lookup('env', 'USERNAME') }}"
-    #  ignore_errors: yes
-    #- name: gsettings --schemadir
-    #  shell: gsettings --schemadir {{ lookup('env', 'HOME') }}/.local/share/gnome-shell/extensions/activities-config@nls1729/schemas set org.gnome.shell.extensions.activities-config activities-config-button-no-text true
-    #  become: no
-    #  #become_user: "{{ lookup('env', 'USERNAME') }}"
-    #  ignore_errors: yes
-    #- name: gsettings --schemadir
-    #  shell: gsettings --schemadir {{ lookup('env', 'HOME') }}/.local/share/gnome-shell/extensions/activities-config@nls1729/schemas set org.gnome.shell.extensions.activities-config transparent-panel 100
-    #  become: no
-    #  #become_user: "{{ lookup('env', 'USERNAME') }}"
-    #  ignore_errors: yes
-    #- name: gsettings --schemadir
-    #  shell: gsettings --schemadir {{ lookup('env', 'HOME') }}/.local/share/gnome-shell/extensions/activities-config@nls1729/schemas set org.gnome.shell.extensions.activities-config transparent-shadow 50
-    #  become: no
-    #  #become_user: "{{ lookup('env', 'USERNAME') }}"
-    #  ignore_errors: yes
-    #- name: gsettings --schemadir
-    #  shell: gsettings --schemadir {{ lookup('env', 'HOME') }}/.local/share/gnome-shell/extensions/activities-config@nls1729/schemas set org.gnome.shell.extensions.activities-config override-theme true
-    #  become: no
-    #  #become_user: "{{ lookup('env', 'USERNAME') }}"
-    #  ignore_errors: yes
     - name: gsettings --schemadir
       shell: gsettings set org.gnome.shell.extensions.dash-to-dock dock-position 'BOTTOM'
       become: no
-      #become_user: "{{ lookup('env', 'USERNAME') }}"
       ignore_errors: yes
     - name: gsettings --schemadir
       shell: gsettings set org.gnome.shell.extensions.dash-to-dock transparency-mode 'FIXED'
       become: no
-      #become_user: "{{ lookup('env', 'USERNAME') }}"
       ignore_errors: yes
     - name: gsettings --schemadir
       shell: gsettings set org.gnome.shell.extensions.dash-to-dock background-opacity 0.5
       become: no
-      #become_user: "{{ lookup('env', 'USERNAME') }}"
       ignore_errors: yes
     - name: gsettings
       shell: gsettings set {{ item.schema }} {{ item.key }} {{ item.value }}
       become: no
-      #become_user: "{{ lookup('env', 'USERNAME') }}"
       with_items:
         - { schema: org.gnome.shell.extensions.user-theme, key: name, value: 'Adapta-Nokto' }
         - { schema: org.gnome.desktop.interface, key: gtk-theme, value: 'Adapta-Nokto' }
@@ -476,15 +403,39 @@
     - name: gsettings
       shell: gsettings set org.gnome.settings-daemon.plugins.xsettings overrides "{'Gtk/ShellShowsAppMenu'{{ ':' }} <0>}"
       become: no
-      #become_user: "{{ lookup('env', 'USERNAME') }}"
       ignore_errors: yes
     - name: gsettings
       shell: gsettings set org.gnome.shell enabled-extensions "['dash-to-dock@micxgx.gmail.com', 'user-theme@gnome-shell-extensions.gcampax.github.com', 'drive-menu@gnome-shell-extensions.gcampax.github.com', 'panel-date-format@keiii.github.com', 'Move_Clock@jonathan.bluemosh.com', 'dynamic-panel-transparency@rockon999.github.io', 'Hide_Activities@shay.shayel.org']"
       become: no
-      #become_user: "{{ lookup('env', 'USERNAME') }}"
       ignore_errors: yes
     - name: gsettings
       shell: gsettings set org.gnome.shell favorite-apps "['Firefox_with_Docker.desktop', 'org.gnome.Nautilus.desktop', 'code.desktop', 'org.gnome.Terminal.desktop']"
       become: no
-      #become_user: "{{ lookup('env', 'USERNAME') }}"
       ignore_errors: yes
+
+    - name: mkdir /etc/skel/.local/share/applications
+      file: path=/etc/skel/.local/share/applications state=directory owner=root group=root mode=0755 recurse=yes
+    - name: copy /etc/skel/.local/share/applications/Firefox_with_Docker.desktop
+      copy: src=./files/Firefox_with_Docker.desktop dest=/etc/skel/.local/share/applications/Firefox_with_Docker.desktop owner=root group=root mode=0755
+
+    - name: mkdir /etc/skel/.config/dconf
+      file: path=/etc/skel/.config/dconf state=directory owner=root group=root mode=0755 recurse=yes
+    - name: copy /etc/skel/.config/dconf/user
+      copy: src="{{ lookup('env', 'HOME') }}/.config/dconf/user" dest=/etc/skel/.config/dconf/user owner=root group=root mode=0644
+
+    - name: mkdir /etc/skel/.local/share/gnome-shell/extensions/{{ item }}
+      file: path="/etc/skel/.local/share/gnome-shell/extensions/{{ item }}" state=directory owner=root group=root mode=0755 recurse=yes
+      with_items:
+        - panel-date-format@keiii.github.com
+        - dynamic-panel-transparency@rockon999.github.io
+    - name: Unarchive gnome plugin
+      unarchive:
+        src: "https://extensions.gnome.org/extension-data/{{ item.src }}"
+        dest: "/etc/skel/.local/share/gnome-shell/extensions/{{ item.dest }}"
+        remote_src: yes
+        owner: root
+        group: root
+      with_items:
+        - { src: panel-date-format%40keiii.github.com.v1.shell-extension.zip, dest: panel-date-format@keiii.github.com }
+        - { src: dynamic-panel-transparencyrockon999.github.io.v32.shell-extension.zip, dest: dynamic-panel-transparency@rockon999.github.io }
+      ignore_errors: "{{ ansible_check_mode }}"
