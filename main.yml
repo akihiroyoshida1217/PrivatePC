@@ -367,7 +367,7 @@
         #- activities-config@nls1729
         #- Move_Clock@rmy.pobox.com
         - panel-date-format@keiii.github.com
-        - dynamicTopBar@gnomeshell.feildel.fr
+        - dynamic-panel-transparency@rockon999.github.io
     - name: Unarchive gnome plugin
       unarchive:
         src: "https://extensions.gnome.org/extension-data/{{ item.src }}"
@@ -382,7 +382,7 @@
         #- { src: activities-config%40nls1729.v58.shell-extension.zip, dest: activities-config@nls1729 }
         #- { src: Move_Clock%40rmy.pobox.com.v12.shell-extension.zip, dest: Move_Clock@rmy.pobox.com }
         - { src: panel-date-format%40keiii.github.com.v1.shell-extension.zip, dest: panel-date-format@keiii.github.com }
-        - { src: dynamicTopBar@gnomeshell.feildel.fr.v14.shell-extension.zip, dest: dynamicTopBar@gnomeshell.feildel.fr }
+        - { src: dynamic-panel-transparencyrockon999.github.io.v32.shell-extension.zip, dest: dynamic-panel-transparency@rockon999.github.io }
       ignore_errors: "{{ ansible_check_mode }}"
     - name: gnome-shell-extension-tool -e
       shell: gnome-shell-extension-tool -e {{ item }}
@@ -393,7 +393,7 @@
         #- activities-config@nls1729
         #- Move_Clock@rmy.pobox.com
         - panel-date-format@keiii.github.com
-        - dynamicTopBar@gnomeshell.feildel.fr
+        - dynamic-panel-transparency@rockon999.github.io
       ignore_errors: yes
 
     #- name: copy HOME/.config/dconf/user
@@ -446,17 +446,17 @@
     #  #become_user: "{{ lookup('env', 'USERNAME') }}"
     #  ignore_errors: yes
     - name: gsettings --schemadir
-      shell: gsettings --schemadir {{ lookup('env', 'HOME') }}/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com/schemas set org.gnome.shell.extensions.dash-to-dock dock-position 'BOTTOM'
+      shell: gsettings set org.gnome.shell.extensions.dash-to-dock dock-position 'BOTTOM'
       become: no
       #become_user: "{{ lookup('env', 'USERNAME') }}"
       ignore_errors: yes
     - name: gsettings --schemadir
-      shell: gsettings --schemadir {{ lookup('env', 'HOME') }}/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com/schemas set org.gnome.shell.extensions.dash-to-dock transparency-mode 'FIXED'
+      shell: gsettings set org.gnome.shell.extensions.dash-to-dock transparency-mode 'FIXED'
       become: no
       #become_user: "{{ lookup('env', 'USERNAME') }}"
       ignore_errors: yes
     - name: gsettings --schemadir
-      shell: gsettings --schemadir {{ lookup('env', 'HOME') }}/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com/schemas set org.gnome.shell.extensions.dash-to-dock background-opacity 0.5
+      shell: gsettings set org.gnome.shell.extensions.dash-to-dock background-opacity 0.5
       become: no
       #become_user: "{{ lookup('env', 'USERNAME') }}"
       ignore_errors: yes
@@ -479,7 +479,7 @@
       #become_user: "{{ lookup('env', 'USERNAME') }}"
       ignore_errors: yes
     - name: gsettings
-      shell: gsettings set org.gnome.shell enabled-extensions "['dash-to-dock@micxgx.gmail.com', 'user-theme@gnome-shell-extensions.gcampax.github.com', 'drive-menu@gnome-shell-extensions.gcampax.github.com', 'panel-date-format@keiii.github.com', 'Move_Clock@jonathan.bluemosh.com', 'dynamicTopBar@gnomeshell.feildel.fr', 'Hide_Activities@shay.shayel.org']"
+      shell: gsettings set org.gnome.shell enabled-extensions "['dash-to-dock@micxgx.gmail.com', 'user-theme@gnome-shell-extensions.gcampax.github.com', 'drive-menu@gnome-shell-extensions.gcampax.github.com', 'panel-date-format@keiii.github.com', 'Move_Clock@jonathan.bluemosh.com', 'dynamic-panel-transparency@rockon999.github.io', 'Hide_Activities@shay.shayel.org']"
       become: no
       #become_user: "{{ lookup('env', 'USERNAME') }}"
       ignore_errors: yes
