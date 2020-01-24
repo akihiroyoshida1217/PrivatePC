@@ -3,14 +3,9 @@ Description=Config Folder Real-Time Scan Daemon
 #After=netfilter-persistent.service
 
 [Service]
-#TimeoutSec=15min
-#ExecStartPre=/usr/bin/inotifywait -m -e create,delete,modify,move,attrib --format '%T %w %f %e' -r --timefmt '%F %T' /etc/iptables/ -d -o /var/log/inotify/inotify.log
 ExecStart=/opt/etc_watchdog/etc_watchdog.py
 Restart=always
-#Restart=no
-#Type=simple
 Type=notify
-#WatchdogSec=1
 
 [Install]
 WantedBy=multi-user.target

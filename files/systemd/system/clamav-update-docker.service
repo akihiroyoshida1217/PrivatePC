@@ -4,11 +4,7 @@ After=docker.service
 
 [Service]
 ExecStart=/usr/local/bin/docker-compose -f /opt/docker-image/clamav-package/docker-compose.yml run --rm freshclam
-#Restart=always
-#Restart=no
 Type=simple
-#Type=notify
-#WatchdogSec=1
 
 [Install]
 WantedBy=multi-user.target

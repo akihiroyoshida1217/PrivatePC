@@ -6,11 +6,7 @@ After=docker.service
 TimeoutSec=15min
 ExecStartPre=/usr/local/bin/docker-compose -f /opt/docker-image/docker-package/docker-compose.yml run --rm docker
 ExecStart=/bin/bash -c "/usr/bin/apt-get install -y `ls /opt/docker-image/docker-package/docker/package/docker-ce*`"
-#Restart=always
-#Restart=no
 Type=simple
-#Type=notify
-#WatchdogSec=1
 
 [Install]
 WantedBy=multi-user.target

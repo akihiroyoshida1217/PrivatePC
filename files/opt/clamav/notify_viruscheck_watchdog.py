@@ -54,7 +54,6 @@ def watch(path, patterns):
     observer.start()
     try:
         while True:
-            #notify(Notification.STATUS, "I'm fine.")
             time.sleep(1)
     except KeyboardInterrupt:
         observer.stop()

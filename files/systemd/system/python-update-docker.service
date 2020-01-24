@@ -5,13 +5,8 @@ After=docker.service
 [Service]
 TimeoutSec=15min
 ExecStartPre=/usr/local/bin/docker-compose -f /opt/docker-image/python-package/docker-compose.yml run --rm python
-#ExecStart=/bin/bash -c "/usr/bin/pip3 install -U --no-deps /opt/docker-image/python-package/python/package/*"
 ExecStart=/bin/bash -c "/usr/bin/pip3 install -U --no-index --find-links=/opt/docker-image/python-package/python/package/* /opt/docker-image/python-package/python/package/*"
-#Restart=always
-#Restart=no
 Type=simple
-#Type=notify
-#WatchdogSec=1
 
 [Install]
 WantedBy=multi-user.target
