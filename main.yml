@@ -85,6 +85,7 @@
         - gnome-shell-extension-move-clock
         - gnome-shell-extension-hide-activities
         - gnome-shell-extension-dashtodock
+        - gnome-shell-extension-pixelsaver
       ignore_errors: "{{ ansible_check_mode }}"
     #- name: install packages
     #  apt: 
@@ -462,7 +463,7 @@
         - { schema: org.gnome.desktop.interface, key: icon-theme, value: 'Paper' }
         - { schema: org.gnome.desktop.wm.preferences, key: button-layout, value: 'appmenu:minimize,maximize,close' }
         - { schema: org.gnome.settings-daemon.plugins.xsettings, key: overrides, value: "{'Gtk/ShellShowsAppMenu'{{ ':' }} <0>}" }
-        - { schema: org.gnome.shell, key: enabled-extensions, value: "['dash-to-dock@micxgx.gmail.com', 'user-theme@gnome-shell-extensions.gcampax.github.com', 'drive-menu@gnome-shell-extensions.gcampax.github.com', 'panel-date-format@keiii.github.com', 'Move_Clock@jonathan.bluemosh.com', 'dynamic-panel-transparency@rockon999.github.io', 'Hide_Activities@shay.shayel.org']" }
+        - { schema: org.gnome.shell, key: enabled-extensions, value: "['dash-to-dock@micxgx.gmail.com', 'user-theme@gnome-shell-extensions.gcampax.github.com', 'drive-menu@gnome-shell-extensions.gcampax.github.com', 'panel-date-format@keiii.github.com', 'Move_Clock@jonathan.bluemosh.com', 'dynamic-panel-transparency@rockon999.github.io', 'Hide_Activities@shay.shayel.org', 'pixel-saver@deadalnix.me']" }
         - { schema: org.gnome.shell, key: favorite-apps, value: "['Firefox_with_Docker.desktop', 'org.gnome.Nautilus.desktop', 'code.desktop', 'org.gnome.Terminal.desktop']" }
         - { schema: org.gnome.shell.extensions.dash-to-dock, key: dock-position, value: 'BOTTOM' }
         - { schema: org.gnome.shell.extensions.dash-to-dock, key: transparency-mode, value: 'FIXED' }
