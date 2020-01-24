@@ -112,7 +112,9 @@
     #  ignore_errors: "{{ ansible_check_mode }}"
 
     - name: copy /opt
-      copy: src=./files/opt/* dest=/opt
+      copy:
+        src: ./files/opt/
+        dest: /opt
         owner: root
         group: root
       when: not ansible_check_mode
@@ -163,7 +165,8 @@
       ignore_errors: yes
     - name: copy /etc/audit/audit.rules
       copy: 
-        src: ./files/auditd.rules dest=/etc/audit/audit.rules
+        src: ./files/auditd.rules
+        dest: /etc/audit/audit.rules
         owner: root
         group: root
         mode: 0640
@@ -492,11 +495,11 @@
         recurse: yes
     - name: copy /etc/skel/.local/share/applications/Firefox_with_Docker.desktop
       copy: 
-      src: ./files/Firefox_with_Docker.desktop
-      dest: /etc/skel/.local/share/applications/Firefox_with_Docker.desktop
-      owner: root
-      group: root
-      mode: 0755
+        src: ./files/Firefox_with_Docker.desktop
+        dest: /etc/skel/.local/share/applications/Firefox_with_Docker.desktop
+        owner: root
+        group: root
+        mode: 0755
 
     - name: mkdir /etc/skel/.config/dconf
       file: 
