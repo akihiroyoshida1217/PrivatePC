@@ -161,10 +161,18 @@
       command: "mv /etc/audit/audit.rules etc/audit/audit.rules.org"
       ignore_errors: yes
     - name: copy /etc/audit/audit.rules
-      copy: src=./files/auditd.rules dest=/etc/audit/audit.rules owner=root group=root mode=0640
+      copy: 
+        src: ./files/auditd.rules dest=/etc/audit/audit.rules
+        owner: root
+        group: root
+        mode: 0640
       
     - name: chown 1001:1001 /opt/docker-image/clamav-package/clamav/patternfile
-      file: path=/opt/docker-image/clamav-package/clamav/patternfile state=directory owner=1001 group=1001
+      file: 
+        path: /opt/docker-image/clamav-package/clamav/patternfile
+        state: directory
+        owner: 1001
+        group: 1001
       when: not ansible_check_mode
     - name: mv /var/lib/clamav/{{ item }} /var/lib/clamav/{{ item }}.org
       command: "mv /var/lib/clamav/{{ item }} /var/lib/clamav/{{ item }}.org"
@@ -176,7 +184,11 @@
         - mirrors.dat
       ignore_errors: yes
     - name: ln -s /opt/docker-image/clamav-package/clamav/patternfile/{{ item }} /var/lib/clamav/{{ item }}
-      file: src="/opt/docker-image/clamav-package/clamav/patternfile/{{ item }}" dest="/var/lib/clamav/{{ item }}" state=link force=yes
+      file: 
+        src: "/opt/docker-image/clamav-package/clamav/patternfile/{{ item }}"
+        dest: "/var/lib/clamav/{{ item }}"
+        state: link
+        force: yes
       with_items:
         - bytecode.cvd
         - daily.cvd
@@ -199,7 +211,12 @@
         - { regexp: '^OnAccessMountPath', line: 'OnAccessMountPath /'}
 
     - name: copy /etc/systemd/system/{{ item }}
-      copy: src="./files/systemd/system/{{ item }}" dest="/etc/systemd/system/{{ item }}" owner=root group=root mode=0644
+      copy: 
+        src: "./files/systemd/system/{{ item }}"
+        dest: "/etc/systemd/system/{{ item }}"
+        owner: root
+        group: root
+        mode: 0644
       with_items:
         - clamav-update-docker.service
         - clamav-watchdog.service
@@ -209,17 +226,34 @@
         - etc_watchdog.service
         - psutil_processmonitor.service
 
-    - name: copy /etc/cron.monthly/docker_image_update.py
-      copy: src=./files/cron.monthly/docker_image_update.py dest=/etc/cron.monthly/docker_image_update.py owner=root group=root mode=0755
-    - name: copy /etc/cron.monthly/notify_viruscheck_cron.py
-      copy: src=./files/cron.monthly/notify_viruscheck_cron.py dest=/etc/cron.monthly/notify_viruscheck_cron.py owner=root group=root mode=0755
-    - name: copy /etc/cron.monthly/python_pip_upgrade
-      copy: src=./files/cron.monthly/python_pip_upgrade dest=/etc/cron.monthly/python_pip_upgrade owner=root group=root mode=0755
+    - name: copy /etc/cron.monthly/
+      copy: 
+        src: "./files/cron.monthly/{{ item }}"
+        dest: "/etc/cron.monthly/{{ item }}"
+        owner: root
+        group: root
+        mode: 0755
+      with_items:
+        - docker_image_update.py
+        - notify_viruscheck_cron.py
+        - python_pip_upgrade
+
+    #- name: copy /etc/cron.monthly/docker_image_update.py
+    #  copy: src=./files/cron.monthly/docker_image_update.py dest=/etc/cron.monthly/docker_image_update.py owner=root group=root mode=0755
+    #- name: copy /etc/cron.monthly/notify_viruscheck_cron.py
+    #  copy: src=./files/cron.monthly/notify_viruscheck_cron.py dest=/etc/cron.monthly/notify_viruscheck_cron.py owner=root group=root mode=0755
+    #- name: copy /etc/cron.monthly/python_pip_upgrade
+    #  copy: src=./files/cron.monthly/python_pip_upgrade dest=/etc/cron.monthly/python_pip_upgrade owner=root group=root mode=0755
     #- name: copy /etc/cron.monthly/docker_baseimage_upgrade
     #  copy: src=./files/cron.monthly/docker_baseimage_upgrade dest=/etc/cron.monthly/docker_baseimage_upgrade owner=root group=root mode=0755
 
     - name: copy /etc/apt/apt.conf.d/20auto-upgrades
-      copy: src=./files/apt/apt.conf.d/20auto-upgrades dest=/etc/apt/apt.conf.d/20auto-upgrades owner=root group=root mode=0644
+      copy: 
+        src: ./files/apt/apt.conf.d/20auto-upgrades
+        dest: /etc/apt/apt.conf.d/20auto-upgrades
+        owner: root
+        group: root
+        mode: 0644
     - name: Unattended-Upgrade::Remove-Unused-Dependencies "true";
       lineinfile: 
         path: /etc/apt/apt.conf.d/50unattended-upgrades
@@ -232,7 +266,11 @@
         owner: root
         group: root
     - name: copy /etc/iptables/rules.v6
-      copy: src=./files/iptables/rules.v6 dest=/etc/iptables/rules.v6 owner=root group=root
+      copy: 
+        src: ./files/iptables/rules.v6
+        dest: /etc/iptables/rules.v6
+        owner: root
+        group: root
       when: not ansible_check_mode
 
     - name: edit ntp.conf
@@ -364,7 +402,13 @@
         - psutil_processmonitor.service
 
     - name: mkdir HOME/.local/share/gnome-shell/extensions/{{ item }}
-      file: path="{{ lookup('env', 'HOME') }}/.local/share/gnome-shell/extensions/{{ item }}" state=directory owner="{{ lookup('env', 'USERNAME') }}" group="{{ lookup('env', 'USERNAME') }}" mode=0755 recurse=yes
+      file: 
+        path: "{{ lookup('env', 'HOME') }}/.local/share/gnome-shell/extensions/{{ item }}"
+        state: directory
+        owner: "{{ lookup('env', 'USERNAME') }}"
+        group: "{{ lookup('env', 'USERNAME') }}"
+        mode: 0755
+        recurse: yes
       become: no
       with_items:
         - panel-date-format@keiii.github.com
@@ -389,58 +433,94 @@
       ignore_errors: yes
 
     - name: copy HOME/.local/share/applications/Firefox_with_Docker.desktop
-      copy: src=./files/Firefox_with_Docker.desktop dest="{{ lookup('env', 'HOME') }}/.local/share/applications/Firefox_with_Docker.desktop" owner="{{ lookup('env', 'USERNAME') }}" group="{{ lookup('env', 'USERNAME') }}" mode=0755
+      copy: 
+        src: ./files/Firefox_with_Docker.desktop
+        dest: "{{ lookup('env', 'HOME') }}/.local/share/applications/Firefox_with_Docker.desktop"
+        owner: "{{ lookup('env', 'USERNAME') }}"
+        group: "{{ lookup('env', 'USERNAME') }}"
+        mode: 0755
       become: no
 
-    - name: gsettings --schemadir
-      shell: gsettings set org.gnome.shell.extensions.dash-to-dock dock-position 'BOTTOM'
-      become: no
-      ignore_errors: yes
-    - name: gsettings --schemadir
-      shell: gsettings set org.gnome.shell.extensions.dash-to-dock transparency-mode 'FIXED'
-      become: no
-      ignore_errors: yes
-    - name: gsettings --schemadir
-      shell: gsettings set org.gnome.shell.extensions.dash-to-dock background-opacity 0.5
-      become: no
-      ignore_errors: yes
+    #- name: gsettings --schemadir
+    #  shell: gsettings set org.gnome.shell.extensions.dash-to-dock dock-position 'BOTTOM'
+    #  become: no
+    #  ignore_errors: yes
+    #- name: gsettings --schemadir
+    #  shell: gsettings set org.gnome.shell.extensions.dash-to-dock transparency-mode 'FIXED'
+    #  become: no
+    #  ignore_errors: yes
+    #- name: gsettings --schemadir
+    #  shell: gsettings set org.gnome.shell.extensions.dash-to-dock background-opacity 0.5
+    #  become: no
+    #  ignore_errors: yes
     - name: gsettings
-      shell: gsettings set {{ item.schema }} {{ item.key }} {{ item.value }}
+      shell: gsettings set {{ item.schema }} {{ item.key }} "{{ item.value }}"
       become: no
       with_items:
         - { schema: org.gnome.shell.extensions.user-theme, key: name, value: 'Adapta-Nokto' }
         - { schema: org.gnome.desktop.interface, key: gtk-theme, value: 'Adapta-Nokto' }
         - { schema: org.gnome.desktop.interface, key: icon-theme, value: 'Paper' }
         - { schema: org.gnome.desktop.wm.preferences, key: button-layout, value: 'appmenu:minimize,maximize,close' }
-        #- { schema: org.gnome.settings-daemon.plugins.xsettings, key: overrides, value: {'Gtk/ShellShowsAppMenu': <0>} }
-        #- { schema: org.gnome.shell, key: enabled-extensions, value: "{{ '"' }}"['dash-to-dock@micxgx.gmail.com', 'user-theme@gnome-shell-extensions.gcampax.github.com', 'drive-menu@gnome-shell-extensions.gcampax.github.com', 'activities-config@nls1729', 'Move_Clock@rmy.pobox.com', 'panel-date-format@keiii.github.com']"{{ '"' }}" }
-        #- { schema: org.gnome.shell, key: favorite-apps, value: "{{ '"' }}"['Firefox_with_Docker.desktop', 'org.gnome.Nautilus.desktop', 'code.desktop', 'org.gnome.Terminal.desktop']"{{ '"' }}" }
+        - { schema: org.gnome.settings-daemon.plugins.xsettings, key: overrides, value: "{'Gtk/ShellShowsAppMenu'{{ ':' }} <0>}" }
+        - { schema: org.gnome.shell, key: enabled-extensions, value: "['dash-to-dock@micxgx.gmail.com', 'user-theme@gnome-shell-extensions.gcampax.github.com', 'drive-menu@gnome-shell-extensions.gcampax.github.com', 'panel-date-format@keiii.github.com', 'Move_Clock@jonathan.bluemosh.com', 'dynamic-panel-transparency@rockon999.github.io', 'Hide_Activities@shay.shayel.org']" }
+        - { schema: org.gnome.shell, key: favorite-apps, value: "['Firefox_with_Docker.desktop', 'org.gnome.Nautilus.desktop', 'code.desktop', 'org.gnome.Terminal.desktop']" }
+        - { schema: org.gnome.shell.extensions.dash-to-dock, key: dock-position, value: 'BOTTOM' }
+        - { schema: org.gnome.shell.extensions.dash-to-dock, key: transparency-mode, value: 'FIXED' }
+        - { schema: org.gnome.shell.extensions.dash-to-dock, key: background-opacity, value: 0.5 }
       ignore_errors: yes
-    - name: gsettings
-      shell: gsettings set org.gnome.settings-daemon.plugins.xsettings overrides "{'Gtk/ShellShowsAppMenu'{{ ':' }} <0>}"
-      become: no
-      ignore_errors: yes
-    - name: gsettings
-      shell: gsettings set org.gnome.shell enabled-extensions "['dash-to-dock@micxgx.gmail.com', 'user-theme@gnome-shell-extensions.gcampax.github.com', 'drive-menu@gnome-shell-extensions.gcampax.github.com', 'panel-date-format@keiii.github.com', 'Move_Clock@jonathan.bluemosh.com', 'dynamic-panel-transparency@rockon999.github.io', 'Hide_Activities@shay.shayel.org']"
-      become: no
-      ignore_errors: yes
-    - name: gsettings
-      shell: gsettings set org.gnome.shell favorite-apps "['Firefox_with_Docker.desktop', 'org.gnome.Nautilus.desktop', 'code.desktop', 'org.gnome.Terminal.desktop']"
-      become: no
-      ignore_errors: yes
+    #- name: gsettings
+    #  shell: gsettings set org.gnome.settings-daemon.plugins.xsettings overrides "{'Gtk/ShellShowsAppMenu'{{ ':' }} <0>}"
+    #  become: no
+    #  ignore_errors: yes
+    #- name: gsettings
+    #  shell: gsettings set org.gnome.shell enabled-extensions "['dash-to-dock@micxgx.gmail.com', 'user-theme@gnome-shell-extensions.gcampax.github.com', 'drive-menu@gnome-shell-extensions.gcampax.github.com', 'panel-date-format@keiii.github.com', 'Move_Clock@jonathan.bluemosh.com', 'dynamic-panel-transparency@rockon999.github.io', 'Hide_Activities@shay.shayel.org']"
+    #  become: no
+    #  ignore_errors: yes
+    #- name: gsettings
+    #  shell: gsettings set org.gnome.shell favorite-apps "['Firefox_with_Docker.desktop', 'org.gnome.Nautilus.desktop', 'code.desktop', 'org.gnome.Terminal.desktop']"
+    #  become: no
+    #  ignore_errors: yes
 
     - name: mkdir /etc/skel/.local/share/applications
-      file: path=/etc/skel/.local/share/applications state=directory owner=root group=root mode=0755 recurse=yes
+      file: 
+        path: /etc/skel/.local/share/applications
+        state: directory
+        owner: root
+        group: root
+        mode: 0755
+        recurse: yes
     - name: copy /etc/skel/.local/share/applications/Firefox_with_Docker.desktop
-      copy: src=./files/Firefox_with_Docker.desktop dest=/etc/skel/.local/share/applications/Firefox_with_Docker.desktop owner=root group=root mode=0755
+      copy: 
+      src: ./files/Firefox_with_Docker.desktop
+      dest: /etc/skel/.local/share/applications/Firefox_with_Docker.desktop
+      owner: root
+      group: root
+      mode: 0755
 
     - name: mkdir /etc/skel/.config/dconf
-      file: path=/etc/skel/.config/dconf state=directory owner=root group=root mode=0755 recurse=yes
+      file: 
+        path: /etc/skel/.config/dconf
+        state: directory
+        owner: root
+        group: root
+        mode: 0755
+        recurse: yes
     - name: copy /etc/skel/.config/dconf/user
-      copy: src="{{ lookup('env', 'HOME') }}/.config/dconf/user" dest=/etc/skel/.config/dconf/user owner=root group=root mode=0644
+      copy: 
+        src: "{{ lookup('env', 'HOME') }}/.config/dconf/user"
+        dest: /etc/skel/.config/dconf/user
+        owner: root
+        group: root
+        mode: 0644
 
     - name: mkdir /etc/skel/.local/share/gnome-shell/extensions/{{ item }}
-      file: path="/etc/skel/.local/share/gnome-shell/extensions/{{ item }}" state=directory owner=root group=root mode=0755 recurse=yes
+      file: 
+        path: "/etc/skel/.local/share/gnome-shell/extensions/{{ item }}"
+        state: directory
+        owner: root
+        group: root
+        mode: 0755
+        recurse: yes
       with_items:
         - panel-date-format@keiii.github.com
         - dynamic-panel-transparency@rockon999.github.io
