@@ -1,7 +1,7 @@
 FROM debian:latest
 
 # Replace 1000 with your user / group id
-RUN export uid=1001 gid=1001 && \
+RUN export uid=1010 gid=1010 && \
     mkdir -p /home/clamav && \
     echo "clamav:x:${uid}:${gid}:clamav,,,:/home/clamav:/bin/bash" >> /etc/passwd && \
     echo "clamav:x:${uid}:" >> /etc/group && \

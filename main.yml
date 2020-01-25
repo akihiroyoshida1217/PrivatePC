@@ -4,7 +4,7 @@
   connection: local
   become: yes
   vars:
-    network_interface: eth0
+    network_interface: ens33
 
   tasks:
     - name: Get version_code
@@ -171,12 +171,12 @@
         group: root
         mode: 0640
       
-    - name: chown 1001:1001 /opt/docker-image/clamav-package/clamav/patternfile
+    - name: chown 1010:1010 /opt/docker-image/clamav-package/clamav/patternfile
       file: 
         path: /opt/docker-image/clamav-package/clamav/patternfile
         state: directory
-        owner: 1001
-        group: 1001
+        owner: 1010
+        group: 1010
       when: not ansible_check_mode
     - name: mv /var/lib/clamav/{{ item }} /var/lib/clamav/{{ item }}.org
       command: "mv /var/lib/clamav/{{ item }} /var/lib/clamav/{{ item }}.org"
