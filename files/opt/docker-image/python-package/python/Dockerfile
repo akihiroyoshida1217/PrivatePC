@@ -2,7 +2,7 @@ ARG imagever="latest"
 FROM debian:${imagever}
 
 RUN apt-get update -qq && \
-    apt-get install -yq --no-install-recommends python3 python3-pip build-essential && \
+    apt-get install -yq --no-install-recommends python3 python3-pip build-essential sudo && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
@@ -18,4 +18,4 @@ RUN export uid=1012 gid=1012 && \
     echo "pythonuser ALL=(ALL) NOPASSWD:/usr/bin/pip3 download -d src ansible docker-compose docker watchdog pylint systemd" >> /etc/sudoers
 
 USER pythonuser
-ENTRYPOINT ["bin/sh", "-c", "/usr/bin/pip3 download -d src ansible docker-compose docker watchdog pylint systemd"]
+ENTRYPOINT ["bin/sh", "-c", "sudo /usr/bin/pip3 download -d src ansible docker-compose docker watchdog pylint systemd"]

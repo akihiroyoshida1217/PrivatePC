@@ -66,6 +66,7 @@
         - iptables
         - iptables-persistent
         - software-properties-common
+        - locales-all
         - ibus-mozc
         - clamav-daemon
         - gnome-tweak-tool
@@ -171,6 +172,11 @@
         group: root
         mode: 0640
       
+    - name: systemctl disable
+      systemd:
+        name: clamav-freshclam
+        state: stopped
+        enabled: no
     - name: chown 1010:1010 /opt/docker-image/clamav-package/clamav/patternfile
       file: 
         path: /opt/docker-image/clamav-package/clamav/patternfile
@@ -291,6 +297,9 @@
       lineinfile: 
         path: /etc/ntp.conf
         line: 'pool ntp.nict.jp iburst'
+
+    - name: localectl set-locale LANG="ja_JP.UTF-8" LANGUAGE="ja_JP:ja"
+      shell: localectl set-locale LANG="ja_JP.UTF-8" LANGUAGE="ja_JP:ja"
 
     - name: build "firefox-image"
       docker_image:

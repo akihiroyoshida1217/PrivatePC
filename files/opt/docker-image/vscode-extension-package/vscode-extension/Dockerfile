@@ -12,6 +12,7 @@ FROM vscode-image:${imagever}
 #RUN curl -L https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor | apt-key add - && \
 #    echo "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main" > /etc/apt/sources.list.d/vscode.list
 
+USER root
 RUN apt-get update -qq && \
     apt-get install -yq --no-install-recommends code libxtst6 libasound2 && \
     apt-get clean && \
