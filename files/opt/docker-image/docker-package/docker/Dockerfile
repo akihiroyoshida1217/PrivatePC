@@ -19,7 +19,11 @@ RUN export uid=1011 gid=1011 && \
     chown ${uid}:${gid} -R /home/dockeruser && \
     echo "dockeruser:test" | chpasswd && \
     #echo "dockeruser ALL=(ALL) NOPASSWD: /usr/bin/apt-get" >> /etc/sudoers
-    echo "dockeruser ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+    echo "dockeruser ALL=(ALL) NOPASSWD: /script/docker-update.sh" >> /etc/sudoers
+
+RUN mkdir /script && \
+    echo "#!/usr/bin/env bash\n/usr/bin/apt-get update\n/usr/bin/apt-get install -dy docker-ce" > /script/docker-update.sh && \
+    chmod 755 /script/docker-update.sh
 
 USER dockeruser
-ENTRYPOINT ["sudo", "bin/sh", "-c", "/usr/bin/apt-get update && /usr/bin/apt-get install -dy docker-ce"]
+ENTRYPOINT ["sudo", "/script/docker-update.sh"]

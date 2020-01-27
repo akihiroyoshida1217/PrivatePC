@@ -45,6 +45,10 @@ RUN sed -e "s/# ja_JP.UTF-8/ja_JP.UTF-8/g" /etc/locale.gen && \
     update-locale LANG=ja_JP.utf8 && \
     im-config -n ibus
 
+RUN mkdir /script && \
+    echo "#!/usr/bin/env bash\n/usr/bin/ibus-daemon -dx\n/usr/bin/firefox -no-remote -profile /home/$UID/profile" > /script/firefox-run.sh && \
+    chmod 755 /script/firefox-run.sh
+
 #RUN find /usr -perm /6000 -type f -exec chmod a-s {} \; || true
 #USER 1000
 #RUN LANG=C xdg-user-dirs-update --force
@@ -61,4 +65,5 @@ ENV QT_IM_MODULE="ibus"
 ENV PULSE_SERVER=unix:/tmp/pulse/native
 ENV PULSE_COOKIE=/tmp/pulse/cookie
 #CMD /usr/bin/ibus-daemon -dx && /usr/bin/firefox -no-remote -profile /home/$UID/profile
-ENTRYPOINT ["/bin/sh", "-c", "/usr/bin/ibus-daemon -dx && /usr/bin/firefox -no-remote -profile /home/$UID/profile"]
+#ENTRYPOINT ["/bin/sh", "-c", "/usr/bin/ibus-daemon -dx && /usr/bin/firefox -no-remote -profile /home/$UID/profile"]
+ENTRYPOINT ["/script/firefox-run.sh"]

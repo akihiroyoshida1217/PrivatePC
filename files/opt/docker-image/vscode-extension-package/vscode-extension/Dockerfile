@@ -38,4 +38,4 @@ RUN mkdir -p /home/1000 && \
 USER 1002
 
 #ENTRYPOINT ["bin/sh", "-c", "apt-get update && apt-get install -dy code"]
-ENTRYPOINT ["bin/sh", "-c", "/usr/bin/code --install-extension $CODE_EXTENSION --force"]
+ENTRYPOINT ["/usr/bin/code", "--install-extension", "$CODE_EXTENSION", "--force"]

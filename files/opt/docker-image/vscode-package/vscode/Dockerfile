@@ -19,7 +19,11 @@ RUN export uid=1013 gid=1013 && \
     chown ${uid}:${gid} -R /home/vscodeuser && \
     echo "vscodeuser:test" | chpasswd && \
     #echo "vscodeuser ALL=(ALL) NOPASSWD: /usr/bin/apt-get" >> /etc/sudoers
-    echo "vscodeuser ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+    echo "vscodeuser ALL=(ALL) NOPASSWD: /script/vscode-update.sh" >> /etc/sudoers
+
+RUN mkdir /script && \
+    echo "#!/usr/bin/env bash\n/usr/bin/apt-get update\n/usr/bin/apt-get install -dy code" > /script/vscode-update.sh && \
+    chmod 755 /script/vscode-update.sh
 
 USER vscodeuser
-ENTRYPOINT ["sudo", "bin/sh", "-c", "/usr/bin/apt-get update && /usr/bin/apt-get install -dy code"]
+ENTRYPOINT ["sudo", "/script/vscode-update.sh"]

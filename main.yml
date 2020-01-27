@@ -177,34 +177,34 @@
         name: clamav-freshclam
         state: stopped
         enabled: no
-    - name: chown 1010:1010 /opt/docker-image/clamav-package/clamav/patternfile
-      file: 
-        path: /opt/docker-image/clamav-package/clamav/patternfile
-        state: directory
-        owner: 1010
-        group: 1010
-      when: not ansible_check_mode
-    - name: mv /var/lib/clamav/{{ item }} /var/lib/clamav/{{ item }}.org
-      command: "mv /var/lib/clamav/{{ item }} /var/lib/clamav/{{ item }}.org"
-      with_items:
-        - bytecode.cvd
-        - daily.cvd
-        - daily.cld
-        - main.cvd
-        - mirrors.dat
-      ignore_errors: yes
-    - name: ln -s /opt/docker-image/clamav-package/clamav/patternfile/{{ item }} /var/lib/clamav/{{ item }}
-      file: 
-        src: "/opt/docker-image/clamav-package/clamav/patternfile/{{ item }}"
-        dest: "/var/lib/clamav/{{ item }}"
-        state: link
-        force: yes
-      with_items:
-        - bytecode.cvd
-        - daily.cvd
-        - daily.cld
-        - main.cvd
-        - mirrors.dat
+    #- name: chown 1010:1010 /opt/docker-image/clamav-package/clamav/patternfile
+    #  file: 
+    #    path: /opt/docker-image/clamav-package/clamav/patternfile
+    #    state: directory
+    #    owner: 1010
+    #    group: 1010
+    #  when: not ansible_check_mode
+    #- name: mv /var/lib/clamav/{{ item }} /var/lib/clamav/{{ item }}.org
+    #  command: "mv /var/lib/clamav/{{ item }} /var/lib/clamav/{{ item }}.org"
+    #  with_items:
+    #    - bytecode.cvd
+    #    - daily.cvd
+    #    - daily.cld
+    #    - main.cvd
+    #    - mirrors.dat
+    #  ignore_errors: yes
+    #- name: ln -s /opt/docker-image/clamav-package/clamav/patternfile/{{ item }} /var/lib/clamav/{{ item }}
+    #  file: 
+    #    src: "/opt/docker-image/clamav-package/clamav/patternfile/{{ item }}"
+    #    dest: "/var/lib/clamav/{{ item }}"
+    #    state: link
+    #    force: yes
+    #  with_items:
+    #    - bytecode.cvd
+    #    - daily.cvd
+    #    - daily.cld
+    #    - main.cvd
+    #    - mirrors.dat
     - name: edit clamd.conf
       lineinfile: 
         path: /etc/clamav/clamd.conf
@@ -313,10 +313,19 @@
         name: firefox-image:ansible-build
         repository: firefox-image:latest
       ignore_errors: "{{ ansible_check_mode }}"
+    - name: Get clamav_uid
+      shell: id -u clamav
+      register: clamav_uid
+    - name: Get clamav_gid
+      shell: id -g clamav
+      register: clamav_gid
     - name: build "freshclam"
       docker_image:
         build:
           path: /opt/docker-image/clamav-package/clamav/
+          args:
+            clamav_uid: "{{ clamav_uid.stdout }}"
+            clamav_gid: "{{ clamav_gid.stdout }}"
         name: freshclam
         tag: ansible-build
       ignore_errors: "{{ ansible_check_mode }}"
@@ -480,6 +489,7 @@
         - { schema: org.gnome.shell.extensions.dash-to-dock, key: dock-position, value: 'BOTTOM' }
         - { schema: org.gnome.shell.extensions.dash-to-dock, key: transparency-mode, value: 'FIXED' }
         - { schema: org.gnome.shell.extensions.dash-to-dock, key: background-opacity, value: 0.5 }
+        - { schema: org.gnome.desktop.input-sources, key: sources, value: "[('ibus', 'mozc-jp'), ('xkb', 'jp')]" }
       ignore_errors: yes
     #- name: gsettings
     #  shell: gsettings set org.gnome.settings-daemon.plugins.xsettings overrides "{'Gtk/ShellShowsAppMenu'{{ ':' }} <0>}"
