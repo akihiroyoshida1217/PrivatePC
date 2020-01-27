@@ -17,7 +17,9 @@ RUN export uid=1011 gid=1011 && \
     echo "dockeruser:x:${uid}:${gid}:dockeruser,,,:/home/dockeruser:/bin/bash" >> /etc/passwd && \
     echo "dockeruser:x:${uid}:" >> /etc/group && \
     chown ${uid}:${gid} -R /home/dockeruser && \
-    echo "dockeruser ALL=(ALL) NOPASSWD: /usr/bin/apt-get" >> /etc/sudoers
+    echo "dockeruser:test" | chpasswd && \
+    #echo "dockeruser ALL=(ALL) NOPASSWD: /usr/bin/apt-get" >> /etc/sudoers
+    echo "dockeruser ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
 USER dockeruser
-ENTRYPOINT ["bin/sh", "-c", "sudo apt-get update && sudo apt-get install -dy docker-ce"]
+ENTRYPOINT ["sudo", "bin/sh", "-c", "/usr/bin/apt-get update && /usr/bin/apt-get install -dy docker-ce"]

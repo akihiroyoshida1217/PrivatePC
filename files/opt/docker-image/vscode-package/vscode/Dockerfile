@@ -17,7 +17,9 @@ RUN export uid=1013 gid=1013 && \
     echo "vscodeuser:x:${uid}:${gid}:vscodeuser,,,:/home/vscodeuser:/bin/bash" >> /etc/passwd && \
     echo "vscodeuser:x:${uid}:" >> /etc/group && \
     chown ${uid}:${gid} -R /home/vscodeuser && \
-    echo "vscodeuser ALL=(ALL) NOPASSWD: /usr/bin/apt-get" >> /etc/sudoers
+    echo "vscodeuser:test" | chpasswd && \
+    #echo "vscodeuser ALL=(ALL) NOPASSWD: /usr/bin/apt-get" >> /etc/sudoers
+    echo "vscodeuser ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
 USER vscodeuser
-ENTRYPOINT ["bin/sh", "-c", "sudo apt-get update && apt-get install -dy code"]
+ENTRYPOINT ["sudo", "bin/sh", "-c", "/usr/bin/apt-get update && /usr/bin/apt-get install -dy code"]

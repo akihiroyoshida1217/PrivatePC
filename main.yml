@@ -4,7 +4,7 @@
   connection: local
   become: yes
   vars:
-    network_interface: ens33
+    network_interface: eth0
 
   tasks:
     - name: Get version_code
