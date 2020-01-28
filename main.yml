@@ -558,3 +558,7 @@
         - { src: panel-date-format%40keiii.github.com.v1.shell-extension.zip, dest: panel-date-format@keiii.github.com }
         - { src: dynamic-panel-transparencyrockon999.github.io.v32.shell-extension.zip, dest: dynamic-panel-transparency@rockon999.github.io }
       ignore_errors: "{{ ansible_check_mode }}"
+
+    - name: aa-complain /usr/sbin/clamd
+      shell: aa-complain /usr/sbin/clamd
+      ignore_errors: yes

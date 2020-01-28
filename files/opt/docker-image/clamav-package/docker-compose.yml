@@ -6,7 +6,7 @@ services:
     image: "freshclam"
     container_name: freshclam1
     volumes:
-#      - /opt/docker-image/clamav-package/clamav/patternfile/:/var/lib/clamav
-      - /var/lib/clamav/:/var/lib/clamav
+      - /opt/docker-image/clamav-package/clamav/patternfile/:/var/lib/clamav
+#      - /var/lib/clamav/:/var/lib/clamav
     cap_drop:
       - ALL
