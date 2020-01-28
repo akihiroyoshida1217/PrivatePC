@@ -87,6 +87,7 @@
         - gnome-shell-extension-hide-activities
         - gnome-shell-extension-dashtodock
         - gnome-shell-extension-pixelsaver
+        - apparmor-utils
       ignore_errors: "{{ ansible_check_mode }}"
     #- name: install packages
     #  apt: 
@@ -177,13 +178,13 @@
         name: clamav-freshclam
         state: stopped
         enabled: no
-    #- name: chown 1010:1010 /opt/docker-image/clamav-package/clamav/patternfile
-    #  file: 
-    #    path: /opt/docker-image/clamav-package/clamav/patternfile
-    #    state: directory
-    #    owner: 1010
-    #    group: 1010
-    #  when: not ansible_check_mode
+    - name: chown 1010:1010 /opt/docker-image/clamav-package/clamav/patternfile
+      file: 
+        path: /opt/docker-image/clamav-package/clamav/patternfile
+        state: directory
+        owner: 1010
+        group: 1010
+      when: not ansible_check_mode
     #- name: mv /var/lib/clamav/{{ item }} /var/lib/clamav/{{ item }}.org
     #  command: "mv /var/lib/clamav/{{ item }} /var/lib/clamav/{{ item }}.org"
     #  with_items:

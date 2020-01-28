@@ -3,7 +3,8 @@ Description=clamav Update with Docker
 After=docker.service
 
 [Service]
-ExecStart=/usr/local/bin/docker-compose -f /opt/docker-image/clamav-package/docker-compose.yml run --rm freshclam
+ExecStartPre=/usr/local/bin/docker-compose -f /opt/docker-image/clamav-package/docker-compose.yml run --rm freshclam
+ExecStart=/usr/bin/cp -f /opt/docker-image/clamav-package/clamav/patternfile/* /var/lib/clamav && /usr/bin/chown clamav:clamav /var/lib/clamav/*
 Type=simple
 
 [Install]

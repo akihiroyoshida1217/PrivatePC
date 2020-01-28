@@ -10,3 +10,11 @@ services:
 #      - /var/lib/clamav/:/var/lib/clamav
     cap_drop:
       - ALL
+    cap_add:
+      - SETGID
+      - SETUID
+      - SETFCAP
+      - CHOWN
+      - FOWNER
+      - FSETID
+      - DAC_OVERRIDE
