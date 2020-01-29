@@ -4,7 +4,7 @@ After=docker.service
 
 [Service]
 ExecStartPre=/usr/local/bin/docker-compose -f /opt/docker-image/clamav-package/docker-compose.yml run --rm freshclam
-ExecStart=/usr/bin/cp -f /opt/docker-image/clamav-package/clamav/patternfile/* /var/lib/clamav && /usr/bin/chown clamav:clamav /var/lib/clamav/*
+ExecStart=/usr/bin/sh -c "/usr/bin/cp -f `ls /opt/docker-image/clamav-package/clamav/patternfile/*` /var/lib/clamav && chown clamav:clamav `ls /var/lib/clamav/*`"
 Type=simple
 
 [Install]
