@@ -162,13 +162,13 @@
     #  file: path=/opt/docker-image/vscode-extension-package/vscode-extension-update.py owner=root group=root mode=0755
     #  when: not ansible_check_mode
 
-    - name: mv /etc/audit/audit.rules etc/audit/audit.rules.org
-      command: "mv /etc/audit/audit.rules etc/audit/audit.rules.org"
+    - name: mv /etc/audit/rules.d/audit.rules etc/audit/rules.d/audit.rules.org
+      command: "mv /etc/audit/rules.d/audit.rules etc/audit/rules.d/audit.rules.org"
       ignore_errors: yes
-    - name: copy /etc/audit/audit.rules
+    - name: copy /etc/audit/rules.d/audit.rules
       copy: 
         src: ./files/auditd.rules
-        dest: /etc/audit/audit.rules
+        dest: /etc/audit/rules.d/audit.rules
         owner: root
         group: root
         mode: 0640
