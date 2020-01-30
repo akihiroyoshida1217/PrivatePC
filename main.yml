@@ -220,6 +220,12 @@
         - { regexp: '^MaxFileSize', line: 'MaxFileSize 0M'}
         - { regexp: '^MaxFiles', line: 'MaxFiles 100000'}
         - { regexp: '^OnAccessMountPath', line: 'OnAccessMountPath /'}
+    - name: aa-complain /usr/sbin/clamd
+      shell: aa-complain /usr/sbin/clamd
+      ignore_errors: yes
+    - name: freshclam
+      shell: freshclam
+      ignore_errors: yes
 
     - name: copy /etc/systemd/system/{{ item }}
       copy: 
@@ -505,6 +511,16 @@
     #  become: no
     #  ignore_errors: yes
 
+    - name: mkdir ~/Downloads
+      file: 
+        path: "{{ lookup('env', 'HOME') }}Downloads"
+        state: directory
+        owner: "{{ lookup('env', 'USERNAME') }}"
+        group: "{{ lookup('env', 'USERNAME') }}"
+        mode: 0755
+        recurse: yes
+      become: no
+
     - name: mkdir /etc/skel/.local/share/applications
       file: 
         path: /etc/skel/.local/share/applications
@@ -560,6 +576,12 @@
         - { src: dynamic-panel-transparencyrockon999.github.io.v32.shell-extension.zip, dest: dynamic-panel-transparency@rockon999.github.io }
       ignore_errors: "{{ ansible_check_mode }}"
 
-    - name: aa-complain /usr/sbin/clamd
-      shell: aa-complain /usr/sbin/clamd
-      ignore_errors: yes
+    - name: mkdir /etc/skel/Downloads
+      file: 
+        path: /etc/skel/Downloads
+        state: directory
+        owner: root
+        group: root
+        mode: 0755
+        recurse: yes
+
