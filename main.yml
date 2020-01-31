@@ -1,4 +1,4 @@
-#ansible-playbook main.yml --ask-become-pass --ask-pass -vvvv
+#ansible-playbook main.yml --ask-become-pass -vvvv
 
 - hosts: localhost
   connection: local
@@ -513,7 +513,7 @@
 
     - name: mkdir ~/Downloads
       file: 
-        path: "{{ lookup('env', 'HOME') }}Downloads"
+        path: "{{ lookup('env', 'HOME') }}/Downloads"
         state: directory
         owner: "{{ lookup('env', 'USERNAME') }}"
         group: "{{ lookup('env', 'USERNAME') }}"
@@ -585,3 +585,10 @@
         mode: 0755
         recurse: yes
 
+    - name: mv /etc/apt/sources.list.d/{{ item }} /etc/apt/sources.list.d/{{ item }}.`date +\"%Y%m%d\"`
+      command: "mv /etc/apt/sources.list.d/{{ item }} /etc/apt/sources.list.d/{{ item }}.`date +\"%Y%m%d\"`"
+      with_items:
+        - docker.list
+        - ppa.list
+        - vscode.list
+      ignore_errors: yes
