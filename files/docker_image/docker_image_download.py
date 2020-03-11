@@ -20,5 +20,10 @@ headers = {
 }
 
 manifest_response = requests.get('https://registry-1.docker.io/v2/library/debian/manifests/latest', headers=headers)
-print(manifest_response.text)
-#blob_response = requests.get('https://registry-1.docker.io/v2/library/ubuntu/blobs/$%7BBLOBSUM%7D', headers=headers)
+#print(json.dumps(manifest_response.json()['layers'][0]['digest']))
+
+digest = json.dumps(manifest_response.json()['layers'][0]['digest']).strip("\"")
+
+blob_response = requests.get('https://registry-1.docker.io/v2/library/debian/blobs/' + digest , headers=headers)
+with open('/home/akihiro/PrivatePC/files/docker_image/layer.tar', 'wb') as saveFile:
+        saveFile.write(blob_response.content)
