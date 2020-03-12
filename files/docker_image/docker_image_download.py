@@ -25,5 +25,9 @@ manifest_response = requests.get('https://registry-1.docker.io/v2/library/debian
 digest = json.dumps(manifest_response.json()['layers'][0]['digest']).strip("\"")
 
 blob_response = requests.get('https://registry-1.docker.io/v2/library/debian/blobs/' + digest , headers=headers)
-with open('/home/akihiro/PrivatePC/files/docker_image/layer.tar', 'wb') as saveFile:
-        saveFile.write(blob_response.content)
+#with open('/home/akihiro/PrivatePC/files/docker_image/layer.tar', 'wb') as saveFile:
+#        saveFile.write(blob_response.content)
+
+config_digest = json.dumps(manifest_response.json()['config']['digest']).strip("\"")
+config_response = requests.get('https://registry-1.docker.io/v2/library/debian/blobs/' + config_digest , headers=headers)
+#print(config_response.text)
