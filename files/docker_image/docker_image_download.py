@@ -31,3 +31,18 @@ blob_response = requests.get('https://registry-1.docker.io/v2/library/debian/blo
 config_digest = json.dumps(manifest_response.json()['config']['digest']).strip("\"")
 config_response = requests.get('https://registry-1.docker.io/v2/library/debian/blobs/' + config_digest , headers=headers)
 #print(config_response.text)
+
+blob_json = {
+    "id": digest,
+    "created": config_response.json().get("created"),
+    "container": config_response.json().get("container"),
+    "container_config": config_response.json().get("container_config"),
+    "docker_version": config_response.json().get("docker_version"),
+    "config": config_response.json().get("config"),
+    "architecture": config_response.json().get("architecture"),
+    "os": config_response.json().get("os")
+  }
+
+#print(json.dumps(blob_json))
+with open('/home/akihiro/PrivatePC/files/docker_image/jsom', 'wb') as saveFile:
+        json.dump(blob_json, saveFile)
