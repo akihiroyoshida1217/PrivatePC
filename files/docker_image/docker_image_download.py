@@ -22,18 +22,32 @@ headers = {
 manifest_response = requests.get('https://registry-1.docker.io/v2/library/debian/manifests/latest', headers=headers)
 #print(json.dumps(manifest_response.json()['layers'][0]['digest']))
 
+config_digest = json.dumps(manifest_response.json()['config']['digest']).strip("\"")
+config_response = requests.get('https://registry-1.docker.io/v2/library/debian/blobs/' + config_digest , headers=headers)
+#print(config_response.text)
+#with open('/home/akihiro/PrivatePC/files/docker_image/' + config_digest.replace('sha256:','') + '.json', 'w') as saveCONFIG:
+#        saveCONFIG.write(config_response.text)
+
+manifest_json = [{
+    "config": "/home/akihiro/PrivatePC/files/docker_image/' + config_digest.replace('sha256:','') + '.json",
+    "RepoTags": [
+      "debian:latest"
+    ],
+    "Layers": [ d['digest'] + '/layer.tar' for d in manifest_response.json()['layers'] ]
+  }]
+print(json.dumps(manifest_json))
+#with open('/home/akihiro/PrivatePC/files/docker_image/manifest.json', 'w') as saveMANIFEST:
+#        json.dump(manifest_json, saveMANIFEST)
+
+
 digest = json.dumps(manifest_response.json()['layers'][0]['digest']).strip("\"")
 
 blob_response = requests.get('https://registry-1.docker.io/v2/library/debian/blobs/' + digest , headers=headers)
 #with open('/home/akihiro/PrivatePC/files/docker_image/layer.tar', 'wb') as saveFile:
 #        saveFile.write(blob_response.content)
 
-config_digest = json.dumps(manifest_response.json()['config']['digest']).strip("\"")
-config_response = requests.get('https://registry-1.docker.io/v2/library/debian/blobs/' + config_digest , headers=headers)
-#print(config_response.text)
-
 blob_json = {
-    "id": digest,
+    "id": digest.replace('sha256:',''),
     "created": config_response.json().get("created"),
     "container": config_response.json().get("container"),
     "container_config": config_response.json().get("container_config"),
@@ -44,5 +58,8 @@ blob_json = {
   }
 
 #print(json.dumps(blob_json))
-with open('/home/akihiro/PrivatePC/files/docker_image/jsom', 'wb') as saveFile:
-        json.dump(blob_json, saveFile)
+#with open('/home/akihiro/PrivatePC/files/docker_image/json', 'w') as saveJSON:
+#        json.dump(blob_json, saveJSON)
+
+#with open('/home/akihiro/PrivatePC/files/docker_image/VERSION', 'w') as saveVERSION:
+#        saveVERSION.write('1.0')
