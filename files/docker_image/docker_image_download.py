@@ -29,15 +29,15 @@ config_response = requests.get('https://registry-1.docker.io/v2/library/debian/b
 #        saveCONFIG.write(config_response.text)
 
 manifest_json = [{
-    "config": "/home/akihiro/PrivatePC/files/docker_image/' + config_digest.replace('sha256:','') + '.json",
+    "config": config_digest.replace('sha256:','') + ".json",
     "RepoTags": [
       "debian:latest"
     ],
-    "Layers": [ d['digest'] + '/layer.tar' for d in manifest_response.json()['layers'] ]
+    "Layers": [ d['digest'].replace('sha256:','') + '/layer.tar' for d in manifest_response.json()['layers'] ]
   }]
-print(json.dumps(manifest_json))
-#with open('/home/akihiro/PrivatePC/files/docker_image/manifest.json', 'w') as saveMANIFEST:
-#        json.dump(manifest_json, saveMANIFEST)
+#print(json.dumps(manifest_json))
+with open('/home/akihiro/PrivatePC/files/docker_image/manifest.json', 'w') as saveMANIFEST:
+        json.dump(manifest_json, saveMANIFEST)
 
 
 digest = json.dumps(manifest_response.json()['layers'][0]['digest']).strip("\"")
