@@ -3,10 +3,17 @@
 
 import requests
 import json
+import os
+import tarfile
+
+image_name = 'debian'
+tag = 'latest'
+
+os.makedirs(image_name)
 
 params = (
     ('service', 'registry.docker.io'),
-    ('scope', 'repository:library/debian:pull'),
+    ('scope', 'repository:library/' + image_name + ':pull'),
 )
 
 token_response = requests.get('https://auth.docker.io/token', params=params)
@@ -19,32 +26,42 @@ headers = {
     'Accept': 'application/vnd.docker.distribution.manifest.v2+json'
 }
 
-manifest_response = requests.get('https://registry-1.docker.io/v2/library/debian/manifests/latest', headers=headers)
+manifest_response = requests.get('https://registry-1.docker.io/v2/library/' + image_name + '/manifests/' + tag, headers=headers)
 #print(json.dumps(manifest_response.json()['layers'][0]['digest']))
 
 config_digest = json.dumps(manifest_response.json()['config']['digest']).strip("\"")
-config_response = requests.get('https://registry-1.docker.io/v2/library/debian/blobs/' + config_digest , headers=headers)
+config_response = requests.get('https://registry-1.docker.io/v2/library/' + image_name + '/blobs/' + config_digest , headers=headers)
 #print(config_response.text)
-#with open('/home/akihiro/PrivatePC/files/docker_image/' + config_digest.replace('sha256:','') + '.json', 'w') as saveCONFIG:
-#        saveCONFIG.write(config_response.text)
+with open(image_name + '/' + config_digest.replace('sha256:','') + '.json', 'w') as saveCONFIG:
+        saveCONFIG.write(config_response.text)
 
 manifest_json = [{
     "config": config_digest.replace('sha256:','') + ".json",
     "RepoTags": [
-      "debian:latest"
+      image_name + ":" + tag
     ],
     "Layers": [ d['digest'].replace('sha256:','') + '/layer.tar' for d in manifest_response.json()['layers'] ]
   }]
 #print(json.dumps(manifest_json))
-with open('/home/akihiro/PrivatePC/files/docker_image/manifest.json', 'w') as saveMANIFEST:
+with open(image_name + '/' + 'manifest.json', 'w') as saveMANIFEST:
         json.dump(manifest_json, saveMANIFEST)
 
+repositories_json = {
+    image_name : {
+      tag : manifest_response.json()['layers'][-1]['digest'].replace('sha256:','')
+    }
+  }
+#print(json.dumps(repositories_json))
+with open(image_name + '/' + 'repositories', 'w') as saveREPOSITORIES:
+        json.dump(repositories_json, saveREPOSITORIES)
 
 digest = json.dumps(manifest_response.json()['layers'][0]['digest']).strip("\"")
 
-blob_response = requests.get('https://registry-1.docker.io/v2/library/debian/blobs/' + digest , headers=headers)
-#with open('/home/akihiro/PrivatePC/files/docker_image/layer.tar', 'wb') as saveFile:
-#        saveFile.write(blob_response.content)
+os.makedirs(image_name + '/' + digest.replace('sha256:',''))
+
+blob_response = requests.get('https://registry-1.docker.io/v2/library/' + image_name + '/blobs/' + digest , headers=headers)
+with open(image_name + '/' + digest.replace('sha256:','') + '/layer.tar', 'wb') as saveFile:
+        saveFile.write(blob_response.content)
 
 blob_json = {
     "id": digest.replace('sha256:',''),
@@ -58,8 +75,11 @@ blob_json = {
   }
 
 #print(json.dumps(blob_json))
-#with open('/home/akihiro/PrivatePC/files/docker_image/json', 'w') as saveJSON:
-#        json.dump(blob_json, saveJSON)
+with open(image_name + '/' + digest.replace('sha256:','') + '/json', 'w') as saveJSON:
+        json.dump(blob_json, saveJSON)
 
-#with open('/home/akihiro/PrivatePC/files/docker_image/VERSION', 'w') as saveVERSION:
-#        saveVERSION.write('1.0')
+with open(image_name + '/' + digest.replace('sha256:','') + '/VERSION', 'w') as saveVERSION:
+        saveVERSION.write('1.0')
+
+with tarfile.open(image_name + '.tar', 'w') as tar:
+        tar.add(image_name + '/')
