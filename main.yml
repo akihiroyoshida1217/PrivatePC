@@ -384,20 +384,20 @@
         name: docker-image:ansible-build
         repository: docker-image:latest
       ignore_errors: "{{ ansible_check_mode }}"
-    #- name: build "docker-image-image"
-    #  docker_image:
-    #    build:
-    #      path: /opt/docker-image/docker-image-package/docker-image/
-    #      args:
-    #        imagever: ansible-build
-    #    name: docker-image-image
-    #    tag: ansible-build
-    #  ignore_errors: "{{ ansible_check_mode }}"
-    #- name: tag "docker-image-image"
-    #  docker_image:
-    #    name: docker-image-image:ansible-build
-    #    repository: docker-image-image:latest
-    #  ignore_errors: "{{ ansible_check_mode }}"
+    - name: build "docker-image-image"
+      docker_image:
+        build:
+          path: /opt/docker-image/docker-image-package/docker-image/
+          args:
+            imagever: ansible-build
+        name: docker-image-image
+        tag: ansible-build
+      ignore_errors: "{{ ansible_check_mode }}"
+    - name: tag "docker-image-image"
+      docker_image:
+        name: docker-image-image:ansible-build
+        repository: docker-image-image:latest
+      ignore_errors: "{{ ansible_check_mode }}"
     - name: build "python-image"
       docker_image:
         build:

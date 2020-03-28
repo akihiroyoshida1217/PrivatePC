@@ -7,6 +7,7 @@ import os
 import tarfile
 import subprocess
 import shutil
+import sys
 
 token_url = 'https://auth.docker.io/token'
 request_url = 'https://registry-1.docker.io/v2/library/'
@@ -38,6 +39,7 @@ def layerdownload(image_name, headers, digest, config_response):
                 saveVERSION.write('1.0')
 
 def imagedownload(image_name = 'debian', tag = 'latest'):
+        if 
         os.remove(image_name + '.tar')
         shutil.rmtree(image_name)
         os.makedirs(image_name)
@@ -95,4 +97,8 @@ def imagedownload(image_name = 'debian', tag = 'latest'):
         subprocess.call(["tar", "cvf", image_name + ".tar", "-C", image_name, "."])
 
 if __name__ == "__main__":
-        imagedownload()
+        args = sys.argv
+        if 3 == len(args):
+          imagedownload(args[1], args[2])
+        elif 1 == len(args):
+          imagedownload()
