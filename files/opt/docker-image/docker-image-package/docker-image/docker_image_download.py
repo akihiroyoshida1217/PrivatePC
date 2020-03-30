@@ -39,9 +39,11 @@ def layerdownload(image_name, headers, digest, config_response):
                 saveVERSION.write('1.0')
 
 def imagedownload(image_name = 'debian', tag = 'latest'):
-        if 
-        os.remove(image_name + '.tar')
-        shutil.rmtree(image_name)
+        try:
+          os.remove(image_name + '.tar')
+          shutil.rmtree(image_name)
+        except FileNotFoundError:
+          None
         os.makedirs(image_name)
 
         params = (

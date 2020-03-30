@@ -19,4 +19,4 @@ RUN export uid=1014 gid=1014 && \
     chmod 755 /image/docker_image_download.py
 
 USER imageuser
-ENTRYPOINT ["/image/docker_image_download.py"]
+ENTRYPOINT ["/image/docker_image_download.py", "$imagename", "$tag"]

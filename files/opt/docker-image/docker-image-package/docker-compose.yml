@@ -7,7 +7,8 @@ services:
     volumes:
       - /opt/docker-image/docker-image-package/docker-image/image/:/image
     environment:
-      - pullver
+      - imagename
+      - tag
     cap_drop:
       - ALL
     cap_add:
