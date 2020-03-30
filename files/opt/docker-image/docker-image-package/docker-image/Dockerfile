@@ -6,9 +6,10 @@ RUN apt-get update -qq && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-RUN mkdir /image
+RUN mkdir /image && \
+    mkdir /script
 
-COPY docker_image_download.py /image/
+COPY docker_image_download.py /script/
 
 RUN export uid=1014 gid=1014 && \
     mkdir -p /home/imageuser && \
@@ -16,7 +17,8 @@ RUN export uid=1014 gid=1014 && \
     echo "imageuser:x:${uid}:" >> /etc/group && \
     chown ${uid}:${gid} -R /home/imageuser && \
     echo "imageuser:test" | chpasswd && \
-    chmod 755 /image/docker_image_download.py
+    chmod 755 /script/docker_image_download.py
+    chown ${uid}:${gid} /image
 
 USER imageuser
-ENTRYPOINT ["/image/docker_image_download.py", "$imagename", "$tag"]
+ENTRYPOINT ["/script/docker_image_download.py", "$imagename", "$tag"]

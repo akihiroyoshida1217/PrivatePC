@@ -11,9 +11,10 @@ import sys
 
 token_url = 'https://auth.docker.io/token'
 request_url = 'https://registry-1.docker.io/v2/library/'
+image_dir = '/image'
 
 def layerdownload(image_name, headers, digest, config_response):
-        layer_path = image_name + '/' + digest.replace('sha256:','')
+        layer_path = image_dir + '/' + image_name + '/' + digest.replace('sha256:','')
         
         os.makedirs(layer_path)
 
@@ -39,12 +40,13 @@ def layerdownload(image_name, headers, digest, config_response):
                 saveVERSION.write('1.0')
 
 def imagedownload(image_name = 'debian', tag = 'latest'):
+        image_path = image_dir + '/' + image_name
         try:
-          os.remove(image_name + '.tar')
-          shutil.rmtree(image_name)
+          os.remove(image_path + '.tar')
+          shutil.rmtree(image_path)
         except FileNotFoundError:
           None
-        os.makedirs(image_name)
+        os.makedirs(image_path)
 
         params = (
                 ('service', 'registry.docker.io'),
@@ -83,9 +85,9 @@ def imagedownload(image_name = 'debian', tag = 'latest'):
           }]
         #print(json.dumps(manifest_json))
 
-        with open(image_name + '/' + config_digest.replace('sha256:','') + '.json', 'w') as saveCONFIG, \
-             open(image_name + '/' + 'manifest.json', 'w') as saveMANIFEST, \
-             open(image_name + '/' + 'repositories', 'w') as saveREPOSITORIES:
+        with open(image_path + '/' + config_digest.replace('sha256:','') + '.json', 'w') as saveCONFIG, \
+             open(image_path + '/' + 'manifest.json', 'w') as saveMANIFEST, \
+             open(image_path + '/' + 'repositories', 'w') as saveREPOSITORIES:
                 saveCONFIG.write(config_response.text)
                 json.dump(manifest_json, saveMANIFEST)
                 json.dump(repositories_json, saveREPOSITORIES)
@@ -96,7 +98,7 @@ def imagedownload(image_name = 'debian', tag = 'latest'):
 
         #with tarfile.open(image_name + '.tar', 'w') as tar:
         #        tar.add(image_name + '/')
-        subprocess.call(["tar", "cvf", image_name + ".tar", "-C", image_name, "."])
+        subprocess.call(["tar", "cvf", image_path + ".tar", "-C", image_path, "."])
 
 if __name__ == "__main__":
         args = sys.argv

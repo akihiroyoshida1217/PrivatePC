@@ -8,7 +8,7 @@ import re
 import subprocess
 
 def baseimageupdate(imagename = "debian", tag = "latest"):
-    subprocess.call(["imagename=" + imagename, "pullver=" + tag, "/usr/local/bin/docker-compose", 
+    subprocess.call(["imagename=" + imagename, "tag=" + tag, "/usr/local/bin/docker-compose", 
                         "-f", "/opt/docker-image/docker-image-package/docker-compose.yml", 
                         "run", "--rm", "docker-image"])
     subprocess.call(["/usr/bin/docker", "load", "/opt/docker-image/docker-image-package/docker-image/image/" + imagename + ".tar"])
