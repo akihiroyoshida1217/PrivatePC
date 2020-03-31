@@ -2,7 +2,7 @@ ARG imagever="latest"
 FROM debian:${imagever}
 
 RUN apt-get update -qq && \
-    apt-get install -yq --no-install-recommends python3 && \
+    apt-get install -yq --no-install-recommends python3 python3-pip && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
