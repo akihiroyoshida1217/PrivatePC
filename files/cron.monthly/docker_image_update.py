@@ -6,9 +6,12 @@ import docker
 import traceback
 import re
 import subprocess
+import os
 
 def baseimageupdate(imagename = "debian", tag = "latest"):
-    subprocess.call(["imagename=" + imagename, "tag=" + tag, "/usr/local/bin/docker-compose", 
+    os.environ['imagename'] = imagename
+    os.environ['tag'] = tag
+    subprocess.call(["/usr/local/bin/docker-compose", 
                         "-f", "/opt/docker-image/docker-image-package/docker-compose.yml", 
                         "run", "--rm", "docker-image"])
     subprocess.call(["/usr/bin/docker", "load", "/opt/docker-image/docker-image-package/docker-image/image/" + imagename + ".tar"])
@@ -33,7 +36,7 @@ def imageupdate():
                                nocache = True , 
                                buildargs = { "imagever": version_code } ,
                                dockerfile = v + "Dockerfile"
-                               )[0].tag(repository = k , tag = "latest") for k, v in imagelists.items() ]
+                               )[0].tag(repository = k , tag = "latest") for k, v in imagelists_with_buildarg.items() ]
         imagelists = { "firefox-image" : "/opt/docker-image/firefox-package/firefox/" , 
                   "freshclam" : "/opt/docker-image/clamav-package/clamav/" , 
                   "vscode-extension-image" : "/opt/docker-image/vscode-extension-package/vscode-extension/"}
