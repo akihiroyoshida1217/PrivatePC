@@ -23,4 +23,4 @@ RUN export uid=1014 gid=1014 && \
     chown ${uid}:${gid} -R /image
 
 USER imageuser
-ENTRYPOINT ["/script/docker_image_download.py", "$imagename", "$tag"]
+ENTRYPOINT ["/script/docker_image_download.py"]

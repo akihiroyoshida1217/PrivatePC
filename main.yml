@@ -135,6 +135,14 @@
         - /opt/docker-image/vscode-extension-package/vscode-extension-update.py
       when: not ansible_check_mode
 
+    - name: chown 1014:1014 /opt/docker-image/docker-image-package/docker-image/image
+      file: 
+        path: /opt/docker-image/docker-image-package/docker-image/image
+        state: directory
+        owner: 1014
+        group: 1014
+      when: not ansible_check_mode
+
     #- name: mkdir /opt/clamav
     #  file: path=/opt/clamav state=directory owner=root group=root mode=0755
     #- name: copy /opt/clamav/notify_viruscheck_watchdog.py

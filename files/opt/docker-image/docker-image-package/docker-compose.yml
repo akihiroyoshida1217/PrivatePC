@@ -6,9 +6,9 @@ services:
     container_name: docker-image1
     volumes:
       - /opt/docker-image/docker-image-package/docker-image/image/:/image
-    environment:
-      - imagename
-      - tag
+    #environment:
+    #  - imagename
+    #  - tag
     cap_drop:
       - ALL
     cap_add:

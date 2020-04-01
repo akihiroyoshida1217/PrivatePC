@@ -9,11 +9,11 @@ import subprocess
 import os
 
 def baseimageupdate(imagename = "debian", tag = "latest"):
-    os.environ['imagename'] = imagename
-    os.environ['tag'] = tag
+    #os.environ['imagename'] = imagename
+    #os.environ['tag'] = tag
     subprocess.call(["/usr/local/bin/docker-compose", 
                         "-f", "/opt/docker-image/docker-image-package/docker-compose.yml", 
-                        "run", "--rm", "docker-image"])
+                        "run", "--rm", "docker-image", "/script/docker_image_download.py", imagename, tag])
     subprocess.call(["/usr/bin/docker", "load", "/opt/docker-image/docker-image-package/docker-image/image/" + imagename + ".tar"])
 
 def imageupdate():
