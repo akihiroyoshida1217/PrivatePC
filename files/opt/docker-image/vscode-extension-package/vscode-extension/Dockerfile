@@ -22,4 +22,4 @@ RUN mkdir -p /home/1000 /home/1000/.vscode/extensions && \
 
 USER 1002
 
-ENTRYPOINT ["sh", "-c", "/usr/bin/code", "--install-extension", "$CODE_EXTENSION", "--force"]
+ENTRYPOINT ["sh", "-c", "/usr/bin/code --install-extension $CODE_EXTENSION --force"]
