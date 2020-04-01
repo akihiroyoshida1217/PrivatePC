@@ -1,9 +1,0 @@
-#!/usr/bin/env bash
-
-pullver="latest"
-/usr/local/bin/docker-compose -f /opt/docker-image/docker-image-package/docker-compose.yml run --rm docker-image > /var/log/docker_baseimage_upgrade.log
-/usr/bin/docker load /opt/docker-image/docker-image-package/docker-image/image/debian.tar
-
-pullver=`cat /etc/os-release | grep VERSION_CODENAME | awk -F'=' '{print $2}'`
-/usr/local/bin/docker-compose -f /opt/docker-image/docker-image-package/docker-compose.yml run --rm docker-image > /var/log/docker_baseimage_upgrade.log
-/usr/bin/docker load /opt/docker-image/docker-image-package/docker-image/image/debian.tar

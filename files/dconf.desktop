@@ -1,7 +1,0 @@
-[Desktop Entry]
-Comment=
-Name=Dconf Startup Setting
-Exec=~/gsettings_configure
-Type=Application
-OnlyShowIn=GNOME;
-NoDisplay=true

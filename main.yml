@@ -143,33 +143,6 @@
         group: 1014
       when: not ansible_check_mode
 
-    #- name: mkdir /opt/clamav
-    #  file: path=/opt/clamav state=directory owner=root group=root mode=0755
-    #- name: copy /opt/clamav/notify_viruscheck_watchdog.py
-    #  copy: src=./files/opt/clamav/notify_viruscheck_watchdog.py dest=/opt/clamav/notify_viruscheck_watchdog.py owner=root group=root mode=0755
-
-    #- name: mkdir /opt/etc_watchdog
-    #  file: path=/opt/etc_watchdog state=directory owner=root group=root mode=0755
-    #- name: copy /opt/etc_watchdog/etc_watchdog.py
-    #  copy: src=./files/opt/etc_watchdog/etc_watchdog.py dest=/opt/etc_watchdog/etc_watchdog.py owner=root group=root mode=0755
-
-    #- name: mkdir /opt/psutil
-    #  file: path=/opt/psutil state=directory owner=root group=root mode=0755
-    #- name: copy /opt/psutil/psutil_processmonitor.py
-    #  copy: src=./files/opt/psutil/psutil_processmonitor.py dest=/opt/psutil/psutil_processmonitor.py owner=root group=root mode=0755
-
-    #- name: copy /opt/docker-image
-    #  copy: src=./files/opt/docker-image/ dest=/opt/docker-image/ owner=root group=root
-    #  when: not ansible_check_mode
-
-    #- name: chmod 755 /opt/docker-image/firefox-package/Firefox_with_Docker-pkexec
-    #  file: path=/opt/docker-image/firefox-package/Firefox_with_Docker-pkexec owner=root group=root mode=0755
-    #  when: not ansible_check_mode
-
-    #- name: chmod 755 /opt/docker-image/vscode-extension-package/vscode-extension-update.py
-    #  file: path=/opt/docker-image/vscode-extension-package/vscode-extension-update.py owner=root group=root mode=0755
-    #  when: not ansible_check_mode
-
     - name: mv /etc/audit/rules.d/audit.rules etc/audit/rules.d/audit.rules.org
       command: "mv /etc/audit/rules.d/audit.rules etc/audit/rules.d/audit.rules.org"
       ignore_errors: yes
@@ -262,15 +235,6 @@
         - docker_image_update.py
         - notify_viruscheck_cron.py
         - python_pip_upgrade
-
-    #- name: copy /etc/cron.monthly/docker_image_update.py
-    #  copy: src=./files/cron.monthly/docker_image_update.py dest=/etc/cron.monthly/docker_image_update.py owner=root group=root mode=0755
-    #- name: copy /etc/cron.monthly/notify_viruscheck_cron.py
-    #  copy: src=./files/cron.monthly/notify_viruscheck_cron.py dest=/etc/cron.monthly/notify_viruscheck_cron.py owner=root group=root mode=0755
-    #- name: copy /etc/cron.monthly/python_pip_upgrade
-    #  copy: src=./files/cron.monthly/python_pip_upgrade dest=/etc/cron.monthly/python_pip_upgrade owner=root group=root mode=0755
-    #- name: copy /etc/cron.monthly/docker_baseimage_upgrade
-    #  copy: src=./files/cron.monthly/docker_baseimage_upgrade dest=/etc/cron.monthly/docker_baseimage_upgrade owner=root group=root mode=0755
 
     - name: copy /etc/apt/apt.conf.d/20auto-upgrades
       copy: 
@@ -396,8 +360,6 @@
       docker_image:
         build:
           path: /opt/docker-image/docker-image-package/docker-image/
-          #args:
-          #  imagever: ansible-build
         name: docker-image-image
         tag: ansible-build
       ignore_errors: "{{ ansible_check_mode }}"
@@ -478,18 +440,6 @@
         mode: 0755
       become: no
 
-    #- name: gsettings --schemadir
-    #  shell: gsettings set org.gnome.shell.extensions.dash-to-dock dock-position 'BOTTOM'
-    #  become: no
-    #  ignore_errors: yes
-    #- name: gsettings --schemadir
-    #  shell: gsettings set org.gnome.shell.extensions.dash-to-dock transparency-mode 'FIXED'
-    #  become: no
-    #  ignore_errors: yes
-    #- name: gsettings --schemadir
-    #  shell: gsettings set org.gnome.shell.extensions.dash-to-dock background-opacity 0.5
-    #  become: no
-    #  ignore_errors: yes
     - name: gsettings
       shell: gsettings set {{ item.schema }} {{ item.key }} "{{ item.value }}"
       become: no
@@ -506,18 +456,6 @@
         - { schema: org.gnome.shell.extensions.dash-to-dock, key: background-opacity, value: 0.5 }
         - { schema: org.gnome.desktop.input-sources, key: sources, value: "[('ibus', 'mozc-jp'), ('xkb', 'jp')]" }
       ignore_errors: yes
-    #- name: gsettings
-    #  shell: gsettings set org.gnome.settings-daemon.plugins.xsettings overrides "{'Gtk/ShellShowsAppMenu'{{ ':' }} <0>}"
-    #  become: no
-    #  ignore_errors: yes
-    #- name: gsettings
-    #  shell: gsettings set org.gnome.shell enabled-extensions "['dash-to-dock@micxgx.gmail.com', 'user-theme@gnome-shell-extensions.gcampax.github.com', 'drive-menu@gnome-shell-extensions.gcampax.github.com', 'panel-date-format@keiii.github.com', 'Move_Clock@jonathan.bluemosh.com', 'dynamic-panel-transparency@rockon999.github.io', 'Hide_Activities@shay.shayel.org']"
-    #  become: no
-    #  ignore_errors: yes
-    #- name: gsettings
-    #  shell: gsettings set org.gnome.shell favorite-apps "['Firefox_with_Docker.desktop', 'org.gnome.Nautilus.desktop', 'code.desktop', 'org.gnome.Terminal.desktop']"
-    #  become: no
-    #  ignore_errors: yes
 
     - name: mkdir ~/Downloads
       file: 

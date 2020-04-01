@@ -13,8 +13,8 @@ def baseimageupdate(imagename = "debian", tag = "latest"):
     #os.environ['tag'] = tag
     subprocess.call(["/usr/local/bin/docker-compose", 
                         "-f", "/opt/docker-image/docker-image-package/docker-compose.yml", 
-                        "run", "--rm", "docker-image", "/script/docker_image_download.py", imagename, tag])
-    subprocess.call(["/usr/bin/docker", "load", "/opt/docker-image/docker-image-package/docker-image/image/" + imagename + ".tar"])
+                        "run", "--rm", "docker-image", imagename, tag])
+    subprocess.call(["/usr/bin/docker", "load", "-i", "/opt/docker-image/docker-image-package/docker-image/image/" + imagename + ".tar"])
 
 def imageupdate():
     try:
