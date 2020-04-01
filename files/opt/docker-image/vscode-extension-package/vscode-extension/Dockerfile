@@ -3,7 +3,7 @@ FROM vscode-image:${imagever}
 
 USER root
 RUN apt-get update -qq && \
-    apt-get install -yq --no-install-recommends code libxtst6 libasound2 && \
+    apt-get install -yq --no-install-recommends code libxtst6 libasound2 libx11-xcb1 && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
