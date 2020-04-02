@@ -31,7 +31,7 @@
         url: https://packages.microsoft.com/keys/microsoft.asc
         state: present
 
-        - name: Add an apt key adapta-gtk-theme and paper-icon-theme by id from a keyserver
+    - name: Add an apt key adapta-gtk-theme and paper-icon-theme by id from a keyserver
       apt_key:
         keyserver: "{{ item.keyserver }}"
         id: "{{ item.id }}"
