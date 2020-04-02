@@ -26,7 +26,12 @@
         url: https://download.docker.com/linux/debian/gpg
         state: present
 
-    - name: Add an apt key adapta-gtk-theme and paper-icon-theme by id from a keyserver
+    - name: Add an Apt signing key https://packages.microsoft.com/keys/microsoft.asc
+      apt_key:
+        url: https://packages.microsoft.com/keys/microsoft.asc
+        state: present
+
+        - name: Add an apt key adapta-gtk-theme and paper-icon-theme by id from a keyserver
       apt_key:
         keyserver: "{{ item.keyserver }}"
         id: "{{ item.id }}"
@@ -40,6 +45,12 @@
         state: present
         filename: docker
 
+    - name: add apt repository docker
+      apt_repository:
+        repo: deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main
+        state: present
+        filename: vscode
+        
     - name: add apt repository ppa:snwh/ppa
       apt_repository:
         repo: "{{ item }}"
@@ -419,6 +430,23 @@
         mode: 0755
       become: no
 
+    - name: copy HOME/.local/share/applications/org.gnome.Terminal.desktop
+      copy: 
+        src: ./files/org.gnome.Terminal.desktop
+        dest: "{{ lookup('env', 'HOME') }}/.local/share/applications/org.gnome.Terminal.desktop"
+        owner: "{{ lookup('env', 'USERNAME') }}"
+        group: "{{ lookup('env', 'USERNAME') }}"
+        mode: 0755
+      become: no
+      
+    - name: copy /usr/bin/termlog
+      copy: 
+        src: ./files/termlog
+        dest: "/usr/bin/termlog"
+        owner: root
+        group: root
+        mode: 0755
+      
     - name: gsettings
       shell: gsettings set {{ item.schema }} {{ item.key }} "{{ item.value }}"
       become: no
@@ -446,6 +474,16 @@
         recurse: yes
       become: no
 
+    - name: mkdir ~/log/term
+      file: 
+        path: "{{ lookup('env', 'HOME') }}/log/term"
+        state: directory
+        owner: "{{ lookup('env', 'USERNAME') }}"
+        group: "{{ lookup('env', 'USERNAME') }}"
+        mode: 0755
+        recurse: yes
+      become: no
+      
     - name: mkdir /etc/skel/.local/share/applications
       file: 
         path: /etc/skel/.local/share/applications
@@ -462,6 +500,14 @@
         group: root
         mode: 0755
 
+    - name: copy /etc/skel/.local/share/applications/org.gnome.Terminal.desktop
+      copy: 
+        src: ./files/org.gnome.Terminal.desktop
+        dest: /etc/skel/.local/share/applications/org.gnome.Terminal.desktop
+        owner: root
+        group: root
+        mode: 0755
+        
     - name: mkdir /etc/skel/.config/dconf
       file: 
         path: /etc/skel/.config/dconf
@@ -510,6 +556,15 @@
         mode: 0755
         recurse: yes
 
+    - name: mkdir /etc/skel/log/term
+      file: 
+        path: /etc/skel/log/term
+        state: directory
+        owner: root
+        group: root
+        mode: 0755
+        recurse: yes
+        
     - name: mv /etc/apt/sources.list.d/{{ item }} /etc/apt/sources.list.d/{{ item }}.`date +\"%Y%m%d\"`
       command: "mv /etc/apt/sources.list.d/{{ item }} /etc/apt/sources.list.d/{{ item }}.{{ lookup('pipe', 'date +%Y%m%d') }}"
       with_items:
