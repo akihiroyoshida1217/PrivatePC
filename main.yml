@@ -166,27 +166,6 @@
         owner: 1010
         group: 1010
       when: not ansible_check_mode
-    #- name: mv /var/lib/clamav/{{ item }} /var/lib/clamav/{{ item }}.org
-    #  command: "mv /var/lib/clamav/{{ item }} /var/lib/clamav/{{ item }}.org"
-    #  with_items:
-    #    - bytecode.cvd
-    #    - daily.cvd
-    #    - daily.cld
-    #    - main.cvd
-    #    - mirrors.dat
-    #  ignore_errors: yes
-    #- name: ln -s /opt/docker-image/clamav-package/clamav/patternfile/{{ item }} /var/lib/clamav/{{ item }}
-    #  file: 
-    #    src: "/opt/docker-image/clamav-package/clamav/patternfile/{{ item }}"
-    #    dest: "/var/lib/clamav/{{ item }}"
-    #    state: link
-    #    force: yes
-    #  with_items:
-    #    - bytecode.cvd
-    #    - daily.cvd
-    #    - daily.cld
-    #    - main.cvd
-    #    - mirrors.dat
     - name: edit clamd.conf
       lineinfile: 
         path: /etc/clamav/clamd.conf
@@ -532,7 +511,7 @@
         recurse: yes
 
     - name: mv /etc/apt/sources.list.d/{{ item }} /etc/apt/sources.list.d/{{ item }}.`date +\"%Y%m%d\"`
-      command: "mv /etc/apt/sources.list.d/{{ item }} /etc/apt/sources.list.d/{{ item }}.`date +\"%Y%m%d\"`"
+      command: "mv /etc/apt/sources.list.d/{{ item }} /etc/apt/sources.list.d/{{ item }}.{{ lookup('pipe', 'date +%Y%m%d') }}"
       with_items:
         - docker.list
         - ppa.list
