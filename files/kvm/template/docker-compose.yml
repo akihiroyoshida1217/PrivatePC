@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  debian-vm:
+    image: ianblenke/kvm
+    container_name: debian-vm1
+    tty: true
+    privileged: true
+    #mem_limit: 4g
+    ports:
+      - '5900:5900'
+    volumes:
+      - $PWD/template:/mnt/vm/template
+    command: "/run.sh  \
+      -name templat-vm -smp 2 -m 2048  \
+      -vnc :0  \
+      -k ja \
+      -cdrom /mnt/vm/template/debian-10.2.0-amd64-DVD-1.iso  \
+      /mnt/vm/template/primary.raw"

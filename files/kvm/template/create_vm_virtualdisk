@@ -1,0 +1,2 @@
+# create virtual disk for 30GB 
+dd if=/dev/zero of=./template/primary.raw bs=10M count=3k

@@ -5,7 +5,7 @@
   become: yes
   vars:
     #network_interface: eth0
-    private_network_address: 192.168.204.0/24
+    private_network_address: 192.168.10.0/24
 
   tasks:
     - name: Get version_code
