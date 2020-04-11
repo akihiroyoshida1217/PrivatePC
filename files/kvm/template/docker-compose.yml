@@ -10,7 +10,7 @@ services:
     ports:
       - '5900:5900'
     volumes:
-      - $PWD/template:/mnt/vm/template
+      - $PWD:/mnt/vm/template
     command: "/run.sh  \
       -name templat-vm -smp 2 -m 2048  \
       -vnc :0  \

@@ -100,6 +100,9 @@
         - gnome-shell-extension-dashtodock
         - gnome-shell-extension-pixelsaver
         - apparmor-utils
+        - tcpdump
+        - wireshark
+        - vlc
       ignore_errors: "{{ ansible_check_mode }}"
     #- name: install packages
     #  apt: 
@@ -374,6 +377,45 @@
         repository: python-image:latest
       ignore_errors: "{{ ansible_check_mode }}"
 
+    - name: mkdir /opt/docker-image/kvm
+      file: 
+        path: "/opt/docker-image/kvm"
+        state: directory
+        owner: root
+        group: root
+        mode: 0755
+        recurse: yes
+    - git:
+        repo: https://github.com/ianblenke/docker-kvm.git
+        dest: /opt/docker-image/kvm
+    - name: copy /opt/docker-image/kvm/docker-kvm/Dockerfile
+      copy: 
+        src: /opt/docker-image/kvm/docker-kvm/Dockerfile
+        dest: /opt/docker-image/kvm/docker-kvm/Dockerfile.org
+        owner: root
+        group: root
+        mode: 0640
+    - name: edit /opt/docker-image/kvm/docker-kvm/Dockerfile
+      lineinfile: 
+        path: /opt/docker-image/kvm/docker-kvm/Dockerfile
+        regexp: "{{ item.regexp }}"
+        line: "{{ item.line }}"
+      with_items:
+        - { regexp: '^FROM ubuntu:trusty', line: 'FROM debian:latest'}
+        - { regexp: '^RUN DEBIAN_FRONTEND=noninteractive apt-get -y install kvm qemu-kvm libvirt-bin bridge-utils libguestfs-tools aria2 unzip dos2unix unrar-free wget git', line: 'RUN DEBIAN_FRONTEND=noninteractive apt-get -y install qemu-kvm libvirt0 bridge-utils libguestfs-tools aria2 unzip dos2unix unrar-free wget git'}
+    - name: build "ianblenke/kvm"
+      docker_image:
+        build:
+          path: /opt/docker-image/kvm/docker-kvm/Dockerfile
+        name: ianblenke/kvm
+        tag: ansible-build
+      ignore_errors: "{{ ansible_check_mode }}"
+    - name: tag "ianblenke/kvm"
+      docker_image:
+        name: ianblenke/kvm:ansible-build
+        repository: ianblenke/kvm:latest
+      ignore_errors: "{{ ansible_check_mode }}"
+      
     - name: systemctl reload
       systemd:
         daemon_reload: yes
@@ -484,6 +526,14 @@
         mode: 0755
         recurse: yes
       become: no
+
+    - name: copy HOME/kvm
+      copy: 
+        src: ./files/kvm
+        dest: "{{ lookup('env', 'HOME') }}/kvm"
+        owner: "{{ lookup('env', 'USERNAME') }}"
+        group: "{{ lookup('env', 'USERNAME') }}"
+      become: no
       
     - name: mkdir /etc/skel/.local/share/applications
       file: 
@@ -573,3 +623,11 @@
         - ppa.list
         - vscode.list
       ignore_errors: yes
+
+    - name: copy /etc/skel/kvm
+      copy: 
+        src: ./files/kvm
+        dest: /etc/skel/kvm
+        owner: root
+        group: root
+      become: no
