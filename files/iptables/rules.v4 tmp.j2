@@ -91,6 +91,23 @@
 -A OUTPUT -d {{ ip }} -p tcp --dport 80 -j ACCEPT
 {% endfor %}
 
+# download.docker.com
+{% for ip in download_docker_com.stdout_lines %}
+-A OUTPUT -d {{ ip }} -p tcp --dport 443 -j ACCEPT
+{% endfor %}
+# auth.docker.io
+{% for ip in auth_docker_io.stdout_lines %}
+-A OUTPUT -d {{ ip }} -p tcp --dport 443 -j ACCEPT
+{% endfor %}
+# registry-1.docker.io
+{% for ip in registry-1_docker_io.stdout_lines %}
+-A OUTPUT -d {{ ip }} -p tcp --dport 443 -j ACCEPT
+{% endfor %}
+# production.cloudflare.docker.com
+{% for ip in production_cloudflare_docker_com.stdout_lines %}
+-A OUTPUT -d {{ ip }} -p tcp --dport 443 -j ACCEPT
+{% endfor %}
+
 # github.com
 {% for ip in github_com.stdout_lines %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 443 -j ACCEPT
@@ -103,6 +120,46 @@
 # security-cdn.debian.org(prod.debian.map.fastly.net)
 {% for ip in prod_debian_map_fastly_net.stdout_lines %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 80 -j ACCEPT
+{% endfor %}
+
+# ppa.launchpad.net
+{% for ip in ppa_launchpad_net.stdout_lines %}
+-A OUTPUT -d {{ ip }} -p tcp --dport 80 -j ACCEPT
+{% endfor %}
+# keyserver.ubuntu.com
+{% for ip in keyserver_ubuntu_com.stdout_lines %}
+-A OUTPUT -d {{ ip }} -p tcp --dport 80 -j ACCEPT
+{% endfor %}
+
+# extentions.gnome.org
+{% for ip in extentions_gnome_org.stdout_lines %}
+-A OUTPUT -d {{ ip }} -p tcp --dport 443 -j ACCEPT
+{% endfor %}
+
+# pypi.org
+{% for ip in pypi_org.stdout_lines %}
+-A OUTPUT -d {{ ip }} -p tcp --dport 443 -j ACCEPT
+{% endfor %}
+{% for ip in pypi_org.stdout_lines %}
+-A OUTPUT -d {{ ip }} -p tcp --dport 80 -j ACCEPT
+{% endfor %}
+
+# bootstrap.pypa.io
+{% for ip in bootstrap_pypa_io.stdout_lines %}
+-A OUTPUT -d {{ ip }} -p tcp --dport 443 -j ACCEPT
+{% endfor %}
+{% for ip in bootstrap_pypa_io.stdout_lines %}
+-A OUTPUT -d {{ ip }} -p tcp --dport 80 -j ACCEPT
+{% endfor %}
+
+# pypi.python.org
+{% for ip in pypi_python_org.stdout_lines %}
+-A OUTPUT -d {{ ip }} -p tcp --dport 443 -j ACCEPT
+{% endfor %}
+
+# files.pythonhosted.org
+{% for ip in files_pythonhosted_org.stdout_lines %}
+-A OUTPUT -d {{ ip }} -p tcp --dport 443 -j ACCEPT
 {% endfor %}
 
 -A INPUT -j LOG --log-prefix "iptables denied: " --log-level 7

@@ -20,7 +20,126 @@
         - curl
         - gnupg2
         - python-pip
+        - dnsutils
+        - iptables
+        - iptables-persistent
       ignore_errors: "{{ ansible_check_mode }}"
+
+    - name: resolv ntp.nict.jp
+      shell: host -4 ntp.nict.jp | awk '{ print $4 }'
+      register: ntp_nict_jp
+    - name: resolv ftp1.debian.or.jp
+      shell: host -4 ftp1.debian.or.jp | awk '{ print $4 }'
+      register: ftp1_debian_or_jp
+    - name: resolv ftp.nara.wide.ad.jp
+      shell: host -4 ftp.nara.wide.ad.jp | awk '{ print $4 }'
+      register: ftp_nara_wide_ad_jp
+    - name: resolv ftp.tsukuba.wide.ad.jp
+      shell: host -4 ftp.tsukuba.wide.ad.jp | awk '{ print $4 }'
+      register: ftp_tsukuba_wide_ad_jp
+    - name: resolv dennou-h.gfd-dennou.org
+      shell: host -4 dennou-h.gfd-dennou.org | awk '{ print $4 }'
+      register: dennou-h_gfd-dennou_org
+    - name: resolv dennou-k.gfd-dennou.org
+      shell: host -4 dennou-k.gfd-dennou.org | awk '{ print $4 }'
+      register: dennou-k_gfd-dennou_org
+    - name: resolv dennou-q.gfd-dennou.org
+      shell: host -4 dennou-q.gfd-dennou.org | awk '{ print $4 }'
+      register: dennou-q_gfd-dennou_org
+    - name: resolv debian-mirror.sakura.ne.jp
+      shell: host -4 debian-mirror.sakura.ne.jp | awk '{ print $4 }'
+      register: debian-mirror.sakura.ne.jp
+    - name: resolv riksun.riken.go.jp
+      shell: host -4 riksun.riken.go.jp | awk '{ print $4 }'
+      register: riksun_riken_go_jp
+    - name: resolv infoserv.ics.es.osaka-u.ac.jp
+      shell: host -4 infoserv.ics.es.osaka-u.ac.jp | awk '{ print $4 }'
+      register: infoserv_ics_es_osaka-u_ac_jp
+    - name: resolv ftp.kddilabs.jp
+      shell: host -4 ftp.kddilabs.jp | awk '{ print $4 }'
+      register: ftp.kddilabs.jp
+    - name: resolv ring.shibaura-it.ac.jp
+      shell: host -4 ring.shibaura-it.ac.jp | awk '{ print $4 }'
+      register: ring_shibaura-it_ac_jp
+    - name: resolv ring.u-toyama.ac.jp
+      shell: host -4 ring.u-toyama.ac.jp | awk '{ print $4 }'
+      register: ring_u-toyama_ac_jp
+    - name: resolv ring.airnet.ne.jp
+      shell: host -4 ring.airnet.ne.jp | awk '{ print $4 }'
+      register: ring_airnet_ne_jp
+    - name: resolv ring.ix.oita-u.ac.jp
+      shell: host -4 ring.ix.oita-u.ac.jp | awk '{ print $4 }'
+      register: ring_ix_oita-u_ac_jp
+    - name: resolv security.debian.org
+      shell: host -4 security.debian.org | awk '{ print $4 }'
+      register: security_debian_org
+    - name: resolv ftp.jp.debian.org
+      shell: host -4 ftp.jp.debian.org | awk '{ print $4 }'
+      register: ftp_jp_debian_org
+    - name: resolv download.docker.com
+      shell: host -4 download.docker.com | awk '{ print $4 }'
+      register: download_docker_com
+    - name: resolv auth.docker.io
+      shell: host -4 auth.docker.io | awk '{ print $4 }'
+      register: auth.docker.io
+    - name: resolv registry-1.docker.io
+      shell: host -4 registry-1.docker.io | awk '{ print $4 }'
+      register: registry-1.docker.io
+    - name: resolv production.cloudflare.docker.com
+      shell: host -4 production.cloudflare.docker.com | awk '{ print $4 }'
+      register: production_cloudflare_docker_com
+    - name: resolv github.com
+      shell: host -4 github.com | awk '{ print $4 }'
+      register: github_com
+    - name: resolv codeload.github.com
+      shell: host -4 codeload.github.com | awk '{ print $4 }'
+      register: codeload_github_com
+    - name: resolv prod.debian.map.fastly.net
+      shell: host -4 prod.debian.map.fastly.net | awk '{ print $4 }'
+      register: prod_debian_map_fastly_net
+    - name: resolv ppa.launchpad.net
+      shell: host -4 ppa.launchpad.net | awk '{ print $4 }'
+      register: ppa_launchpad_net
+    - name: resolv keyserver.ubuntu.com
+      shell: host -4 keyserver.ubuntu.com | awk '{ print $4 }'
+      register: keyserver_ubuntu_com
+    - name: resolv extentions.gnome.org
+      shell: host -4 extentions.gnome.org | awk '{ print $4 }'
+      register: extentions_gnome_org
+    - name: resolv pypi.org
+      shell: host -4 pypi.org | awk '{ print $4 }'
+      register: pypi_org
+    - name: resolv bootstrap.pypa.io
+      shell: host -4 bootstrap.pypa.io | awk '{ print $4 }'
+      register: bootstrap_pypa_io
+    - name: resolv pypi.python.org
+      shell: host -4 pypi.python.org | awk '{ print $4 }'
+      register: pypi_python_org
+    - name: resolv files.pythonhosted.org
+      shell: host -4 files.pythonhosted.org | awk '{ print $4 }'
+      register: files_pythonhosted_org
+
+    - template:
+        src: ./files/iptables/rules.v4.tmp.j2
+        dest: /etc/iptables/rules.v4
+        owner: root
+        group: root
+    - name: copy /etc/iptables/rules.v6
+      copy: 
+        src: ./files/iptables/rules.v6
+        dest: /etc/iptables/rules.v6
+        owner: root
+        group: root
+      when: not ansible_check_mode
+
+    - name: netfilter-persistent reload
+      shell: netfilter-persistent reload
+    - name: restart docker
+      systemd:
+        state: restarted
+        daemon_reload: yes
+        name: docker
+      ignore_errors: yes
 
     - name: Add an Apt signing key https://download.docker.com/linux/debian/gpg
       apt_key:
@@ -75,8 +194,8 @@
         - ntp
         - mailutils
         - unattended-upgrades
-        - iptables
-        - iptables-persistent
+        #- iptables
+        #- iptables-persistent
         - software-properties-common
         - locales-all
         - ibus-mozc

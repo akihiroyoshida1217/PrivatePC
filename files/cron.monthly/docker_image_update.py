@@ -39,7 +39,8 @@ def imageupdate():
                                )[0].tag(repository = k , tag = "latest") for k, v in imagelists_with_buildarg.items() ]
         imagelists = { "firefox-image" : "/opt/docker-image/firefox-package/firefox/" , 
                   "freshclam" : "/opt/docker-image/clamav-package/clamav/" , 
-                  "vscode-extension-image" : "/opt/docker-image/vscode-extension-package/vscode-extension/"}
+                  "vscode-extension-image" : "/opt/docker-image/vscode-extension-package/vscode-extension/",
+                  "ianblenke/kvm" : "/opt/docker-image/kvm/docker-kvm/"}
         [ client.images.build(path = v , 
                                tag = k + ":" +  "{0:%Y%m}".format(datetime.datetime.now()), 
                                nocache = True , 
