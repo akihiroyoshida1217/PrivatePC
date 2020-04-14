@@ -59,7 +59,7 @@
 -A OUTPUT -d {{ ip }} -p tcp --dport 80 -j ACCEPT
 {% endfor %}
 # infoserv.ics.es.osaka-u.ac.jp
-{% for ip in infoserv_ics_es_osaka-u_ac_jp.stdout_lines %}
+{% for ip in infoserv_ics_es_osaka_u_ac_jp.stdout_lines %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 80 -j ACCEPT
 {% endfor %}
 # ftp.kddilabs.jp
