@@ -158,7 +158,7 @@
 -A OUTPUT -d {{ ip }} -p tcp --dport 443 -j ACCEPT
 {% endfor %}
 
-# packages.microsoft.com
+# packages.microsoft.com(csd-apt-eas-d-4.eastasia.cloudapp.azure.com)
 {% for ip in packages_microsoft_com.stdout_lines %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 443 -j ACCEPT
 {% endfor %}
