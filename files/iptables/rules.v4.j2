@@ -39,19 +39,19 @@
 -A OUTPUT -d {{ ip }} -p tcp --dport 80 -j ACCEPT
 {% endfor %}
 # dennou-h.gfd-dennou.org
-{% for ip in dennou-h_gfd-dennou_org.stdout_lines %}
+{% for ip in dennou_h_gfd_dennou_org.stdout_lines %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 80 -j ACCEPT
 {% endfor %}
 # dennou-k.gfd-dennou.org
-{% for ip in dennou-k_gfd-dennou_org.stdout_lines %}
+{% for ip in dennou_k_gfd_dennou_org.stdout_lines %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 80 -j ACCEPT
 {% endfor %}
 # dennou-q.gfd-dennou.org
-{% for ip in dennou-q_gfd-dennou_org.stdout_lines %}
+{% for ip in dennou_q_gfd_dennou_org.stdout_lines %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 80 -j ACCEPT
 {% endfor %}
 # debian-mirror.sakura.ne.jp
-{% for ip in debian-mirror_sakura_ne_jp.stdout_lines %}
+{% for ip in debian_mirror_sakura_ne_jp.stdout_lines %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 80 -j ACCEPT
 {% endfor %}
 # riksun.riken.go.jp
@@ -59,7 +59,7 @@
 -A OUTPUT -d {{ ip }} -p tcp --dport 80 -j ACCEPT
 {% endfor %}
 # infoserv.ics.es.osaka-u.ac.jp
-{% for ip in infoserv_ics_es_osaka-u_ac_jp.stdout_lines %}
+{% for ip in infoserv_ics_es_osaka_u_ac_jp.stdout_lines %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 80 -j ACCEPT
 {% endfor %}
 # ftp.kddilabs.jp
@@ -67,11 +67,11 @@
 -A OUTPUT -d {{ ip }} -p tcp --dport 80 -j ACCEPT
 {% endfor %}
 # ring.shibaura-it.ac.jp
-{% for ip in ring_shibaura-it_ac_jp.stdout_lines %}
+{% for ip in ring_shibaura_it_ac_jp.stdout_lines %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 80 -j ACCEPT
 {% endfor %}
 # ring.u-toyama.ac.jp
-{% for ip in ring_u-toyama_ac_jp.stdout_lines %}
+{% for ip in ring_u_toyama_ac_jp.stdout_lines %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 80 -j ACCEPT
 {% endfor %}
 # ring.airnet.ne.jp
@@ -79,7 +79,7 @@
 -A OUTPUT -d {{ ip }} -p tcp --dport 80 -j ACCEPT
 {% endfor %}
 # ring.ix.oita-u.ac.jp
-{% for ip in ring_ix_oita-u_ac_jp.stdout_lines %}
+{% for ip in ring_ix_oita_u_ac_jp.stdout_lines %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 80 -j ACCEPT
 {% endfor %}
 # security.debian.org

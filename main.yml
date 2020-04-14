@@ -39,37 +39,37 @@
       register: ftp_tsukuba_wide_ad_jp
     - name: resolv dennou-h.gfd-dennou.org
       shell: host -4 dennou-h.gfd-dennou.org | awk '{ print $4 }'
-      register: dennou-h_gfd-dennou_org
+      register: dennou_h_gfd_dennou_org
     - name: resolv dennou-k.gfd-dennou.org
       shell: host -4 dennou-k.gfd-dennou.org | awk '{ print $4 }'
-      register: dennou-k_gfd-dennou_org
+      register: dennou_k_gfd_dennou_org
     - name: resolv dennou-q.gfd-dennou.org
       shell: host -4 dennou-q.gfd-dennou.org | awk '{ print $4 }'
-      register: dennou-q_gfd-dennou_org
+      register: dennou_q_gfd_dennou_org
     - name: resolv debian-mirror.sakura.ne.jp
       shell: host -4 debian-mirror.sakura.ne.jp | awk '{ print $4 }'
-      register: debian-mirror.sakura.ne.jp
+      register: debian_mirror_sakura_ne_jp
     - name: resolv riksun.riken.go.jp
       shell: host -4 riksun.riken.go.jp | awk '{ print $4 }'
       register: riksun_riken_go_jp
     - name: resolv infoserv.ics.es.osaka-u.ac.jp
       shell: host -4 infoserv.ics.es.osaka-u.ac.jp | awk '{ print $4 }'
-      register: infoserv_ics_es_osaka-u_ac_jp
+      register: infoserv_ics_es_osaka_u_ac_jp
     - name: resolv ftp.kddilabs.jp
       shell: host -4 ftp.kddilabs.jp | awk '{ print $4 }'
-      register: ftp.kddilabs.jp
+      register: ftp_kddilabs_jp
     - name: resolv ring.shibaura-it.ac.jp
       shell: host -4 ring.shibaura-it.ac.jp | awk '{ print $4 }'
-      register: ring_shibaura-it_ac_jp
+      register: ring_shibaura_it_ac_jp
     - name: resolv ring.u-toyama.ac.jp
       shell: host -4 ring.u-toyama.ac.jp | awk '{ print $4 }'
-      register: ring_u-toyama_ac_jp
+      register: ring_u_toyama_ac_jp
     - name: resolv ring.airnet.ne.jp
       shell: host -4 ring.airnet.ne.jp | awk '{ print $4 }'
       register: ring_airnet_ne_jp
     - name: resolv ring.ix.oita-u.ac.jp
       shell: host -4 ring.ix.oita-u.ac.jp | awk '{ print $4 }'
-      register: ring_ix_oita-u_ac_jp
+      register: ring_ix_oita_u_ac_jp
     - name: resolv security.debian.org
       shell: host -4 security.debian.org | awk '{ print $4 }'
       register: security_debian_org
@@ -81,10 +81,10 @@
       register: download_docker_com
     - name: resolv auth.docker.io
       shell: host -4 auth.docker.io | awk '{ print $4 }'
-      register: auth.docker.io
+      register: auth_docker_io
     - name: resolv registry-1.docker.io
       shell: host -4 registry-1.docker.io | awk '{ print $4 }'
-      register: registry-1.docker.io
+      register: registry_1_docker_io
     - name: resolv production.cloudflare.docker.com
       shell: host -4 production.cloudflare.docker.com | awk '{ print $4 }'
       register: production_cloudflare_docker_com
