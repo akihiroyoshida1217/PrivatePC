@@ -158,6 +158,11 @@
 -A OUTPUT -d {{ ip }} -p tcp --dport 443 -j ACCEPT
 {% endfor %}
 
+# packages.microsoft.com
+{% for ip in packages_microsoft_com.stdout_lines %}
+-A OUTPUT -d {{ ip }} -p tcp --dport 443 -j ACCEPT
+{% endfor %}
+
 -A INPUT -j LOG --log-prefix "iptables denied: " --log-level 7
 -A OUTPUT -j LOG --log-prefix "iptables denied: " --log-level 7
 
