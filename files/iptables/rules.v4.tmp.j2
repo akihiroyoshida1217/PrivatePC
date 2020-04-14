@@ -27,9 +27,9 @@
 {% endfor %}
 
 # ftp1.debian.or.jp
-{% for ip in ftp1_debian_or_jp.stdout_lines %}
--A OUTPUT -d {{ ip }} -p tcp --dport 80 -j ACCEPT
-{% endfor %}
+#{% for ip in ftp1_debian_or_jp.stdout_lines %}
+#-A OUTPUT -d {{ ip }} -p tcp --dport 80 -j ACCEPT
+#{% endfor %}
 # ftp.nara.wide.ad.jp
 {% for ip in ftp_nara_wide_ad_jp.stdout_lines %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 80 -j ACCEPT
@@ -86,12 +86,12 @@
 {% for ip in security_debian_org.stdout_lines %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 80 -j ACCEPT
 {% endfor %}
-# ftp.jp.debian.org
+# ftp.jp.debian.org(jp.cdn.araki.net)
 {% for ip in ftp_jp_debian_org.stdout_lines %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 80 -j ACCEPT
 {% endfor %}
 
-# download.docker.com
+# download.docker.com(d2h67oheeuigaw.cloudfront.net)
 {% for ip in download_docker_com.stdout_lines %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 443 -j ACCEPT
 {% endfor %}
@@ -131,8 +131,8 @@
 -A OUTPUT -d {{ ip }} -p tcp --dport 80 -j ACCEPT
 {% endfor %}
 
-# extentions.gnome.org
-{% for ip in extentions_gnome_org.stdout_lines %}
+# extentions.gnome.org(openshift.gnome.org)
+{% for ip in openshift_gnome_org.stdout_lines %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 443 -j ACCEPT
 {% endfor %}
 
@@ -144,7 +144,7 @@
 -A OUTPUT -d {{ ip }} -p tcp --dport 80 -j ACCEPT
 {% endfor %}
 
-# bootstrap.pypa.io
+# bootstrap.pypa.io(dualstack.c.ssl.global.fastly.net)
 {% for ip in bootstrap_pypa_io.stdout_lines %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 443 -j ACCEPT
 {% endfor %}
@@ -152,12 +152,12 @@
 -A OUTPUT -d {{ ip }} -p tcp --dport 80 -j ACCEPT
 {% endfor %}
 
-# pypi.python.org
+# pypi.python.org(dualstack.python.map.fastly.net)
 {% for ip in pypi_python_org.stdout_lines %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 443 -j ACCEPT
 {% endfor %}
 
-# files.pythonhosted.org
+# files.pythonhosted.org(dualstack.r.ssl.global.fastly.net)
 {% for ip in files_pythonhosted_org.stdout_lines %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 443 -j ACCEPT
 {% endfor %}

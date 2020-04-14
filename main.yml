@@ -26,97 +26,97 @@
       ignore_errors: "{{ ansible_check_mode }}"
 
     - name: resolv ntp.nict.jp
-      shell: host -4 ntp.nict.jp | awk '{ print $4 }'
+      shell: host -4 -t A ntp.nict.jp | awk '{ print $4 }'
       register: ntp_nict_jp
-    - name: resolv ftp1.debian.or.jp
-      shell: host -4 ftp1.debian.or.jp | awk '{ print $4 }'
-      register: ftp1_debian_or_jp
+    #- name: resolv ftp1.debian.or.jp
+    #  shell: host -4 -t A ftp1.debian.or.jp | awk '{ print $4 }'
+    #  register: ftp1_debian_or_jp
     - name: resolv ftp.nara.wide.ad.jp
-      shell: host -4 ftp.nara.wide.ad.jp | awk '{ print $4 }'
+      shell: host -4 -t A ftp.nara.wide.ad.jp | awk '{ print $4 }'
       register: ftp_nara_wide_ad_jp
     - name: resolv ftp.tsukuba.wide.ad.jp
-      shell: host -4 ftp.tsukuba.wide.ad.jp | awk '{ print $4 }'
+      shell: host -4 -t A ftp.tsukuba.wide.ad.jp | awk '{ print $4 }'
       register: ftp_tsukuba_wide_ad_jp
     - name: resolv dennou-h.gfd-dennou.org
-      shell: host -4 dennou-h.gfd-dennou.org | awk '{ print $4 }'
+      shell: host -4 -t A dennou-h.gfd-dennou.org | awk '{ print $4 }'
       register: dennou_h_gfd_dennou_org
     - name: resolv dennou-k.gfd-dennou.org
-      shell: host -4 dennou-k.gfd-dennou.org | awk '{ print $4 }'
+      shell: host -4 -t A dennou-k.gfd-dennou.org | awk '{ print $4 }'
       register: dennou_k_gfd_dennou_org
     - name: resolv dennou-q.gfd-dennou.org
-      shell: host -4 dennou-q.gfd-dennou.org | awk '{ print $4 }'
+      shell: host -4 -t A dennou-q.gfd-dennou.org | awk '{ print $4 }'
       register: dennou_q_gfd_dennou_org
     - name: resolv debian-mirror.sakura.ne.jp
-      shell: host -4 debian-mirror.sakura.ne.jp | awk '{ print $4 }'
+      shell: host -4 -t A debian-mirror.sakura.ne.jp | awk '{ print $4 }'
       register: debian_mirror_sakura_ne_jp
     - name: resolv riksun.riken.go.jp
-      shell: host -4 riksun.riken.go.jp | awk '{ print $4 }'
+      shell: host -4 -t A riksun.riken.go.jp | awk '{ print $4 }'
       register: riksun_riken_go_jp
     - name: resolv infoserv.ics.es.osaka-u.ac.jp
-      shell: host -4 infoserv.ics.es.osaka-u.ac.jp | awk '{ print $4 }'
+      shell: host -4 -t A infoserv.ics.es.osaka-u.ac.jp | awk '{ print $4 }'
       register: infoserv_ics_es_osaka_u_ac_jp
     - name: resolv ftp.kddilabs.jp
-      shell: host -4 ftp.kddilabs.jp | awk '{ print $4 }'
+      shell: host -4 -t A ftp.kddilabs.jp | awk '{ print $4 }'
       register: ftp_kddilabs_jp
     - name: resolv ring.shibaura-it.ac.jp
-      shell: host -4 ring.shibaura-it.ac.jp | awk '{ print $4 }'
+      shell: host -4 -t A ring.shibaura-it.ac.jp | awk '{ print $4 }'
       register: ring_shibaura_it_ac_jp
     - name: resolv ring.u-toyama.ac.jp
-      shell: host -4 ring.u-toyama.ac.jp | awk '{ print $4 }'
+      shell: host -4 -t A ring.u-toyama.ac.jp | awk '{ print $4 }'
       register: ring_u_toyama_ac_jp
     - name: resolv ring.airnet.ne.jp
-      shell: host -4 ring.airnet.ne.jp | awk '{ print $4 }'
+      shell: host -4 -t A ring.airnet.ne.jp | awk '{ print $4 }'
       register: ring_airnet_ne_jp
     - name: resolv ring.ix.oita-u.ac.jp
-      shell: host -4 ring.ix.oita-u.ac.jp | awk '{ print $4 }'
+      shell: host -4 -t A ring.ix.oita-u.ac.jp | awk '{ print $4 }'
       register: ring_ix_oita_u_ac_jp
     - name: resolv security.debian.org
-      shell: host -4 security.debian.org | awk '{ print $4 }'
+      shell: host -4 -t A security.debian.org | awk '{ print $4 }'
       register: security_debian_org
-    - name: resolv ftp.jp.debian.org
-      shell: host -4 ftp.jp.debian.org | awk '{ print $4 }'
+    - name: resolv ftp.jp.debian.org(jp.cdn.araki.net)
+      shell: host -4 -t A jp.cdn.araki.net | awk '{ print $4 }'
       register: ftp_jp_debian_org
-    - name: resolv download.docker.com
-      shell: host -4 download.docker.com | awk '{ print $4 }'
+    - name: resolv download.docker.com(d2h67oheeuigaw.cloudfront.net)
+      shell: host -4 -t A d2h67oheeuigaw.cloudfront.net | awk '{ print $4 }'
       register: download_docker_com
     - name: resolv auth.docker.io
-      shell: host -4 auth.docker.io | awk '{ print $4 }'
+      shell: host -4 -t A auth.docker.io | awk '{ print $4 }'
       register: auth_docker_io
     - name: resolv registry-1.docker.io
-      shell: host -4 registry-1.docker.io | awk '{ print $4 }'
+      shell: host -4 -t A registry-1.docker.io | awk '{ print $4 }'
       register: registry_1_docker_io
     - name: resolv production.cloudflare.docker.com
-      shell: host -4 production.cloudflare.docker.com | awk '{ print $4 }'
+      shell: host -4 -t A production.cloudflare.docker.com | awk '{ print $4 }'
       register: production_cloudflare_docker_com
     - name: resolv github.com
-      shell: host -4 github.com | awk '{ print $4 }'
+      shell: host -4 -t A github.com | awk '{ print $4 }'
       register: github_com
     - name: resolv codeload.github.com
-      shell: host -4 codeload.github.com | awk '{ print $4 }'
+      shell: host -4 -t A codeload.github.com | awk '{ print $4 }'
       register: codeload_github_com
     - name: resolv prod.debian.map.fastly.net
-      shell: host -4 prod.debian.map.fastly.net | awk '{ print $4 }'
+      shell: host -4 -t A prod.debian.map.fastly.net | awk '{ print $4 }'
       register: prod_debian_map_fastly_net
     - name: resolv ppa.launchpad.net
-      shell: host -4 ppa.launchpad.net | awk '{ print $4 }'
+      shell: host -4 -t A ppa.launchpad.net | awk '{ print $4 }'
       register: ppa_launchpad_net
     - name: resolv keyserver.ubuntu.com
-      shell: host -4 keyserver.ubuntu.com | awk '{ print $4 }'
+      shell: host -4 -t A keyserver.ubuntu.com | awk '{ print $4 }'
       register: keyserver_ubuntu_com
-    - name: resolv extentions.gnome.org
-      shell: host -4 extentions.gnome.org | awk '{ print $4 }'
-      register: extentions_gnome_org
+    - name: resolv openshift.gnome.org
+      shell: host -4 -t A openshift.gnome.org | awk '{ print $4 }'
+      register: openshift_gnome_org
     - name: resolv pypi.org
-      shell: host -4 pypi.org | awk '{ print $4 }'
+      shell: host -4 -t A pypi.org | awk '{ print $4 }'
       register: pypi_org
-    - name: resolv bootstrap.pypa.io
-      shell: host -4 bootstrap.pypa.io | awk '{ print $4 }'
+    - name: resolv bootstrap.pypa.io(dualstack.c.ssl.global.fastly.net)
+      shell: host -4 -t A dualstack.c.ssl.global.fastly.net | awk '{ print $4 }'
       register: bootstrap_pypa_io
-    - name: resolv pypi.python.org
-      shell: host -4 pypi.python.org | awk '{ print $4 }'
+    - name: resolv pypi.python.org(dualstack.python.map.fastly.net)
+      shell: host -4 -t A dualstack.python.map.fastly.net | awk '{ print $4 }'
       register: pypi_python_org
-    - name: resolv files.pythonhosted.org
-      shell: host -4 files.pythonhosted.org | awk '{ print $4 }'
+    - name: resolv files.pythonhosted.org(dualstack.r.ssl.global.fastly.net)
+      shell: host -4 -t A dualstack.r.ssl.global.fastly.net | awk '{ print $4 }'
       register: files_pythonhosted_org
 
     - template:
