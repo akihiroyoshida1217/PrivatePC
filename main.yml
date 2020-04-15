@@ -519,16 +519,16 @@
     - git:
         repo: https://github.com/ianblenke/docker-kvm.git
         dest: /opt/docker-image/kvm
-    - name: copy /opt/docker-image/kvm/docker-kvm/Dockerfile
+    - name: copy /opt/docker-image/kvm/Dockerfile
       copy: 
-        src: /opt/docker-image/kvm/docker-kvm/Dockerfile
-        dest: /opt/docker-image/kvm/docker-kvm/Dockerfile.org
+        src: /opt/docker-image/kvm/Dockerfile
+        dest: /opt/docker-image/kvm/Dockerfile.org
         owner: root
         group: root
         mode: 0640
-    - name: edit /opt/docker-image/kvm/docker-kvm/Dockerfile
+    - name: edit /opt/docker-image/kvm/Dockerfile
       lineinfile: 
-        path: /opt/docker-image/kvm/docker-kvm/Dockerfile
+        path: /opt/docker-image/kvm/Dockerfile
         regexp: "{{ item.regexp }}"
         line: "{{ item.line }}"
       with_items:
@@ -537,7 +537,7 @@
     - name: build "ianblenke/kvm"
       docker_image:
         build:
-          path: /opt/docker-image/kvm/docker-kvm/Dockerfile
+          path: /opt/docker-image/kvm/Dockerfile
         name: ianblenke/kvm
         tag: ansible-build
       ignore_errors: "{{ ansible_check_mode }}"
