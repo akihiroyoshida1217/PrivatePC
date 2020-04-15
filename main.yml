@@ -130,6 +130,12 @@
     - name: resolv packages.microsoft.com(csd-apt-eas-d-4.eastasia.cloudapp.azure.com)
       shell: host -4 -t A csd-apt-eas-d-4.eastasia.cloudapp.azure.com | awk '{ print $4 }'
       register: csd_apt_eas_d_4_eastasia_cloudapp_azure_com
+    - name: resolv launchpad-net.nutmeg.canonical.com
+      shell: host -4 -t A launchpad-net.nutmeg.canonical.com | awk '{ print $4 }'
+      register: launchpad_net_nutmeg_canonical_com
+    - name: resolv launchpad-net.banana.canonical.com
+      shell: host -4 -t A launchpad-net.banana.canonical.com | awk '{ print $4 }'
+      register: launchpad_net_banana_canonical_com
 
     - template:
         src: ./files/iptables/rules.v4.tmp.j2

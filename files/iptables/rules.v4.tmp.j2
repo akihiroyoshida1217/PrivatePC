@@ -122,6 +122,18 @@
 {% for ip in ppa_launchpad_net.stdout_lines %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 80 -j ACCEPT
 {% endfor %}
+{% for ip in ppa_launchpad_net.stdout_lines %}
+-A OUTPUT -d {{ ip }} -p tcp --dport 443 -j ACCEPT
+{% endfor %}
+# launchpad-net.nutmeg.canonical.com
+{% for ip in launchpad_net_nutmeg_canonical_com.stdout_lines %}
+-A OUTPUT -d {{ ip }} -p tcp --dport 443 -j ACCEPT
+{% endfor %}
+# launchpad-net.banana.canonical.com
+{% for ip in launchpad_net_banana_canonical_com.stdout_lines %}
+-A OUTPUT -d {{ ip }} -p tcp --dport 443 -j ACCEPT
+{% endfor %}
+
 # keyserver.ubuntu.com
 {% for ip in keyserver_ubuntu_com.stdout_lines %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 80 -j ACCEPT
