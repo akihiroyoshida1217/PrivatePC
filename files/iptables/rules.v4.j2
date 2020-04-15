@@ -27,9 +27,9 @@
 {% endfor %}
 
 # ftp1.debian.or.jp
-{% for ip in ftp1_debian_or_jp.stdout_lines %}
--A OUTPUT -d {{ ip }} -p tcp --dport 80 -j ACCEPT
-{% endfor %}
+#{% for ip in ftp1_debian_or_jp.stdout_lines %}
+#-A OUTPUT -d {{ ip }} -p tcp --dport 80 -j ACCEPT
+#{% endfor %}
 # ftp.nara.wide.ad.jp
 {% for ip in ftp_nara_wide_ad_jp.stdout_lines %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 80 -j ACCEPT
