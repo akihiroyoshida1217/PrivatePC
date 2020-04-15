@@ -158,8 +158,20 @@
 -A OUTPUT -d {{ ip }} -p tcp --dport 443 -j ACCEPT
 {% endfor %}
 
+# packages.microsoft.com(csd-apt-eas-d-1.eastasia.cloudapp.azure.com)
+{% for ip in csd_apt_eas_d_1_eastasia_cloudapp_azure_com.stdout_lines %}
+-A OUTPUT -d {{ ip }} -p tcp --dport 443 -j ACCEPT
+{% endfor %}
+# packages.microsoft.com(csd-apt-eas-d-2.eastasia.cloudapp.azure.com)
+{% for ip in csd_apt_eas_d_2_eastasia_cloudapp_azure_com.stdout_lines %}
+-A OUTPUT -d {{ ip }} -p tcp --dport 443 -j ACCEPT
+{% endfor %}
+# packages.microsoft.com(csd-apt-eas-d-3.eastasia.cloudapp.azure.com)
+{% for ip in csd_apt_eas_d_3_eastasia_cloudapp_azure_com.stdout_lines %}
+-A OUTPUT -d {{ ip }} -p tcp --dport 443 -j ACCEPT
+{% endfor %}
 # packages.microsoft.com(csd-apt-eas-d-4.eastasia.cloudapp.azure.com)
-{% for ip in packages_microsoft_com.stdout_lines %}
+{% for ip in csd_apt_eas_d_4_eastasia_cloudapp_azure_com.stdout_lines %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 443 -j ACCEPT
 {% endfor %}
 

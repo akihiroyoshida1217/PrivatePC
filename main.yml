@@ -118,9 +118,18 @@
     - name: resolv files.pythonhosted.org(dualstack.r.ssl.global.fastly.net)
       shell: host -4 -t A dualstack.r.ssl.global.fastly.net | awk '{ print $4 }'
       register: files_pythonhosted_org
+    - name: resolv packages.microsoft.com(csd-apt-eas-d-1.eastasia.cloudapp.azure.com)
+      shell: host -4 -t A csd-apt-eas-d-1.eastasia.cloudapp.azure.com | awk '{ print $4 }'
+      register: csd_apt_eas_d_1_eastasia_cloudapp_azure_com
+    - name: resolv packages.microsoft.com(csd-apt-eas-d-2.eastasia.cloudapp.azure.com)
+      shell: host -4 -t A csd-apt-eas-d-2.eastasia.cloudapp.azure.com | awk '{ print $4 }'
+      register: csd_apt_eas_d_2_eastasia_cloudapp_azure_com
+    - name: resolv packages.microsoft.com(csd-apt-eas-d-3.eastasia.cloudapp.azure.com)
+      shell: host -4 -t A csd-apt-eas-d-3.eastasia.cloudapp.azure.com | awk '{ print $4 }'
+      register: csd_apt_eas_d_3_eastasia_cloudapp_azure_com
     - name: resolv packages.microsoft.com(csd-apt-eas-d-4.eastasia.cloudapp.azure.com)
       shell: host -4 -t A csd-apt-eas-d-4.eastasia.cloudapp.azure.com | awk '{ print $4 }'
-      register: packages_microsoft_com
+      register: csd_apt_eas_d_4_eastasia_cloudapp_azure_com
 
     - template:
         src: ./files/iptables/rules.v4.tmp.j2
