@@ -130,6 +130,10 @@
 {% for ip in keyserver_ubuntu_com.stdout_lines %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 443 -j ACCEPT
 {% endfor %}
+# keyserver.ubuntu.com
+{% for ip in keyserver_ubuntu_com.stdout_lines %}
+-A OUTPUT -d {{ ip }} -p tcp --dport 11371 -j ACCEPT
+{% endfor %}
 
 # extentions.gnome.org(openshift.gnome.org)
 {% for ip in openshift_gnome_org.stdout_lines %}
