@@ -140,7 +140,7 @@
       shell: host -4 -t A database.clamav.net.cdn.cloudflare.net | awk '{ print $4 }'
       register: database_clamav_net_cdn_cloudflare_net
 
-      - template:
+    - template:
         src: ./files/iptables/rules.v4.tmp.j2
         dest: /etc/iptables/rules.v4
         owner: root
