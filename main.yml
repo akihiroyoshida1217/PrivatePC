@@ -525,6 +525,7 @@
     - git:
         repo: https://github.com/ianblenke/docker-kvm.git
         dest: /opt/docker-image/kvm
+      ignore_errors: yes
     - name: copy /opt/docker-image/kvm/Dockerfile
       copy: 
         src: /opt/docker-image/kvm/Dockerfile
