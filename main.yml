@@ -136,8 +136,11 @@
     - name: resolv launchpad-net.banana.canonical.com
       shell: host -4 -t A launchpad-net.banana.canonical.com | awk '{ print $4 }'
       register: launchpad_net_banana_canonical_com
+    - name: resolv database.clamav.net(database.clamav.net.cdn.cloudflare.net)
+      shell: host -4 -t A database.clamav.net.cdn.cloudflare.net | awk '{ print $4 }'
+      register: database_clamav_net_cdn_cloudflare_net
 
-    - template:
+      - template:
         src: ./files/iptables/rules.v4.tmp.j2
         dest: /etc/iptables/rules.v4
         owner: root
@@ -768,4 +771,3 @@
         dest: /etc/skel/kvm
         owner: root
         group: root
-      become: no
