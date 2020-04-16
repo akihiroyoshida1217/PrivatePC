@@ -544,7 +544,7 @@
     - name: build "ianblenke/kvm"
       docker_image:
         build:
-          path: /opt/docker-image/kvm/Dockerfile
+          path: /opt/docker-image/kvm/
         name: ianblenke/kvm
         tag: ansible-build
       ignore_errors: "{{ ansible_check_mode }}"
