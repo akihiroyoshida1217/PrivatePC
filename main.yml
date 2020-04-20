@@ -520,6 +520,10 @@
         repository: python-image:latest
       ignore_errors: "{{ ansible_check_mode }}"
 
+    - name: rm -r /opt/docker-image/kvm
+      file: 
+        path: "/opt/docker-image/kvm"
+        state: absent
     - name: mkdir /opt/docker-image/kvm
       file: 
         path: "/opt/docker-image/kvm"
@@ -531,7 +535,7 @@
     - git:
         repo: https://github.com/ianblenke/docker-kvm.git
         dest: /opt/docker-image/kvm
-      ignore_errors: yes
+      #ignore_errors: yes
     - name: copy /opt/docker-image/kvm/Dockerfile
       copy: 
         src: /opt/docker-image/kvm/Dockerfile
