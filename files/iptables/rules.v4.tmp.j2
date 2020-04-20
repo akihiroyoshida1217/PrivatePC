@@ -22,107 +22,107 @@
 -A OUTPUT -p udp --dport 53 -j ACCEPT
 
 # ntp.nict.jp
-{% for ip in lookup('dig', 'ntp.nict.jp./A', wantlist=True) %}
+{% for ip in lookup('dnsqueryloop', 'ntp.nict.jp', 'A') %}
 -A OUTPUT -d {{ ip }} -p udp --dport 123 -j ACCEPT
 {% endfor %}
 
 # ftp.nara.wide.ad.jp
-{% for ip in lookup('dig', 'ftp.nara.wide.ad.jp./A', wantlist=True) %}
+{% for ip in lookup('dnsqueryloop', 'ftp.nara.wide.ad.jp', 'A') %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 80 -j ACCEPT
 {% endfor %}
 # ftp.tsukuba.wide.ad.jp
-{% for ip in lookup('dig', 'ftp.tsukuba.wide.ad.jp./A', wantlist=True) %}
+{% for ip in lookup('dnsqueryloop', 'ftp.tsukuba.wide.ad.jp', 'A') %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 80 -j ACCEPT
 {% endfor %}
 # dennou-h.gfd-dennou.org
-{% for ip in lookup('dig', 'dennou-h.gfd-dennou.org./A', wantlist=True) %}
+{% for ip in lookup('dnsqueryloop', 'dennou-h.gfd-dennou.org', 'A') %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 80 -j ACCEPT
 {% endfor %}
 # dennou-k.gfd-dennou.org
-{% for ip in lookup('dig', 'dennou-k.gfd-dennou.org./A', wantlist=True) %}
+{% for ip in lookup('dnsqueryloop', 'dennou-k.gfd-dennou.org', 'A') %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 80 -j ACCEPT
 {% endfor %}
 # dennou-q.gfd-dennou.org
-{% for ip in lookup('dig', 'dennou-q.gfd-dennou.org./A', wantlist=True) %}
+{% for ip in lookup('dnsqueryloop', 'dennou-q.gfd-dennou.org', 'A') %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 80 -j ACCEPT
 {% endfor %}
 # debian-mirror.sakura.ne.jp
-{% for ip in lookup('dig', 'debian-mirror.sakura.ne.jp./A', wantlist=True) %}
+{% for ip in lookup('dnsqueryloop', 'debian-mirror.sakura.ne.jp', 'A') %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 80 -j ACCEPT
 {% endfor %}
 # riksun.riken.go.jp
-{% for ip in lookup('dig', 'riksun.riken.go.jp./A', wantlist=True) %}
+{% for ip in lookup('dnsqueryloop', 'riksun.riken.go.jp', 'A') %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 80 -j ACCEPT
 {% endfor %}
 # infoserv.ics.es.osaka-u.ac.jp
-{% for ip in lookup('dig', 'infoserv.ics.es.osaka-u.ac.jp./A', wantlist=True) %}
+{% for ip in lookup('dnsqueryloop', 'infoserv.ics.es.osaka-u.ac.jp', 'A') %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 80 -j ACCEPT
 {% endfor %}
 # ftp.kddilabs.jp
-{% for ip in lookup('dig', 'ftp.kddilabs.jp./A', wantlist=True) %}
+{% for ip in lookup('dnsqueryloop', 'ftp.kddilabs.jp', 'A') %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 80 -j ACCEPT
 {% endfor %}
 # ring.shibaura-it.ac.jp
-{% for ip in lookup('dig', 'ring.shibaura-it.ac.jp./A', wantlist=True) %}
+{% for ip in lookup('dnsqueryloop', 'ring.shibaura-it.ac.jp', 'A') %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 80 -j ACCEPT
 {% endfor %}
 # ring.u-toyama.ac.jp
-{% for ip in lookup('dig', 'ring.u-toyama.ac.jp./A', wantlist=True) %}
+{% for ip in lookup('dnsqueryloop', 'ring.u-toyama.ac.jp', 'A') %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 80 -j ACCEPT
 {% endfor %}
 # ring.airnet.ne.jp
-{% for ip in lookup('dig', 'ring.airnet.ne.jp./A', wantlist=True) %}
+{% for ip in lookup('dnsqueryloop', 'ring.airnet.ne.jp', 'A') %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 80 -j ACCEPT
 {% endfor %}
 # ring.ix.oita-u.ac.jp
-{% for ip in lookup('dig', 'ring.ix.oita-u.ac.jp./A', wantlist=True) %}
+{% for ip in lookup('dnsqueryloop', 'ring.ix.oita-u.ac.jp', 'A') %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 80 -j ACCEPT
 {% endfor %}
 # security.debian.org
-{% for ip in lookup('dig', 'security.debian.org./A', wantlist=True) %}
+{% for ip in lookup('dnsqueryloop', 'security.debian.org', 'A') %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 80 -j ACCEPT
 {% endfor %}
 # ftp.jp.debian.org(jp.cdn.araki.net)
-{% for ip in lookup('dig', 'jp.cdn.araki.net./A', wantlist=True) %}
+{% for ip in lookup('dnsqueryloop', 'jp.cdn.araki.net', 'A') %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 80 -j ACCEPT
 {% endfor %}
 
 # download.docker.com(d2h67oheeuigaw.cloudfront.net)
-{% for ip in lookup('dig', 'd2h67oheeuigaw.cloudfront.net./A', wantlist=True) %}
+{% for ip in lookup('dnsqueryloop', 'd2h67oheeuigaw.cloudfront.net', 'A') %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 443 -j ACCEPT
 {% endfor %}
 # auth.docker.io
-{% for ip in lookup('dig', 'auth.docker.io./A', wantlist=True) %}
+{% for ip in lookup('dnsqueryloop', 'auth.docker.io', 'A') %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 443 -j ACCEPT
 {% endfor %}
 # registry-1.docker.io
-{% for ip in lookup('dig', 'registry-1.docker.io./A', wantlist=True) %}
+{% for ip in lookup('dnsqueryloop', 'registry-1.docker.io', 'A') %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 443 -j ACCEPT
 {% endfor %}
 # production.cloudflare.docker.com
-{% for ip in lookup('dig', 'production.cloudflare.docker.com./A', wantlist=True) %}
+{% for ip in lookup('dnsqueryloop', 'production.cloudflare.docker.com', 'A') %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 443 -j ACCEPT
 {% endfor %}
 
 # github.com
-{% for ip in lookup('dig', 'github.com./A', wantlist=True) %}
+{% for ip in lookup('dnsqueryloop', 'github.com', 'A') %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 443 -j ACCEPT
 {% endfor %}
 # codeload.github.com
-{% for ip in lookup('dig', 'codeload.github.com./A', wantlist=True) %}
+{% for ip in lookup('dnsqueryloop', 'codeload.github.com', 'A') %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 443 -j ACCEPT
 {% endfor %}
 
 # security-cdn.debian.org(prod.debian.map.fastly.net)
-{% for ip in lookup('dig', 'prod.debian.map.fastly.net./A', wantlist=True) %}
+{% for ip in lookup('dnsqueryloop', 'prod.debian.map.fastly.net', 'A') %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 80 -j ACCEPT
 {% endfor %}
 
 # ppa.launchpad.net
-{% for ip in lookup('dig', 'ppa.launchpad.net./A', wantlist=True) %}
+{% for ip in lookup('dnsqueryloop', 'ppa.launchpad.net', 'A') %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 80 -j ACCEPT
 {% endfor %}
-{% for ip in lookup('dig', 'ppa.launchpad.net./A', wantlist=True) %}
+{% for ip in lookup('dnsqueryloop', 'ppa.launchpad.net', 'A') %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 443 -j ACCEPT
 {% endfor %}
 # launchpad-net.nutmeg.canonical.com
@@ -131,84 +131,84 @@
 -A OUTPUT -d 91.189.89.223 -p tcp --dport 443 -j ACCEPT
 
 # keyserver.ubuntu.com
-{% for ip in lookup('dig', 'keyserver.ubuntu.com./A', wantlist=True) %}
+{% for ip in lookup('dnsqueryloop', 'keyserver.ubuntu.com', 'A') %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 80 -j ACCEPT
 {% endfor %}
 # keyserver.ubuntu.com
-{% for ip in lookup('dig', 'keyserver.ubuntu.com./A', wantlist=True) %}
+{% for ip in lookup('dnsqueryloop', 'keyserver.ubuntu.com', 'A') %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 443 -j ACCEPT
 {% endfor %}
 # keyserver.ubuntu.com
-{% for ip in lookup('dig', 'keyserver.ubuntu.com./A', wantlist=True) %}
+{% for ip in lookup('dnsqueryloop', 'keyserver.ubuntu.com', 'A') %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 11371 -j ACCEPT
 {% endfor %}
 
 # extentions.gnome.org(openshift.gnome.org)
-{% for ip in lookup('dig', 'openshift.gnome.org./A', wantlist=True) %}
+{% for ip in lookup('dnsqueryloop', 'openshift.gnome.org', 'A') %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 443 -j ACCEPT
 {% endfor %}
 
 # pypi.org
-{% for ip in lookup('dig', 'pypi.org./A', wantlist=True) %}
+{% for ip in lookup('dnsqueryloop', 'pypi.org', 'A') %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 443 -j ACCEPT
 {% endfor %}
-{% for ip in lookup('dig', 'pypi.org./A', wantlist=True) %}
+{% for ip in lookup('dnsqueryloop', 'pypi.org', 'A') %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 80 -j ACCEPT
 {% endfor %}
 
 # bootstrap.pypa.io(dualstack.c.ssl.global.fastly.net)
-{% for ip in lookup('dig', 'dualstack.c.ssl.global.fastly.net./A', wantlist=True) %}
+{% for ip in lookup('dnsqueryloop', 'dualstack.c.ssl.global.fastly.net', 'A') %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 443 -j ACCEPT
 {% endfor %}
-{% for ip in lookup('dig', 'dualstack.c.ssl.global.fastly.net./A', wantlist=True) %}
+{% for ip in lookup('dnsqueryloop', 'dualstack.c.ssl.global.fastly.net', 'A') %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 80 -j ACCEPT
 {% endfor %}
 
 # pypi.python.org(dualstack.python.map.fastly.net)
-{% for ip in lookup('dig', 'dualstack.python.map.fastly.net./A', wantlist=True) %}
+{% for ip in lookup('dnsqueryloop', 'dualstack.python.map.fastly.net', 'A') %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 443 -j ACCEPT
 {% endfor %}
 
 # files.pythonhosted.org(dualstack.r.ssl.global.fastly.net)
-{% for ip in lookup('dig', 'dualstack.r.ssl.global.fastly.net./A', wantlist=True) %}
+{% for ip in lookup('dnsqueryloop', 'dualstack.r.ssl.global.fastly.net', 'A') %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 443 -j ACCEPT
 {% endfor %}
 
 # packages.microsoft.com(csd-apt-eas-d-1.eastasia.cloudapp.azure.com)
-{% for ip in lookup('dig', 'csd-apt-eas-d-1.eastasia.cloudapp.azure.com./A', wantlist=True) %}
+{% for ip in lookup('dnsqueryloop', 'csd-apt-eas-d-1.eastasia.cloudapp.azure.com', 'A') %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 443 -j ACCEPT
 {% endfor %}
 # packages.microsoft.com(csd-apt-eas-d-2.eastasia.cloudapp.azure.com)
-{% for ip in lookup('dig', 'csd-apt-eas-d-2.eastasia.cloudapp.azure.com./A', wantlist=True) %}
+{% for ip in lookup('dnsqueryloop', 'csd-apt-eas-d-2.eastasia.cloudapp.azure.com', 'A') %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 443 -j ACCEPT
 {% endfor %}
 # packages.microsoft.com(csd-apt-eas-d-3.eastasia.cloudapp.azure.com)
-{% for ip in lookup('dig', 'csd-apt-eas-d-3.eastasia.cloudapp.azure.com./A', wantlist=True) %}
+{% for ip in lookup('dnsqueryloop', 'csd-apt-eas-d-3.eastasia.cloudapp.azure.com', 'A') %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 443 -j ACCEPT
 {% endfor %}
 # packages.microsoft.com(csd-apt-eas-d-4.eastasia.cloudapp.azure.com)
-{% for ip in lookup('dig', 'csd-apt-eas-d-4.eastasia.cloudapp.azure.com./A', wantlist=True) %}
+{% for ip in lookup('dnsqueryloop', 'csd-apt-eas-d-4.eastasia.cloudapp.azure.com', 'A') %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 443 -j ACCEPT
 {% endfor %}
 # packages.microsoft.com(csd-apt-eas-d-1.eastasia.cloudapp.azure.com)
-{% for ip in lookup('dig', 'csd-apt-eas-d-1.eastasia.cloudapp.azure.com./A', wantlist=True) %}
+{% for ip in lookup('dnsqueryloop', 'csd-apt-eas-d-1.eastasia.cloudapp.azure.com', 'A') %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 80 -j ACCEPT
 {% endfor %}
 # packages.microsoft.com(csd-apt-eas-d-2.eastasia.cloudapp.azure.com)
-{% for ip in lookup('dig', 'csd-apt-eas-d-2.eastasia.cloudapp.azure.com./A', wantlist=True) %}
+{% for ip in lookup('dnsqueryloop', 'csd-apt-eas-d-2.eastasia.cloudapp.azure.com', 'A') %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 80 -j ACCEPT
 {% endfor %}
 # packages.microsoft.com(csd-apt-eas-d-3.eastasia.cloudapp.azure.com)
-{% for ip in lookup('dig', 'csd-apt-eas-d-3.eastasia.cloudapp.azure.com./A', wantlist=True) %}
+{% for ip in lookup('dnsqueryloop', 'csd-apt-eas-d-3.eastasia.cloudapp.azure.com', 'A') %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 80 -j ACCEPT
 {% endfor %}
 # packages.microsoft.com(csd-apt-eas-d-4.eastasia.cloudapp.azure.com)
-{% for ip in lookup('dig', 'csd-apt-eas-d-4.eastasia.cloudapp.azure.com./A', wantlist=True) %}
+{% for ip in lookup('dnsqueryloop', 'csd-apt-eas-d-4.eastasia.cloudapp.azure.com', 'A') %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 80 -j ACCEPT
 {% endfor %}
 
 # database.clamav.net(database.clamav.net.cdn.cloudflare.net)
-{% for ip in lookup('dig', 'database.clamav.net.cdn.cloudflare.net./A', wantlist=True) %}
+{% for ip in lookup('dnsqueryloop', 'database.clamav.net.cdn.cloudflare.net', 'A') %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 443 -j ACCEPT
 {% endfor %}
 
