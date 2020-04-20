@@ -307,9 +307,10 @@
       docker_image:
         build:
           path: /opt/docker-image/firefox-package/firefox/
+          pull: no
         name: firefox-image
         tag: ansible-build
-        source: build        
+        source: build
       ignore_errors: "{{ ansible_check_mode }}"
     - name: tag "firefox-image"
       docker_image:
@@ -330,13 +331,16 @@
           args:
             clamav_uid: "{{ clamav_uid.stdout }}"
             clamav_gid: "{{ clamav_gid.stdout }}"
+          pull: no
         name: freshclam
         tag: ansible-build
+        source: build
       ignore_errors: "{{ ansible_check_mode }}"
     - name: tag "freshclam"
       docker_image:
         name: freshclam:ansible-build
         repository: freshclam:latest
+        source: local
       ignore_errors: "{{ ansible_check_mode }}"
     - name: build "vscode-image"
       docker_image:
@@ -344,13 +348,16 @@
           path: /opt/docker-image/vscode-package/vscode/
           args:
             imagever: "{{ version_code.stdout }}"
+          pull: no
         name: vscode-image
         tag: ansible-build
+        source: build
       ignore_errors: "{{ ansible_check_mode }}"
     - name: tag "vscode-image"
       docker_image:
         name: vscode-image:ansible-build
         repository: vscode-image:latest
+        source: local
       ignore_errors: "{{ ansible_check_mode }}"
     - name: build "vscode-extension-image"
       docker_image:
@@ -361,11 +368,13 @@
             imagever: ansible-build
           pull: no
         tag: ansible-build
+        source: build
       ignore_errors: "{{ ansible_check_mode }}"
     - name: tag "vscode-extension-image"
       docker_image:
         name: vscode-extension-image:ansible-build
         repository: vscode-extension-image:latest
+        source: local
       ignore_errors: "{{ ansible_check_mode }}"
     - name: build "docker-image"
       docker_image:
@@ -373,25 +382,31 @@
           path: /opt/docker-image/docker-package/docker/
           args:
             imagever: "{{ version_code.stdout }}"
+          pull: no
         name: docker-image
         tag: ansible-build
+        source: build
       ignore_errors: "{{ ansible_check_mode }}"
     - name: tag "docker-image"
       docker_image:
         name: docker-image:ansible-build
         repository: docker-image:latest
+        source: local
       ignore_errors: "{{ ansible_check_mode }}"
     - name: build "docker-image-image"
       docker_image:
         build:
           path: /opt/docker-image/docker-image-package/docker-image/
+          pull: no
         name: docker-image-image
         tag: ansible-build
+        source: build
       ignore_errors: "{{ ansible_check_mode }}"
     - name: tag "docker-image-image"
       docker_image:
         name: docker-image-image:ansible-build
         repository: docker-image-image:latest
+        source: local
       ignore_errors: "{{ ansible_check_mode }}"
     - name: build "python-image"
       docker_image:
@@ -399,13 +414,16 @@
           path: /opt/docker-image/python-package/python/
           args:
             imagever: "{{ version_code.stdout }}"
+          pull: no
         name: python-image
         tag: ansible-build
+        source: build
       ignore_errors: "{{ ansible_check_mode }}"
     - name: tag "python-image"
       docker_image:
         name: python-image:ansible-build
         repository: python-image:latest
+        source: local
       ignore_errors: "{{ ansible_check_mode }}"
 
     - name: rm -r /opt/docker-image/kvm
@@ -443,13 +461,16 @@
       docker_image:
         build:
           path: /opt/docker-image/kvm/
+          pull: no
         name: ianblenke/kvm
         tag: ansible-build
+        source: build
       ignore_errors: "{{ ansible_check_mode }}"
     - name: tag "ianblenke/kvm"
       docker_image:
         name: ianblenke/kvm:ansible-build
         repository: ianblenke/kvm:latest
+        source: local
       ignore_errors: "{{ ansible_check_mode }}"
       
     - name: systemctl reload
