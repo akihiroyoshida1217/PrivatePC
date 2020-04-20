@@ -4,7 +4,6 @@
   connection: local
   become: yes
   vars:
-    #network_interface: eth0
     private_network_address: 192.168.10.0/24
 
   tasks:
@@ -13,135 +12,22 @@
       register: version_code
 
     - name: pre-install packages
-      apt: name={{ item }} update_cache=yes cache_valid_time=3600
-      with_items:
-        - apt-transport-https
-        - ca-certificates
-        - curl
-        - gnupg2
-        - python-pip
-        - dnsutils
-        - iptables
-        - iptables-persistent
+      apt: 
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - gnupg2
+          - python-pip
+          - dnsutils
+          - iptables
+          - iptables-persistent
+        update_cache: yes
+        cache_valid_time: 3600
       ignore_errors: "{{ ansible_check_mode }}"
     - pip:
         name: dnspython
         executable: pip3
-
-    #- name: resolv ntp.nict.jp
-    #  shell: host -4 -t A ntp.nict.jp | awk '{ print $4 }'
-    #  register: ntp_nict_jp
-    #- name: resolv ftp1.debian.or.jp
-    #  shell: host -4 -t A ftp1.debian.or.jp | awk '{ print $4 }'
-    #  register: ftp1_debian_or_jp
-    #- name: resolv ftp.nara.wide.ad.jp
-    #  shell: host -4 -t A ftp.nara.wide.ad.jp | awk '{ print $4 }'
-    #  register: ftp_nara_wide_ad_jp
-    #- name: resolv ftp.tsukuba.wide.ad.jp
-    #  shell: host -4 -t A ftp.tsukuba.wide.ad.jp | awk '{ print $4 }'
-    #  register: ftp_tsukuba_wide_ad_jp
-    #- name: resolv dennou-h.gfd-dennou.org
-    #  shell: host -4 -t A dennou-h.gfd-dennou.org | awk '{ print $4 }'
-    #  register: dennou_h_gfd_dennou_org
-    #- name: resolv dennou-k.gfd-dennou.org
-    #  shell: host -4 -t A dennou-k.gfd-dennou.org | awk '{ print $4 }'
-    #  register: dennou_k_gfd_dennou_org
-    #- name: resolv dennou-q.gfd-dennou.org
-    #  shell: host -4 -t A dennou-q.gfd-dennou.org | awk '{ print $4 }'
-    #  register: dennou_q_gfd_dennou_org
-    #- name: resolv debian-mirror.sakura.ne.jp
-    #  shell: host -4 -t A debian-mirror.sakura.ne.jp | awk '{ print $4 }'
-    #  register: debian_mirror_sakura_ne_jp
-    #- name: resolv riksun.riken.go.jp
-    #  shell: host -4 -t A riksun.riken.go.jp | awk '{ print $4 }'
-    #  register: riksun_riken_go_jp
-    #- name: resolv infoserv.ics.es.osaka-u.ac.jp
-    #  shell: host -4 -t A infoserv.ics.es.osaka-u.ac.jp | awk '{ print $4 }'
-    #  register: infoserv_ics_es_osaka_u_ac_jp
-    #- name: resolv ftp.kddilabs.jp
-    #  shell: host -4 -t A ftp.kddilabs.jp | awk '{ print $4 }'
-    #  register: ftp_kddilabs_jp
-    #- name: resolv ring.shibaura-it.ac.jp
-    #  shell: host -4 -t A ring.shibaura-it.ac.jp | awk '{ print $4 }'
-    #  register: ring_shibaura_it_ac_jp
-    #- name: resolv ring.u-toyama.ac.jp
-    #  shell: host -4 -t A ring.u-toyama.ac.jp | awk '{ print $4 }'
-    #  register: ring_u_toyama_ac_jp
-    #- name: resolv ring.airnet.ne.jp
-    #  shell: host -4 -t A ring.airnet.ne.jp | awk '{ print $4 }'
-    #  register: ring_airnet_ne_jp
-    #- name: resolv ring.ix.oita-u.ac.jp
-    #  shell: host -4 -t A ring.ix.oita-u.ac.jp | awk '{ print $4 }'
-    #  register: ring_ix_oita_u_ac_jp
-    #- name: resolv security.debian.org
-    #  shell: host -4 -t A security.debian.org | awk '{ print $4 }'
-    #  register: security_debian_org
-    #- name: resolv ftp.jp.debian.org(jp.cdn.araki.net)
-    #  shell: host -4 -t A jp.cdn.araki.net | awk '{ print $4 }'
-    #  register: ftp_jp_debian_org
-    #- name: resolv download.docker.com(d2h67oheeuigaw.cloudfront.net)
-    #  shell: for i in {{ "{" }}1..3{{ "}" }};do host -4 -t A d2h67oheeuigaw.cloudfront.net | awk '{print $4}';done
-    #  register: download_docker_com
-    #- name: resolv auth.docker.io
-    #  shell: host -4 -t A auth.docker.io | awk '{ print $4 }'
-    #  register: auth_docker_io
-    #- name: resolv registry-1.docker.io
-    #  shell: host -4 -t A registry-1.docker.io | awk '{ print $4 }'
-    #  register: registry_1_docker_io
-    #- name: resolv production.cloudflare.docker.com
-    #  shell: host -4 -t A production.cloudflare.docker.com | awk '{ print $4 }'
-    #  register: production_cloudflare_docker_com
-    #- name: resolv github.com
-    #  shell: for i in {{ "{" }}1..5{{ "}" }};do host -4 -t A github.com | awk '{print $4}';done
-    #  register: github_com
-    #- name: resolv codeload.github.com
-    #  shell: for i in {{ "{" }}1..5{{ "}" }};do host -4 -t A codeload.github.com | awk '{print $4}';done
-    #  register: codeload_github_com
-    #- name: resolv prod.debian.map.fastly.net
-    #  shell: host -4 -t A prod.debian.map.fastly.net | awk '{ print $4 }'
-    #  register: prod_debian_map_fastly_net
-    #- name: resolv ppa.launchpad.net
-    #  shell: host -4 -t A ppa.launchpad.net | awk '{ print $4 }'
-    #  register: ppa_launchpad_net
-    #- name: resolv keyserver.ubuntu.com
-    #  shell: host -4 -t A keyserver.ubuntu.com | awk '{ print $4 }'
-    #  register: keyserver_ubuntu_com
-    #- name: resolv openshift.gnome.org
-    #  shell: host -4 -t A openshift.gnome.org | awk '{ print $4 }'
-    #  register: openshift_gnome_org
-    #- name: resolv pypi.org
-    #  shell: host -4 -t A pypi.org | awk '{ print $4 }'
-    #  register: pypi_org
-    #- name: resolv bootstrap.pypa.io(dualstack.c.ssl.global.fastly.net)
-    #  shell: host -4 -t A dualstack.c.ssl.global.fastly.net | awk '{ print $4 }'
-    #  register: bootstrap_pypa_io
-    #- name: resolv pypi.python.org(dualstack.python.map.fastly.net)
-    #  shell: host -4 -t A dualstack.python.map.fastly.net | awk '{ print $4 }'
-    #  register: pypi_python_org
-    #- name: resolv files.pythonhosted.org(dualstack.r.ssl.global.fastly.net)
-    #  shell: host -4 -t A dualstack.r.ssl.global.fastly.net | awk '{ print $4 }'
-    #  register: files_pythonhosted_org
-    #- name: resolv packages.microsoft.com(csd-apt-eas-d-1.eastasia.cloudapp.azure.com)
-    #  shell: host -4 -t A csd-apt-eas-d-1.eastasia.cloudapp.azure.com | awk '{ print $4 }'
-    #  register: csd_apt_eas_d_1_eastasia_cloudapp_azure_com
-    #- name: resolv packages.microsoft.com(csd-apt-eas-d-2.eastasia.cloudapp.azure.com)
-    #  shell: host -4 -t A csd-apt-eas-d-2.eastasia.cloudapp.azure.com | awk '{ print $4 }'
-    #  register: csd_apt_eas_d_2_eastasia_cloudapp_azure_com
-    #- name: resolv packages.microsoft.com(csd-apt-eas-d-3.eastasia.cloudapp.azure.com)
-    #  shell: host -4 -t A csd-apt-eas-d-3.eastasia.cloudapp.azure.com | awk '{ print $4 }'
-    #  register: csd_apt_eas_d_3_eastasia_cloudapp_azure_com
-    #- name: resolv packages.microsoft.com(csd-apt-eas-d-4.eastasia.cloudapp.azure.com)
-    #  shell: host -4 -t A csd-apt-eas-d-4.eastasia.cloudapp.azure.com | awk '{ print $4 }'
-    #  register: csd_apt_eas_d_4_eastasia_cloudapp_azure_com
-    #- name: resolv launchpad-net.nutmeg.canonical.com
-    #  shell: host -4 -t A launchpad-net.nutmeg.canonical.com | awk '{ print $4 }'
-    #  register: launchpad_net_nutmeg_canonical_com
-    #- name: resolv launchpad-net.banana.canonical.com
-    #  shell: host -4 -t A launchpad-net.banana.canonical.com | awk '{ print $4 }'
-    #  register: launchpad_net_banana_canonical_com
-    #- name: resolv database.clamav.net(database.clamav.net.cdn.cloudflare.net)
-    #  shell: host -4 -t A database.clamav.net.cdn.cloudflare.net | awk '{ print $4 }'
-    #  register: database_clamav_net_cdn_cloudflare_net
 
     - template:
         src: ./files/iptables/rules.v4.tmp.j2
@@ -207,45 +93,46 @@
 
     - name: remove packages
       apt: 
-        name: "{{ item }}"
+        name:
+          - docker
+          - docker-engine
         state: absent
-      with_items:
-        - docker
-        - docker-engine
     - name: install packages
-      apt: name={{ item }} update_cache=yes cache_valid_time=3600
-      with_items:
-        - ntp
-        - mailutils
-        - unattended-upgrades
-        #- iptables
-        #- iptables-persistent
-        - software-properties-common
-        - locales-all
-        - ibus-mozc
-        - clamav-daemon
-        - gnome-tweak-tool
-        - adapta-gtk-theme
-        - paper-icon-theme
-        - alacarte
-        - policykit-1
-        - libnotify-bin
-        - build-essential
-        - libsystemd-dev
-        - libgconf-2-4
-        - gconf2-common
-        - docker-ce
-        - cifs-utils
-        - python3-pkgconfig
-        - auditd
-        - gnome-shell-extension-move-clock
-        - gnome-shell-extension-hide-activities
-        - gnome-shell-extension-dashtodock
-        - gnome-shell-extension-pixelsaver
-        - apparmor-utils
-        - tcpdump
-        - wireshark
-        - vlc
+      apt: 
+        name:
+          - ntp
+          - mailutils
+          - unattended-upgrades
+          #- iptables
+          #- iptables-persistent
+          - software-properties-common
+          - locales-all
+          - ibus-mozc
+          - clamav-daemon
+          - gnome-tweak-tool
+          - adapta-gtk-theme
+          - paper-icon-theme
+          - alacarte
+          - policykit-1
+          - libnotify-bin
+          - build-essential
+          - libsystemd-dev
+          - libgconf-2-4
+          - gconf2-common
+          - docker-ce
+          - cifs-utils
+          - python3-pkgconfig
+          - auditd
+          - gnome-shell-extension-move-clock
+          - gnome-shell-extension-hide-activities
+          - gnome-shell-extension-dashtodock
+          - gnome-shell-extension-pixelsaver
+          - apparmor-utils
+          - tcpdump
+          - wireshark
+          - vlc
+        update_cache: yes 
+        cache_valid_time: 3600
       ignore_errors: "{{ ansible_check_mode }}"
     #- name: install packages
     #  apt: 
@@ -256,15 +143,14 @@
     #  ignore_errors: "{{ ansible_check_mode }}"
 
     - pip:
-        name: "{{ item }}"
-        executable: pip3
-      with_items:
+        name: 
           - docker-compose
           - docker
           - watchdog
           - pylint
           - systemd-python
           - psutil
+        executable: pip3
       ignore_errors: "{{ ansible_check_mode }}"
     #- pip:
     #    name: docker
@@ -297,8 +183,8 @@
       file: 
         path: /opt/docker-image/docker-image-package/docker-image/image
         state: directory
-        owner: 1014
-        group: 1014
+        owner: '1014'
+        group: '1014'
       when: not ansible_check_mode
 
     - name: mv /etc/audit/rules.d/audit.rules etc/audit/rules.d/audit.rules.org
@@ -321,8 +207,8 @@
       file: 
         path: /opt/docker-image/clamav-package/clamav/patternfile
         state: directory
-        owner: 1010
-        group: 1010
+        owner: '1010'
+        group: '1010'
       when: not ansible_check_mode
     - name: edit clamd.conf
       lineinfile: 
@@ -423,11 +309,13 @@
           path: /opt/docker-image/firefox-package/firefox/
         name: firefox-image
         tag: ansible-build
+        source: build        
       ignore_errors: "{{ ansible_check_mode }}"
     - name: tag "firefox-image"
       docker_image:
         name: firefox-image:ansible-build
         repository: firefox-image:latest
+        source: local
       ignore_errors: "{{ ansible_check_mode }}"
     - name: Get clamav_uid
       shell: id -u clamav
@@ -471,8 +359,8 @@
           path: /opt/docker-image/vscode-extension-package/vscode-extension/
           args:
             imagever: ansible-build
+          pull: no
         tag: ansible-build
-        pull: no
       ignore_errors: "{{ ansible_check_mode }}"
     - name: tag "vscode-extension-image"
       docker_image:
