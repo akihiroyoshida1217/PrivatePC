@@ -22,82 +22,82 @@
 -A OUTPUT -p udp --dport 53 -j ACCEPT
 
 # ntp.nict.jp
-{% for ip in ntp_nict_jp.stdout_lines %}
+{% for ip in lookup('dig', 'ntp.nict.jp./A', wantlist=True) %}
 -A OUTPUT -d {{ ip }} -p udp --dport 123 -j ACCEPT
 {% endfor %}
 
 # ftp.nara.wide.ad.jp
-{% for ip in ftp_nara_wide_ad_jp.stdout_lines %}
+{% for ip in lookup('dig', 'ftp.nara.wide.ad.jp./A', wantlist=True) %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 80 -j ACCEPT
 {% endfor %}
 # ftp.tsukuba.wide.ad.jp
-{% for ip in ftp_tsukuba_wide_ad_jp.stdout_lines %}
+{% for ip in lookup('dig', 'ftp.tsukuba.wide.ad.jp./A', wantlist=True) %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 80 -j ACCEPT
 {% endfor %}
 # dennou-h.gfd-dennou.org
-{% for ip in dennou_h_gfd_dennou_org.stdout_lines %}
+{% for ip in lookup('dig', 'dennou-h.gfd-dennou.org./A', wantlist=True) %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 80 -j ACCEPT
 {% endfor %}
 # dennou-k.gfd-dennou.org
-{% for ip in dennou_k_gfd_dennou_org.stdout_lines %}
+{% for ip in lookup('dig', 'dennou-k.gfd-dennou.org./A', wantlist=True) %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 80 -j ACCEPT
 {% endfor %}
 # dennou-q.gfd-dennou.org
-{% for ip in dennou_q_gfd_dennou_org.stdout_lines %}
+{% for ip in lookup('dig', 'dennou-q.gfd-dennou.org./A', wantlist=True) %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 80 -j ACCEPT
 {% endfor %}
 # debian-mirror.sakura.ne.jp
-{% for ip in debian_mirror_sakura_ne_jp.stdout_lines %}
+{% for ip in lookup('dig', 'debian-mirror.sakura.ne.jp./A', wantlist=True) %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 80 -j ACCEPT
 {% endfor %}
 # riksun.riken.go.jp
-{% for ip in riksun_riken_go_jp.stdout_lines %}
+{% for ip in lookup('dig', 'riksun.riken.go.jp./A', wantlist=True) %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 80 -j ACCEPT
 {% endfor %}
 # infoserv.ics.es.osaka-u.ac.jp
-{% for ip in infoserv_ics_es_osaka_u_ac_jp.stdout_lines %}
+{% for ip in lookup('dig', 'infoserv.ics.es.osaka-u.ac.jp./A', wantlist=True) %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 80 -j ACCEPT
 {% endfor %}
 # ftp.kddilabs.jp
-{% for ip in ftp_kddilabs_jp.stdout_lines %}
+{% for ip in lookup('dig', 'ftp.kddilabs.jp./A', wantlist=True) %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 80 -j ACCEPT
 {% endfor %}
 # ring.shibaura-it.ac.jp
-{% for ip in ring_shibaura_it_ac_jp.stdout_lines %}
+{% for ip in lookup('dig', 'ring.shibaura-it.ac.jp./A', wantlist=True) %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 80 -j ACCEPT
 {% endfor %}
 # ring.u-toyama.ac.jp
-{% for ip in ring_u_toyama_ac_jp.stdout_lines %}
+{% for ip in lookup('dig', 'ring.u-toyama.ac.jp./A', wantlist=True) %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 80 -j ACCEPT
 {% endfor %}
 # ring.airnet.ne.jp
-{% for ip in ring_airnet_ne_jp.stdout_lines %}
+{% for ip in lookup('dig', 'ring.airnet.ne.jp./A', wantlist=True) %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 80 -j ACCEPT
 {% endfor %}
 # ring.ix.oita-u.ac.jp
-{% for ip in ring_ix_oita_u_ac_jp.stdout_lines %}
+{% for ip in lookup('dig', 'ring.ix.oita-u.ac.jp./A', wantlist=True) %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 80 -j ACCEPT
 {% endfor %}
 # security.debian.org
-{% for ip in security_debian_org.stdout_lines %}
+{% for ip in lookup('dig', 'security.debian.org./A', wantlist=True) %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 80 -j ACCEPT
 {% endfor %}
-# ftp.jp.debian.org
-{% for ip in ftp_jp_debian_org.stdout_lines %}
+# ftp.jp.debian.org(jp.cdn.araki.net)
+{% for ip in lookup('dig', 'jp.cdn.araki.net./A', wantlist=True) %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 80 -j ACCEPT
 {% endfor %}
 
 # github.com
-{% for ip in github_com.stdout_lines %}
+{% for ip in lookup('dig', 'github.com./A', wantlist=True) %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 443 -j ACCEPT
 {% endfor %}
 # codeload.github.com
-{% for ip in codeload_github_com.stdout_lines %}
+{% for ip in lookup('dig', 'codeload.github.com./A', wantlist=True) %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 443 -j ACCEPT
 {% endfor %}
 
 # security-cdn.debian.org(prod.debian.map.fastly.net)
-{% for ip in prod_debian_map_fastly_net.stdout_lines %}
+{% for ip in lookup('dig', 'prod.debian.map.fastly.net./A', wantlist=True) %}
 -A OUTPUT -d {{ ip }} -p tcp --dport 80 -j ACCEPT
 {% endfor %}
 
