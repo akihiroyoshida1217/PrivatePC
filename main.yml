@@ -131,6 +131,7 @@
           - tcpdump
           - wireshark
           - vlc
+          - code
         update_cache: yes 
         cache_valid_time: 3600
       ignore_errors: "{{ ansible_check_mode }}"
@@ -457,7 +458,8 @@
       with_items:
         - { regexp: '^FROM ubuntu:trusty', line: 'FROM debian:latest'}
         - { regexp: '^RUN DEBIAN_FRONTEND=noninteractive apt-get -y install kvm qemu-kvm libvirt-bin bridge-utils libguestfs-tools aria2 unzip dos2unix unrar-free wget git', line: 'RUN DEBIAN_FRONTEND=noninteractive apt-get -y install qemu-kvm libvirt0 bridge-utils libguestfs-tools aria2 unzip dos2unix unrar-free wget git'}
-    - name: build "ianblenke/kvm"
+        - { regexp: '^EXPOSE 5900', line: 'EXPOSE 5900\nEXPOSE 22'}
+        - name: build "ianblenke/kvm"
       docker_image:
         build:
           path: /opt/docker-image/kvm/
