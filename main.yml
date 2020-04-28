@@ -460,7 +460,7 @@
       with_items:
         - { regexp: '^FROM ubuntu:trusty', line: 'FROM debian:latest'}
         - { regexp: '^RUN DEBIAN_FRONTEND=noninteractive apt-get -y install kvm qemu-kvm libvirt-bin bridge-utils libguestfs-tools aria2 unzip dos2unix unrar-free wget git', line: 'RUN DEBIAN_FRONTEND=noninteractive apt-get -y install qemu-kvm libvirt0 bridge-utils libguestfs-tools aria2 unzip dos2unix unrar-free wget git'}
-        - { regexp: '^EXPOSE 5900', line: 'EXPOSE 5900\nEXPOSE 22'}
+        - { regexp: '^EXPOSE 5900', line: 'EXPOSE 5900\nEXPOSE 10022'}
         - name: build "ianblenke/kvm"
       docker_image:
         build:
